@@ -35,16 +35,24 @@ class InputValidator:
         # Remove any null bytes
         filepath = filepath.replace('\x00', '')
         
-        # Check for path traversal attempts
-        if '..' in filepath or filepath.startswith('/'):
-            return False, "Path traversal detected"
-        
-        # Normalize the path
+        # Normalize the path first to resolve any . or .. components
         normalized = os.path.normpath(filepath)
         
-        # Ensure it doesn't escape current directory
-        if os.path.isabs(normalized):
-            return False, "Absolute paths not allowed"
+        # Check if the normalized path tries to escape current directory
+        # by going up with .. or by being absolute
+        if normalized.startswith('..') or os.path.isabs(normalized):
+            return False, "Path traversal detected"
+        
+        # Additional security checks for suspicious patterns
+        suspicious_patterns = [
+            '../',  # Parent directory traversal
+            '..\\',  # Parent directory traversal (Windows)
+            '\\\\',  # UNC path
+        ]
+        
+        for pattern in suspicious_patterns:
+            if pattern in filepath:
+                return False, "Path traversal detected"
         
         # Check file extension
         path = Path(normalized)
@@ -63,7 +71,7 @@ class InputValidator:
             return False, f"File too large: {file_size_mb:.2f}MB > {MAX_FILE_SIZE_MB}MB"
         
         return True, normalized
-    
+
     @staticmethod
     def validate_dataframe_name(name: str) -> Tuple[bool, str]:
         """
