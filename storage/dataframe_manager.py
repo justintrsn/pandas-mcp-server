@@ -192,7 +192,7 @@ class DataFrameManager:
         """
         import signal
         from contextlib import contextmanager
-        import numpy as np  # Add numpy import here
+        import numpy as np
         
         @contextmanager
         def timeout_context(seconds):
@@ -227,42 +227,40 @@ class DataFrameManager:
                 # Try to execute the code
                 exec_locals = {}
                 
-                # First, try to execute as a statement (might be assignment)
+                # First check if this looks like an expression that returns a value
+                # Try eval first for expressions
                 try:
+                    # Try to evaluate as an expression first
+                    result = eval(code, safe_globals)
+                    
+                    # Update the dataframe in session if it was modified
+                    if target_df in safe_globals and id(safe_globals[target_df]) != original_df_id:
+                        session.dataframes[target_df] = safe_globals[target_df]
+                        
+                except SyntaxError:
+                    # Not an expression, execute as a statement
                     exec(code, safe_globals, exec_locals)
                     
                     # Check if 'result' variable was created
                     if 'result' in exec_locals:
                         result = exec_locals['result']
-                    # Check if the target dataframe was modified in place
-                    elif target_df in safe_globals and id(safe_globals[target_df]) == original_df_id:
-                        # DataFrame was potentially modified in place
-                        # Return the modified dataframe
-                        result = safe_globals[target_df]
                     else:
-                        # No explicit result, try to evaluate as expression
-                        try:
-                            result = eval(code, safe_globals)
-                        except SyntaxError:
-                            # This was likely an in-place modification
-                            # Return the target dataframe
-                            result = session.dataframes[target_df]
-                            
-                except SyntaxError:
-                    # If exec fails with syntax error, try eval
-                    result = eval(code, safe_globals)
-                
-                # Update the dataframe in session if it was modified
-                if target_df in safe_globals:
-                    session.dataframes[target_df] = safe_globals[target_df]
+                        # Check if the target dataframe was modified
+                        if target_df in safe_globals:
+                            if id(safe_globals[target_df]) != original_df_id:
+                                # DataFrame was modified, return it
+                                result = safe_globals[target_df]
+                                session.dataframes[target_df] = safe_globals[target_df]
+                            else:
+                                # Statement executed but no result and no modification
+                                # This might be a print statement or similar
+                                result = None
+                        else:
+                            result = None
                 
                 # Determine result type
                 if isinstance(result, pd.DataFrame):
                     result_type = "dataframe"
-                    # Optionally store as new dataframe if it's different
-                    if result is not session.dataframes[target_df]:
-                        # This is a new dataframe, could store it
-                        pass
                 elif isinstance(result, pd.Series):
                     result_type = "series"
                 elif isinstance(result, (list, tuple)):
@@ -272,11 +270,19 @@ class DataFrameManager:
                 elif isinstance(result, (int, float, str, bool)):
                     # Python built-in scalar types
                     result_type = "scalar"
-                elif hasattr(result, 'dtype') and np.isscalar(result):
-                    # Numpy scalar types - use numpy's isscalar function
-                    result_type = "scalar"
+                elif hasattr(result, 'dtype'):
+                    # Numpy scalar types (np.int64, np.float64, etc.)
+                    # These have a dtype attribute and are scalar values
+                    if hasattr(result, 'ndim') and result.ndim == 0:
+                        # 0-dimensional numpy array (scalar)
+                        result_type = "scalar"
+                    elif np.isscalar(result):
+                        # Use numpy's scalar check as backup
+                        result_type = "scalar"
+                    else:
+                        result_type = "unknown"
                 elif result is None:
-                    # This might be an in-place operation
+                    # This might be an in-place operation or statement with no return
                     result_type = "none"
                     result = f"Operation completed successfully on {target_df}"
                 else:
