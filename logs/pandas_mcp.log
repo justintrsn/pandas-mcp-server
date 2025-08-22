@@ -1,0 +1,141 @@
+2025-08-21 17:21:23,281 - server - INFO - Reading metadata from: test_data.csv
+2025-08-21 17:21:23,325 - server - INFO - Successfully extracted metadata from test_data.csv: 5 rows, 4 columns
+2025-08-21 17:21:23,325 - server - INFO - Loading file test_data.csv as DataFrame 'test_df'
+2025-08-21 17:21:23,328 - server - INFO - Executing pandas code in session test_session: test_df.describe()...
+2025-08-21 17:21:23,334 - server - INFO - Code executed successfully, result type: dataframe
+2025-08-21 17:21:23,334 - server - INFO - Executing pandas code in session test_session: test_df.groupby('city')['salary'].mean()...
+2025-08-21 17:21:23,336 - server - INFO - Code executed successfully, result type: series
+2025-08-21 17:21:52,605 - __main__ - INFO - Starting pandas-mcp-server v0.1.0
+2025-08-21 17:21:52,605 - __main__ - INFO - Server configuration: sse on 0.0.0.0:8000
+2025-08-21 17:21:52,605 - __main__ - INFO - Available tools:
+2025-08-21 17:21:52,605 - __main__ - INFO -   - read_metadata_tool: Extract comprehensive file metadata
+2025-08-21 17:21:52,605 - __main__ - INFO -   - run_pandas_code_tool: Execute pandas operations
+2025-08-21 17:21:52,606 - __main__ - INFO -   - load_dataframe_tool: Load data files
+2025-08-21 17:21:52,606 - __main__ - INFO -   - list_dataframes_tool: List loaded DataFrames
+2025-08-21 17:21:52,606 - __main__ - INFO -   - get_server_info: Get server configuration
+2025-08-22 11:05:02,827 - __main__ - INFO - Starting pandas-mcp-server v0.1.0
+2025-08-22 11:05:02,827 - __main__ - INFO - Server configuration: sse on 0.0.0.0:8000
+2025-08-22 11:05:02,827 - __main__ - INFO - Available MCP tools:
+2025-08-22 11:05:02,827 - __main__ - INFO -   - read_metadata_tool: Extract comprehensive file metadata
+2025-08-22 11:05:02,827 - __main__ - INFO -   - run_pandas_code_tool: Execute pandas operations
+2025-08-22 11:05:02,827 - __main__ - INFO -   - load_dataframe_tool: Load data files
+2025-08-22 11:05:02,827 - __main__ - INFO -   - list_dataframes_tool: List loaded DataFrames
+2025-08-22 11:05:02,827 - __main__ - INFO -   - get_dataframe_info_tool: Get DataFrame details
+2025-08-22 11:05:02,827 - __main__ - INFO -   - validate_pandas_code_tool: Validate code without execution
+2025-08-22 11:05:02,827 - __main__ - INFO -   - get_execution_context_tool: Get execution context
+2025-08-22 11:05:02,827 - __main__ - INFO -   - preview_file_tool: Preview files
+2025-08-22 11:05:02,827 - __main__ - INFO -   - get_supported_formats_tool: Get supported formats
+2025-08-22 11:05:02,827 - __main__ - INFO -   - clear_session_tool: Clear session data
+2025-08-22 11:05:02,827 - __main__ - INFO -   - get_session_info_tool: Get session info
+2025-08-22 11:05:02,827 - __main__ - INFO -   - get_server_info_tool: Get server configuration
+2025-08-22 11:05:51,040 - __main__ - INFO - Starting pandas-mcp-server v0.1.0
+2025-08-22 11:05:51,040 - __main__ - INFO - Server configuration: sse on 0.0.0.0:8000
+2025-08-22 11:05:51,040 - __main__ - INFO - Available MCP tools:
+2025-08-22 11:05:51,040 - __main__ - INFO -   - read_metadata_tool: Extract comprehensive file metadata
+2025-08-22 11:05:51,040 - __main__ - INFO -   - run_pandas_code_tool: Execute pandas operations
+2025-08-22 11:05:51,040 - __main__ - INFO -   - load_dataframe_tool: Load data files
+2025-08-22 11:05:51,040 - __main__ - INFO -   - list_dataframes_tool: List loaded DataFrames
+2025-08-22 11:05:51,040 - __main__ - INFO -   - get_dataframe_info_tool: Get DataFrame details
+2025-08-22 11:05:51,040 - __main__ - INFO -   - validate_pandas_code_tool: Validate code without execution
+2025-08-22 11:05:51,040 - __main__ - INFO -   - get_execution_context_tool: Get execution context
+2025-08-22 11:05:51,040 - __main__ - INFO -   - preview_file_tool: Preview files
+2025-08-22 11:05:51,040 - __main__ - INFO -   - get_supported_formats_tool: Get supported formats
+2025-08-22 11:05:51,040 - __main__ - INFO -   - clear_session_tool: Clear session data
+2025-08-22 11:05:51,040 - __main__ - INFO -   - get_session_info_tool: Get session info
+2025-08-22 11:05:51,040 - __main__ - INFO -   - get_server_info_tool: Get server configuration
+2025-08-22 11:20:20,669 - core.tools - INFO - Orchestrating metadata extraction for: test_products.csv
+2025-08-22 11:20:20,669 - core.metadata - INFO - Extracting metadata from: test_products.csv
+2025-08-22 11:20:20,669 - core.metadata - INFO - File size: 0.00MB, Extension: csv
+2025-08-22 11:20:20,670 - core.metadata - INFO - Detected encoding: ascii (confidence: 1.00)
+2025-08-22 11:20:20,670 - core.metadata - INFO - Detected CSV parameters: delimiter=',', has_header=True
+2025-08-22 11:20:20,670 - core.metadata - INFO - Reading CSV with delimiter ',' and encoding 'ascii'
+2025-08-22 11:20:20,679 - core.metadata - INFO - Extracting DataFrame metadata: (3, 3)
+2025-08-22 11:20:20,710 - core.tools - INFO - Successfully extracted metadata from test_products.csv: 3 rows, 3 columns
+2025-08-22 11:20:20,710 - core.tools - INFO - Orchestrating data loading: test_products.csv -> DataFrame 'products'
+2025-08-22 11:20:20,710 - core.data_loader - INFO - Loading file 'test_products.csv' as DataFrame 'products' in session 'core_test'
+2025-08-22 11:20:20,710 - core.data_loader - INFO - Using .csv loader with options: {}
+2025-08-22 11:20:20,710 - core.data_loader - INFO - Loading CSV with options: {}
+2025-08-22 11:20:20,720 - core.data_loader - INFO - Loaded DataFrame: (3, 3), Memory: 0.00MB
+2025-08-22 11:20:20,721 - core.data_loader - INFO - Successfully stored DataFrame 'products': DataFrame 'products' added successfully (0.00MB)
+2025-08-22 11:20:20,722 - core.tools - INFO - Successfully loaded test_products.csv as 'products'
+2025-08-22 11:20:20,722 - core.tools - INFO - Orchestrating data loading: test_employees.csv -> DataFrame 'employees'
+2025-08-22 11:20:20,722 - core.data_loader - INFO - Loading file 'test_employees.csv' as DataFrame 'employees' in session 'core_test'
+2025-08-22 11:20:20,722 - core.data_loader - INFO - Using .csv loader with options: {}
+2025-08-22 11:20:20,722 - core.data_loader - INFO - Loading CSV with options: {}
+2025-08-22 11:20:20,725 - core.data_loader - INFO - Loaded DataFrame: (5, 4), Memory: 0.00MB
+2025-08-22 11:20:20,727 - core.data_loader - INFO - Successfully stored DataFrame 'employees': DataFrame 'employees' added successfully (0.00MB)
+2025-08-22 11:20:20,728 - core.tools - INFO - Successfully loaded test_employees.csv as 'employees'
+2025-08-22 11:20:20,728 - core.tools - INFO - Orchestrating pandas code execution in session core_test
+2025-08-22 11:20:20,728 - core.execution - INFO - Executing pandas code in session 'core_test' on DataFrame 'products': products['total'] = products['quantity'] * products['price']...
+2025-08-22 11:20:20,729 - core.execution - ERROR - Execution runtime error: Execution failed: invalid syntax (<string>, line 1)
+2025-08-22 11:20:20,729 - core.tools - WARNING - Code execution failed: Execution failed: invalid syntax (<string>, line 1)
+2025-08-22 11:20:20,729 - core.tools - INFO - Orchestrating pandas code execution in session core_test
+2025-08-22 11:20:20,729 - core.execution - INFO - Executing pandas code in session 'core_test' on DataFrame 'employees': employees.groupby('city')['salary'].mean()...
+2025-08-22 11:20:20,732 - core.execution - INFO - Code executed successfully, result type: series
+2025-08-22 11:20:20,732 - core.tools - INFO - Code executed successfully, result type: series
+2025-08-22 11:20:20,732 - core.tools - INFO - Orchestrating pandas code execution in session core_test
+2025-08-22 11:20:20,732 - core.execution - INFO - Executing pandas code in session 'core_test' on DataFrame 'employees': employees.describe()...
+2025-08-22 11:20:20,739 - core.execution - INFO - Code executed successfully, result type: dataframe
+2025-08-22 11:20:20,739 - core.tools - INFO - Code executed successfully, result type: dataframe
+2025-08-22 11:20:20,739 - core.tools - INFO - Validating pandas code for DataFrame 'employees'
+2025-08-22 11:20:20,739 - core.execution - INFO - Validating pandas code: employees.head()...
+2025-08-22 11:20:20,740 - core.execution - INFO - Code validation passed
+2025-08-22 11:20:20,740 - core.tools - INFO - Validating pandas code for DataFrame 'employees'
+2025-08-22 11:20:20,740 - core.execution - INFO - Validating pandas code: __import__('os').system('ls')...
+2025-08-22 11:20:20,740 - core.tools - INFO - Listing DataFrames for session: core_test
+2025-08-22 11:20:20,740 - core.tools - INFO - Getting info for DataFrame 'employees' in session 'core_test'
+2025-08-22 11:20:20,743 - core.tools - INFO - Getting execution context for session 'core_test'
+2025-08-22 11:20:20,744 - core.tools - INFO - Previewing file: test_products.csv
+2025-08-22 11:20:20,744 - core.data_loader - INFO - Loading CSV with options: {'nrows': 10}
+2025-08-22 11:20:20,746 - core.tools - INFO - Getting supported file formats
+2025-08-22 11:20:20,746 - core.tools - INFO - Getting session info: core_test
+2025-08-22 11:20:20,748 - core.tools - INFO - Getting server information
+2025-08-22 11:20:20,749 - core.tools - INFO - Clearing session: core_test
+2025-08-22 11:24:27,925 - core.tools - INFO - Orchestrating metadata extraction for: test_products.csv
+2025-08-22 11:24:27,925 - core.metadata - INFO - Extracting metadata from: test_products.csv
+2025-08-22 11:24:27,926 - core.metadata - INFO - File size: 0.00MB, Extension: csv
+2025-08-22 11:24:27,926 - core.metadata - INFO - Detected encoding: ascii (confidence: 1.00)
+2025-08-22 11:24:27,926 - core.metadata - INFO - Detected CSV parameters: delimiter=',', has_header=True
+2025-08-22 11:24:27,926 - core.metadata - INFO - Reading CSV with delimiter ',' and encoding 'ascii'
+2025-08-22 11:24:27,928 - core.metadata - INFO - Extracting DataFrame metadata: (3, 3)
+2025-08-22 11:24:27,951 - core.tools - INFO - Successfully extracted metadata from test_products.csv: 3 rows, 3 columns
+2025-08-22 11:24:27,951 - core.tools - INFO - Orchestrating data loading: test_products.csv -> DataFrame 'products'
+2025-08-22 11:24:27,952 - core.data_loader - INFO - Loading file 'test_products.csv' as DataFrame 'products' in session 'core_test'
+2025-08-22 11:24:27,952 - core.data_loader - INFO - Using .csv loader with options: {}
+2025-08-22 11:24:27,952 - core.data_loader - INFO - Loading CSV with options: {}
+2025-08-22 11:24:27,960 - core.data_loader - INFO - Loaded DataFrame: (3, 3), Memory: 0.00MB
+2025-08-22 11:24:27,962 - core.data_loader - INFO - Successfully stored DataFrame 'products': DataFrame 'products' added successfully (0.00MB)
+2025-08-22 11:24:27,964 - core.tools - INFO - Successfully loaded test_products.csv as 'products'
+2025-08-22 11:24:27,964 - core.tools - INFO - Orchestrating data loading: test_employees.csv -> DataFrame 'employees'
+2025-08-22 11:24:27,964 - core.data_loader - INFO - Loading file 'test_employees.csv' as DataFrame 'employees' in session 'core_test'
+2025-08-22 11:24:27,964 - core.data_loader - INFO - Using .csv loader with options: {}
+2025-08-22 11:24:27,964 - core.data_loader - INFO - Loading CSV with options: {}
+2025-08-22 11:24:27,966 - core.data_loader - INFO - Loaded DataFrame: (5, 4), Memory: 0.00MB
+2025-08-22 11:24:27,968 - core.data_loader - INFO - Successfully stored DataFrame 'employees': DataFrame 'employees' added successfully (0.00MB)
+2025-08-22 11:24:27,969 - core.tools - INFO - Successfully loaded test_employees.csv as 'employees'
+2025-08-22 11:24:27,969 - core.tools - INFO - Orchestrating pandas code execution in session core_test
+2025-08-22 11:24:27,969 - core.execution - INFO - Executing pandas code in session 'core_test' on DataFrame 'products': products['total'] = products['quantity'] * products['price']...
+2025-08-22 11:24:27,971 - core.execution - INFO - Code executed successfully, result type: dataframe
+2025-08-22 11:24:27,972 - core.tools - INFO - Code executed successfully, result type: dataframe
+2025-08-22 11:24:27,972 - core.tools - INFO - Orchestrating pandas code execution in session core_test
+2025-08-22 11:24:27,972 - core.execution - INFO - Executing pandas code in session 'core_test' on DataFrame 'employees': employees.groupby('city')['salary'].mean()...
+2025-08-22 11:24:27,974 - core.execution - INFO - Code executed successfully, result type: dataframe
+2025-08-22 11:24:27,974 - core.tools - INFO - Code executed successfully, result type: dataframe
+2025-08-22 11:24:27,974 - core.tools - INFO - Orchestrating pandas code execution in session core_test
+2025-08-22 11:24:27,974 - core.execution - INFO - Executing pandas code in session 'core_test' on DataFrame 'employees': employees.describe()...
+2025-08-22 11:24:27,978 - core.execution - INFO - Code executed successfully, result type: dataframe
+2025-08-22 11:24:27,978 - core.tools - INFO - Code executed successfully, result type: dataframe
+2025-08-22 11:24:27,978 - core.tools - INFO - Validating pandas code for DataFrame 'employees'
+2025-08-22 11:24:27,978 - core.execution - INFO - Validating pandas code: employees.head()...
+2025-08-22 11:24:27,978 - core.execution - INFO - Code validation passed
+2025-08-22 11:24:27,978 - core.tools - INFO - Validating pandas code for DataFrame 'employees'
+2025-08-22 11:24:27,978 - core.execution - INFO - Validating pandas code: __import__('os').system('ls')...
+2025-08-22 11:24:27,978 - core.tools - INFO - Listing DataFrames for session: core_test
+2025-08-22 11:24:27,978 - core.tools - INFO - Getting info for DataFrame 'employees' in session 'core_test'
+2025-08-22 11:24:27,981 - core.tools - INFO - Getting execution context for session 'core_test'
+2025-08-22 11:24:27,982 - core.tools - INFO - Previewing file: test_products.csv
+2025-08-22 11:24:27,982 - core.data_loader - INFO - Loading CSV with options: {'nrows': 10}
+2025-08-22 11:24:27,984 - core.tools - INFO - Getting supported file formats
+2025-08-22 11:24:27,984 - core.tools - INFO - Getting session info: core_test
+2025-08-22 11:24:27,985 - core.tools - INFO - Getting server information
+2025-08-22 11:24:27,986 - core.tools - INFO - Clearing session: core_test
