@@ -178,114 +178,119 @@ class DataFrameManager:
         return False
     
     def execute_operation(
-            self, 
-            code: str, 
-            target_df: str = "df",
-            session_id: str = "default",
-            timeout: int = 30
-        ) -> Tuple[Any, str]:
-            """
-            Execute pandas operation on a DataFrame
+        self, 
+        code: str, 
+        target_df: str = "df",
+        session_id: str = "default",
+        timeout: int = 30
+    ) -> Tuple[Any, str]:
+        """
+        Execute pandas operation on a DataFrame
+        
+        Returns:
+            Tuple of (result, result_type)
+        """
+        import signal
+        from contextlib import contextmanager
+        import numpy as np  # Add numpy import here
+        
+        @contextmanager
+        def timeout_context(seconds):
+            def timeout_handler(signum, frame):
+                raise TimeoutError(f"Operation timed out after {seconds} seconds")
             
-            Returns:
-                Tuple of (result, result_type)
-            """
-            import signal
-            from contextlib import contextmanager
-            
-            @contextmanager
-            def timeout_context(seconds):
-                def timeout_handler(signum, frame):
-                    raise TimeoutError(f"Operation timed out after {seconds} seconds")
-                
-                # Set the signal handler and alarm
-                old_handler = signal.signal(signal.SIGALRM, timeout_handler)
-                signal.alarm(seconds)
-                try:
-                    yield
-                finally:
-                    signal.alarm(0)
-                    signal.signal(signal.SIGALRM, old_handler)
-            
-            session = self.get_or_create_session(session_id)
-            
-            # Get the target dataframe
-            if target_df not in session.dataframes:
-                raise KeyError(f"DataFrame '{target_df}' not found in session")
-            
-            # Create execution context
-            from utils.security import create_restricted_execution_context
-            safe_globals = create_restricted_execution_context(session.dataframes)
-            
-            # Execute with timeout
+            # Set the signal handler and alarm
+            old_handler = signal.signal(signal.SIGALRM, timeout_handler)
+            signal.alarm(seconds)
             try:
-                with timeout_context(timeout):
-                    # Store the original dataframe reference for comparison
-                    original_df_id = id(session.dataframes[target_df])
+                yield
+            finally:
+                signal.alarm(0)
+                signal.signal(signal.SIGALRM, old_handler)
+        
+        session = self.get_or_create_session(session_id)
+        
+        # Get the target dataframe
+        if target_df not in session.dataframes:
+            raise KeyError(f"DataFrame '{target_df}' not found in session")
+        
+        # Create execution context
+        from utils.security import create_restricted_execution_context
+        safe_globals = create_restricted_execution_context(session.dataframes)
+        
+        # Execute with timeout
+        try:
+            with timeout_context(timeout):
+                # Store the original dataframe reference for comparison
+                original_df_id = id(session.dataframes[target_df])
+                
+                # Try to execute the code
+                exec_locals = {}
+                
+                # First, try to execute as a statement (might be assignment)
+                try:
+                    exec(code, safe_globals, exec_locals)
                     
-                    # Try to execute the code
-                    exec_locals = {}
-                    
-                    # First, try to execute as a statement (might be assignment)
-                    try:
-                        exec(code, safe_globals, exec_locals)
-                        
-                        # Check if 'result' variable was created
-                        if 'result' in exec_locals:
-                            result = exec_locals['result']
-                        # Check if the target dataframe was modified in place
-                        elif target_df in safe_globals and id(safe_globals[target_df]) == original_df_id:
-                            # DataFrame was potentially modified in place
-                            # Return the modified dataframe
-                            result = safe_globals[target_df]
-                        else:
-                            # No explicit result, try to evaluate as expression
-                            try:
-                                result = eval(code, safe_globals)
-                            except SyntaxError:
-                                # This was likely an in-place modification
-                                # Return the target dataframe
-                                result = session.dataframes[target_df]
-                                
-                    except SyntaxError:
-                        # If exec fails with syntax error, try eval
-                        result = eval(code, safe_globals)
-                    
-                    # Update the dataframe in session if it was modified
-                    if target_df in safe_globals:
-                        session.dataframes[target_df] = safe_globals[target_df]
-                    
-                    # Determine result type
-                    if isinstance(result, pd.DataFrame):
-                        result_type = "dataframe"
-                        # Optionally store as new dataframe if it's different
-                        if result is not session.dataframes[target_df]:
-                            # This is a new dataframe, could store it
-                            pass
-                    elif isinstance(result, pd.Series):
-                        result_type = "series"
-                    elif isinstance(result, (list, tuple)):
-                        result_type = "list"
-                    elif isinstance(result, dict):
-                        result_type = "dict"
-                    elif isinstance(result, (int, float, str, bool)):
-                        result_type = "scalar"
-                    elif result is None:
-                        # This might be an in-place operation
-                        result_type = "none"
-                        result = f"Operation completed successfully on {target_df}"
+                    # Check if 'result' variable was created
+                    if 'result' in exec_locals:
+                        result = exec_locals['result']
+                    # Check if the target dataframe was modified in place
+                    elif target_df in safe_globals and id(safe_globals[target_df]) == original_df_id:
+                        # DataFrame was potentially modified in place
+                        # Return the modified dataframe
+                        result = safe_globals[target_df]
                     else:
-                        result_type = "unknown"
-                    
-                    # Add to operation history
-                    session.add_operation(code, target_df, result_type)
-                    
-                    return result, result_type
-                    
-            except TimeoutError as e:
-                raise RuntimeError(str(e))
-            except Exception as e:
-                raise RuntimeError(f"Execution failed: {str(e)}")
+                        # No explicit result, try to evaluate as expression
+                        try:
+                            result = eval(code, safe_globals)
+                        except SyntaxError:
+                            # This was likely an in-place modification
+                            # Return the target dataframe
+                            result = session.dataframes[target_df]
+                            
+                except SyntaxError:
+                    # If exec fails with syntax error, try eval
+                    result = eval(code, safe_globals)
+                
+                # Update the dataframe in session if it was modified
+                if target_df in safe_globals:
+                    session.dataframes[target_df] = safe_globals[target_df]
+                
+                # Determine result type
+                if isinstance(result, pd.DataFrame):
+                    result_type = "dataframe"
+                    # Optionally store as new dataframe if it's different
+                    if result is not session.dataframes[target_df]:
+                        # This is a new dataframe, could store it
+                        pass
+                elif isinstance(result, pd.Series):
+                    result_type = "series"
+                elif isinstance(result, (list, tuple)):
+                    result_type = "list"
+                elif isinstance(result, dict):
+                    result_type = "dict"
+                elif isinstance(result, (int, float, str, bool)):
+                    # Python built-in scalar types
+                    result_type = "scalar"
+                elif hasattr(result, 'dtype') and np.isscalar(result):
+                    # Numpy scalar types - use numpy's isscalar function
+                    result_type = "scalar"
+                elif result is None:
+                    # This might be an in-place operation
+                    result_type = "none"
+                    result = f"Operation completed successfully on {target_df}"
+                else:
+                    result_type = "unknown"
+                
+                # Add to operation history
+                session.add_operation(code, target_df, result_type)
+                
+                return result, result_type
+                
+        except TimeoutError as e:
+            raise RuntimeError(str(e))
+        except Exception as e:
+            raise RuntimeError(f"Execution failed: {str(e)}")
     
     def get_session_info(self, session_id: str = "default") -> dict:
         """Get information about a session"""

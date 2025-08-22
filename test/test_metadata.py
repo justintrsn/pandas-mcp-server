@@ -49,7 +49,9 @@ Charlie Wilson,32,,Sales"""
         test_csv.write_text(csv_data)
         
         # Test via tools.py orchestration
-        metadata = tools.read_metadata(str(test_csv))
+        relative_path = f"test/{test_csv.name}"
+        metadata = tools.read_metadata(relative_path) 
+
         
         # Validate results
         assert 'file_info' in metadata, "Missing file_info"

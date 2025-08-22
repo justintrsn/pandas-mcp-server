@@ -4,6 +4,7 @@ Test module for data loading functionality
 """
 
 import sys
+import os
 from pathlib import Path
 from typing import Dict, Any
 
@@ -49,8 +50,9 @@ Charlie,35,Chicago,65000"""
         test_csv.write_text(csv_data)
         
         # Load CSV
+        relative_path = f"test/{test_csv.name}"
         result = tools.load_dataframe(
-            filepath=str(test_csv),
+            filepath=relative_path,
             df_name="test_csv",
             session_id=session_id
         )
@@ -88,8 +90,9 @@ Bob\t25\tSeattle"""
         test_tsv.write_text(tsv_data)
         
         # Load with tab delimiter
+        relative_path = f"test/{test_tsv.name}"
         result = tools.load_dataframe(
-            filepath=str(test_tsv),
+            filepath=relative_path,
             df_name="test_tsv",
             session_id=session_id,
             delimiter='\t'
@@ -132,8 +135,9 @@ Bob\t25\tSeattle"""
             df.to_excel(writer, sheet_name='Sheet2', index=False)
         
         # Load Excel (default sheet)
+        relative_path = f"test/{test_excel.name}"
         result = tools.load_dataframe(
-            filepath=str(test_excel),
+            filepath=relative_path,
             df_name="test_excel",
             session_id=session_id
         )
@@ -143,7 +147,7 @@ Bob\t25\tSeattle"""
         
         # Load specific sheet
         result = tools.load_dataframe(
-            filepath=str(test_excel),
+            filepath=relative_path,
             df_name="test_excel_sheet2",
             session_id=session_id,
             sheet_name='Sheet2'
@@ -182,8 +186,9 @@ Bob\t25\tSeattle"""
         test_json.write_text(json.dumps(json_data))
         
         # Load JSON
+        relative_path = f"test/{test_json.name}"
         result = tools.load_dataframe(
-            filepath=str(test_json),
+            filepath=relative_path,
             df_name="test_json",
             session_id=session_id
         )
@@ -224,8 +229,9 @@ Bob\t25\tSeattle"""
         df.to_parquet(test_parquet)
         
         # Load Parquet
+        relative_path = f"test/{test_parquet.name}"
         result = tools.load_dataframe(
-            filepath=str(test_parquet),
+            filepath=relative_path,
             df_name="test_parquet",
             session_id=session_id
         )
@@ -265,7 +271,8 @@ Bob\t25\tSeattle"""
         test_preview.write_text(preview_data)
         
         # Preview file
-        result = tools.preview_file(str(test_preview))
+        relative_path = f"test/{test_preview.name}"
+        result = tools.preview_file(relative_path)
         
         assert result['success'], "File preview failed"
         assert 'preview' in result, "Missing preview data"

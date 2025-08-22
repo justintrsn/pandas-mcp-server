@@ -48,8 +48,9 @@ Doohickey,15,15.25"""
         test_csv.write_text(csv_data)
         
         # Load DataFrame
+        relative_path = f"test/{test_csv.name}"
         load_result = tools.load_dataframe(
-            filepath=os.path.relpath(test_csv),
+            filepath=relative_path,
             df_name="products",
             session_id=session_id
         )
