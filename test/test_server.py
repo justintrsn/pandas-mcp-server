@@ -55,7 +55,9 @@ def test_mcp_registration() -> Dict[str, Any]:
     # Test 3: Check tool registration
     print("\n3. Testing tool registration...")
     
+    # Include ALL tools from server.py
     expected_tools = [
+        # Data tools
         'read_metadata_tool',
         'run_pandas_code_tool',
         'load_dataframe_tool',
@@ -67,7 +69,13 @@ def test_mcp_registration() -> Dict[str, Any]:
         'get_supported_formats_tool',
         'clear_session_tool',
         'get_session_info_tool',
-        'get_server_info_tool'
+        'get_server_info_tool',
+        # Visualization tools
+        'create_chart_tool',
+        'suggest_charts_tool',
+        'get_chart_types_tool',
+        'create_correlation_heatmap_tool',
+        'create_time_series_chart_tool'
     ]
     
     for tool_name in expected_tools:
@@ -95,8 +103,9 @@ def test_mcp_registration() -> Dict[str, Any]:
     try:
         from core import tools
         
-        # Check that core functions exist
+        # Check that core functions exist (including visualization)
         core_functions = [
+            # Data functions
             'read_metadata',
             'run_pandas_code',
             'load_dataframe',
@@ -108,7 +117,13 @@ def test_mcp_registration() -> Dict[str, Any]:
             'get_supported_formats',
             'clear_session',
             'get_session_info',
-            'get_server_info'
+            'get_server_info',
+            # Visualization functions
+            'create_chart',
+            'suggest_charts',
+            'get_chart_types',
+            'create_correlation_heatmap',
+            'create_time_series_chart'
         ]
         
         missing_functions = []
@@ -154,12 +169,50 @@ def test_mcp_registration() -> Dict[str, Any]:
         results['warnings'] += 1
         results['passed'] += 1
     
+    # Test 6: Check visualization tools specifically
+    print("\n6. Testing visualization tools...")
+    results['total'] += 1
+    
+    viz_tools = [
+        'create_chart_tool',
+        'suggest_charts_tool',
+        'get_chart_types_tool',
+        'create_correlation_heatmap_tool',
+        'create_time_series_chart_tool'
+    ]
+    
+    viz_functions = [
+        'create_chart',
+        'suggest_charts',
+        'get_chart_types',
+        'create_correlation_heatmap',
+        'create_time_series_chart'
+    ]
+    
+    all_viz_present = True
+    for tool_name, func_name in zip(viz_tools, viz_functions):
+        if not hasattr(server, tool_name):
+            print(f"   ✗ Missing visualization tool: {tool_name}")
+            all_viz_present = False
+        if not hasattr(tools, func_name):
+            print(f"   ✗ Missing visualization function: {func_name}")
+            all_viz_present = False
+    
+    if all_viz_present:
+        print("   ✓ All visualization tools are registered")
+        results['passed'] += 1
+    else:
+        results['failed'] += 1
+        results['status'] = 'failed'
+    
     # Update status if there are warnings
     if results['warnings'] > 0 and results['status'] == 'passed':
         results['status'] = 'warning'
     
     # Print summary for this module
     print(f"\nMCP Registration Tests Summary: {results['passed']}/{results['total']} passed")
+    if results['warnings'] > 0:
+        print(f"  ⚠ {results['warnings']} warnings")
     
     return results
 
