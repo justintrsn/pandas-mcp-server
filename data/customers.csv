@@ -1,0 +1,22 @@
+customer_id,customer_name,email,phone,registration_date,total_purchases,customer_segment,city,state,loyalty_points
+C101,John Doe,john.doe@email.com,555-0101,2023-01-15,15,Premium,New York,NY,1500
+C102,Jane Smith,jane.smith@email.com,555-0102,2023-02-20,8,Standard,Los Angeles,CA,800
+C103,Bob Johnson,bob.j@email.com,555-0103,2023-03-10,22,Premium,Chicago,IL,2200
+C104,Alice Brown,alice.brown@email.com,555-0104,2023-04-05,5,Basic,Houston,TX,500
+C105,Charlie Wilson,charlie.w@email.com,555-0105,2023-05-12,18,Premium,Phoenix,AZ,1800
+C106,Diana Martinez,diana.m@email.com,555-0106,2023-06-18,3,Basic,Philadelphia,PA,300
+C107,Eve Davis,eve.davis@email.com,555-0107,2023-07-22,12,Standard,San Antonio,TX,1200
+C108,Frank Miller,frank.miller@email.com,555-0108,2023-08-30,25,Premium,San Diego,CA,2500
+C109,Grace Lee,grace.lee@email.com,555-0109,2023-09-14,7,Standard,Dallas,TX,700
+C110,Henry Taylor,henry.t@email.com,555-0110,2023-10-08,20,Premium,San Jose,CA,2000
+C111,Iris Anderson,iris.a@email.com,,2023-11-11,9,Standard,Austin,TX,900
+C112,Jack Thomas,jack.thomas@email.com,555-0112,2023-12-25,4,Basic,Jacksonville,FL,400
+C113,Karen White,,555-0113,2024-01-02,16,Premium,Fort Worth,TX,1600
+C114,Leo Harris,leo.h@email.com,555-0114,2024-01-10,11,Standard,Columbus,OH,1100
+C115,Maria Garcia,maria.g@email.com,555-0115,2024-01-15,6,Basic,Charlotte,NC,600
+C116,Nathan Clark,nathan.c@email.com,555-0116,2024-01-20,14,Standard,San Francisco,CA,
+C117,Olivia Lewis,olivia.lewis@email.com,555-0117,2024-01-25,19,Premium,Indianapolis,IN,1900
+C118,Paul Robinson,paul.r@email.com,,2024-01-28,2,Basic,Seattle,WA,200
+C119,Quinn Walker,quinn.w@email.com,555-0119,2024-01-30,10,Standard,Denver,CO,1000
+C120,Rachel Hall,rachel.hall@email.com,555-0120,2024-02-01,13,Standard,Boston,MA,1300
+C121,Sam Allen,sam.allen@email.com,555-0121,2024-02-05,21,Premium,Detroit,MI,2100

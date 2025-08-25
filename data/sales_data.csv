@@ -1,0 +1,32 @@
+date,product_id,product_name,category,quantity,unit_price,revenue,customer_id,region,sales_rep
+2024-01-01,P001,Laptop Pro,Electronics,2,1299.99,2599.98,C101,North,Alice Johnson
+2024-01-02,P002,Office Chair,Furniture,5,249.99,1249.95,C102,South,Bob Smith
+2024-01-03,P003,Wireless Mouse,Electronics,10,29.99,299.90,C103,East,Charlie Brown
+2024-01-04,P004,Standing Desk,Furniture,1,599.99,599.99,C104,West,Diana Prince
+2024-01-05,P001,Laptop Pro,Electronics,3,1299.99,3899.97,C105,North,Alice Johnson
+2024-01-06,P005,Monitor 4K,Electronics,2,449.99,899.98,C106,South,Bob Smith
+2024-01-07,P006,Desk Lamp,Furniture,8,39.99,319.92,C107,East,Charlie Brown
+2024-01-08,P007,Keyboard Mechanical,Electronics,6,89.99,539.94,C108,West,Diana Prince
+2024-01-09,P008,Webcam HD,Electronics,4,79.99,319.96,C109,North,Alice Johnson
+2024-01-10,P002,Office Chair,Furniture,3,249.99,749.97,C110,South,Bob Smith
+2024-01-11,P003,Wireless Mouse,Electronics,15,29.99,449.85,C101,East,Charlie Brown
+2024-01-12,P009,Headphones,Electronics,7,149.99,1049.93,C102,West,Diana Prince
+2024-01-13,P010,File Cabinet,Furniture,2,199.99,399.98,C103,North,Alice Johnson
+2024-01-14,P001,Laptop Pro,Electronics,1,1299.99,1299.99,C104,South,Bob Smith
+2024-01-15,P005,Monitor 4K,Electronics,4,449.99,1799.96,C105,East,Charlie Brown
+2024-01-16,P011,Printer,Electronics,2,299.99,599.98,C106,West,Diana Prince
+2024-01-17,P012,Bookshelf,Furniture,3,149.99,449.97,C107,North,Alice Johnson
+2024-01-18,P007,Keyboard Mechanical,Electronics,5,89.99,449.95,C108,South,Bob Smith
+2024-01-19,P013,Tablet,Electronics,2,699.99,1399.98,C109,East,Charlie Brown
+2024-01-20,P014,Desk Organizer,Furniture,10,24.99,249.90,C110,West,Diana Prince
+2024-01-21,P001,Laptop Pro,Electronics,2,1299.99,2599.98,C111,North,Eve Wilson
+2024-01-22,P015,External SSD,Electronics,8,129.99,1039.92,C112,South,Frank Miller
+2024-01-23,P002,Office Chair,Furniture,4,249.99,999.96,C113,East,Grace Lee
+2024-01-24,P016,USB Hub,Electronics,12,34.99,419.88,C114,West,Henry Davis
+2024-01-25,P009,Headphones,Electronics,3,149.99,449.97,C115,North,Eve Wilson
+2024-01-26,P017,Whiteboard,Furniture,2,89.99,179.98,C116,South,Frank Miller
+2024-01-27,P005,Monitor 4K,Electronics,1,449.99,449.99,C117,East,Grace Lee
+2024-01-28,P018,Mouse Pad,Electronics,20,14.99,299.80,C118,West,Henry Davis
+2024-01-29,P001,Laptop Pro,Electronics,4,1299.99,5199.96,C119,North,Eve Wilson
+2024-01-30,P019,Cable Management,Furniture,15,19.99,299.85,C120,South,Frank Miller
+2024-01-31,P020,Docking Station,Electronics,3,179.99,539.97,C121,East,Grace Lee

@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  pandas-mcp-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: pandas-mcp-server
+    ports:
+      - "8000:8000"
+    environment:
+      - MCP_SERVER_HOST=0.0.0.0
+      - MCP_SERVER_PORT=8000
+      - MCP_SERVER_TRANSPORT=sse
+      - MCP_LOG_LEVEL=INFO
+      - MCP_MAX_DATAFRAME_SIZE_MB=100
+      - MCP_MAX_FILE_SIZE_MB=100
+    volumes:
+      # Mount data directory for persistent data files
+      - ./data:/app/data
+      # Mount charts directory to access generated charts
+      - ./charts:/app/charts
+      # Mount logs for debugging
+      - ./logs:/app/logs
+    restart: unless-stopped
+    networks:
+      - mcp-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  # Optional: OpenAI Client service
+  pandas-mcp-client:
+    build:
+      context: .
+      dockerfile: Dockerfile.client
+    container_name: pandas-mcp-client
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OPENAI_MODEL=${OPENAI_MODEL:-gpt-4-turbo-preview}
+      - MCP_SERVER_URL=http://pandas-mcp-server:8000/sse
+    volumes:
+      - ./data:/app/data
+    networks:
+      - mcp-network
+    depends_on:
+      pandas-mcp-server:
+        condition: service_healthy
+    stdin_open: true
+    tty: true
+    command: ["python", "client.py", "http://pandas-mcp-server:8000/sse"]
+
+networks:
+  mcp-network:
+    driver: bridge
