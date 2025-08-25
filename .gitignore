@@ -5,9 +5,13 @@ build/
 dist/
 wheels/
 *.egg-info
+.gitignore
 
 # Virtual environments
 .venv
 
 # Charts testing
 charts/
+pandas_mcp.log
+*.log
+.env

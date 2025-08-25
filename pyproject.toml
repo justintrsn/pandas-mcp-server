@@ -1,7 +1,104 @@
 [project]
 name = "pandas-mcp-server"
 version = "0.1.0"
-description = "Add your description here"
+description = "A powerful MCP server for pandas data analysis with interactive Chart.js visualizations"
+authors = [
+    {name = "Justin Trisno", email = "justin.trisno@gmail.com"}
+]
 readme = "README.md"
+license = {text = "MIT"}
 requires-python = ">=3.10"
-dependencies = []
+keywords = [
+    "mcp",
+    "pandas",
+    "data-analysis",
+    "visualization",
+    "charts",
+    "excel",
+    "csv",
+    "json",
+    "parquet"
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Information Analysis",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+# Core dependencies
+dependencies = [
+    # MCP Framework
+    "fastmcp>=0.4.0",
+    "mcp[cli]>=1.1.0",
+    
+    # Data Processing
+    "pandas>=2.0.0",
+    "numpy>=1.24.0",
+    "scipy>=1.10.0",
+    
+    # File Format Support
+    "openpyxl>=3.1.0",      # Excel files
+    "pyarrow>=14.0.0",      # Parquet files
+    "xlrd>=2.0.0",          # Legacy Excel
+    "odfpy>=1.4.0",         # OpenDocument spreadsheets
+    "lxml>=4.9.0",          # XML/HTML parsing
+    "html5lib>=1.1",        # HTML parsing
+    
+    # Server & Async
+    "uvicorn[standard]>=0.25.0",
+    "httpx>=0.25.0",
+    "aiofiles>=23.0.0",
+    "python-multipart>=0.0.6",
+    "sse-starlette>=1.8.0",
+    "aiohttp>=3.9.0",
+    "nest-asyncio>=1.5.0",
+    
+    # Utilities
+    "python-dotenv>=1.0.0",
+    "psutil>=5.9.0",
+    "chardet==5.2.0",
+    
+    # Text Formatting
+    "tabulate>=0.9.0",
+    "rich>=13.0.0",
+    "asciichartpy>=1.5.0",
+]
+
+[project.optional-dependencies]
+# Development dependencies
+dev = [
+    "pytest>=7.4.0",
+    "pytest-asyncio>=0.21.0",
+    "pytest-cov>=4.1.0",
+    "black>=23.0.0",
+    "ruff>=0.1.0",
+    "mypy>=1.7.0",
+    "ipython>=8.0.0",
+    "jupyter>=1.0.0",
+]
+
+# Visualization extras (optional heavy dependencies)
+viz-extras = [
+    "matplotlib>=3.7.0",
+    "seaborn>=0.12.0",
+    "plotly>=5.17.0",
+    "kaleido>=0.2.1",  # For static image export
+]
+
+# HDF5 support (optional, can have installation issues)
+hdf5 = [
+    "tables>=3.8.0",
+]
+
+# All optional dependencies
+all = [
+    "pandas-mcp-server[dev,viz-extras,hdf5]",
+]
