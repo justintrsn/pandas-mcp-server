@@ -97,6 +97,7 @@ class TestRunner:
         print("  • server.py:     Thin MCP layer ✓")
         print("  • core/tools.py: Orchestration layer ✓")
         print("  • core modules:  Implementation with validation ✓")
+        print("  • visualization: Modular chart system ✓")
         print("  • test modules:  Modular test architecture ✓")
         
         # Final verdict
@@ -127,6 +128,7 @@ def main():
     print("  • Modular test design")
     print("  • Component-specific test files")
     print("  • Comprehensive coverage")
+    print("  • Visualization testing")
     
     runner = TestRunner()
     
@@ -160,6 +162,13 @@ def main():
         test_modules.append(("Code Execution", test_code_execution))
     except ImportError as e:
         print(f"⚠️  Could not import test_execution: {e}")
+    
+    # 5. Test Visualization Module (NEW)
+    try:
+        from test_visualization import test_visualization_module
+        test_modules.append(("Visualization", test_visualization_module))
+    except ImportError as e:
+        print(f"⚠️  Could not import test_visualization: {e}")
     
     # Run all available test modules
     if not test_modules:

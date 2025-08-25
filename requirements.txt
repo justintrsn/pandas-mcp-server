@@ -5,6 +5,7 @@ mcp[cli]>=1.1.0
 # Data processing
 pandas>=2.0.0
 numpy>=1.24.0
+scipy>=1.15.0
 
 # File format support
 openpyxl>=3.1.0      # Excel files

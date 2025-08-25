@@ -399,3 +399,193 @@
 2025-08-22 12:28:18,945 - core.tools - INFO - Code executed successfully, result type: dataframe
 2025-08-22 12:28:18,945 - core.tools - INFO - Getting execution context for session 'exec_test'
 2025-08-22 12:28:18,946 - core.tools - INFO - Clearing session: exec_test
+2025-08-25 11:08:42,891 - core.tools - INFO - Orchestrating metadata extraction for: test/test_metadata.csv
+2025-08-25 11:08:42,891 - core.metadata - INFO - Extracting metadata from: test/test_metadata.csv
+2025-08-25 11:08:42,892 - core.metadata - INFO - File size: 0.00MB, Extension: csv
+2025-08-25 11:08:42,892 - core.metadata - INFO - Detected encoding: ascii (confidence: 1.00)
+2025-08-25 11:08:42,892 - core.metadata - INFO - Detected CSV parameters: delimiter=',', has_header=True
+2025-08-25 11:08:42,892 - core.metadata - INFO - Reading CSV with delimiter ',' and encoding 'ascii'
+2025-08-25 11:08:42,894 - core.metadata - INFO - Extracting DataFrame metadata: (5, 4)
+2025-08-25 11:08:42,933 - core.tools - INFO - Successfully extracted metadata from test_metadata.csv: 5 rows, 4 columns
+2025-08-25 11:08:43,040 - core.tools - INFO - Orchestrating metadata extraction for: test/test_metadata.xlsx
+2025-08-25 11:08:43,040 - core.metadata - INFO - Extracting metadata from: test/test_metadata.xlsx
+2025-08-25 11:08:43,040 - core.metadata - INFO - File size: 0.01MB, Extension: xlsx
+2025-08-25 11:08:43,040 - core.metadata - INFO - Reading Excel file: test/test_metadata.xlsx
+2025-08-25 11:08:43,049 - core.metadata - INFO - Analyzing sheet: Sheet1
+2025-08-25 11:08:43,054 - core.metadata - INFO - Extracting DataFrame metadata: (3, 2)
+2025-08-25 11:08:43,073 - core.metadata - INFO - Analyzing sheet: Sheet2
+2025-08-25 11:08:43,077 - core.metadata - INFO - Extracting DataFrame metadata: (3, 2)
+2025-08-25 11:08:43,096 - core.tools - INFO - Successfully extracted metadata from test_metadata.xlsx: 0 rows, 0 columns
+2025-08-25 11:08:43,096 - core.tools - INFO - Orchestrating metadata extraction for: test/test_metadata.json
+2025-08-25 11:08:43,096 - core.metadata - INFO - Extracting metadata from: test/test_metadata.json
+2025-08-25 11:08:43,096 - core.metadata - INFO - File size: 0.00MB, Extension: json
+2025-08-25 11:08:43,096 - core.metadata - INFO - Reading JSON file: test/test_metadata.json
+2025-08-25 11:08:43,098 - core.metadata - INFO - Successfully parsed JSON with orientation: records
+2025-08-25 11:08:43,098 - core.metadata - INFO - Extracting DataFrame metadata: (3, 3)
+2025-08-25 11:08:43,115 - core.tools - INFO - Successfully extracted metadata from test_metadata.json: 3 rows, 3 columns
+2025-08-25 11:08:43,115 - core.tools - INFO - Orchestrating metadata extraction for: test/test_mixed.csv
+2025-08-25 11:08:43,115 - core.metadata - INFO - Extracting metadata from: test/test_mixed.csv
+2025-08-25 11:08:43,116 - core.metadata - INFO - File size: 0.00MB, Extension: csv
+2025-08-25 11:08:43,116 - core.metadata - INFO - Detected encoding: ascii (confidence: 1.00)
+2025-08-25 11:08:43,116 - core.metadata - INFO - Detected CSV parameters: delimiter=',', has_header=True
+2025-08-25 11:08:43,116 - core.metadata - INFO - Reading CSV with delimiter ',' and encoding 'ascii'
+2025-08-25 11:08:43,117 - core.metadata - INFO - Extracting DataFrame metadata: (3, 5)
+2025-08-25 11:08:43,151 - core.tools - INFO - Successfully extracted metadata from test_mixed.csv: 3 rows, 5 columns
+2025-08-25 11:08:43,161 - core.tools - INFO - Orchestrating metadata extraction for: test/test_large.csv
+2025-08-25 11:08:43,161 - core.metadata - INFO - Extracting metadata from: test/test_large.csv
+2025-08-25 11:08:43,161 - core.metadata - INFO - File size: 0.01MB, Extension: csv
+2025-08-25 11:08:43,167 - core.metadata - INFO - Detected encoding: ascii (confidence: 1.00)
+2025-08-25 11:08:43,168 - core.metadata - INFO - Detected CSV parameters: delimiter=',', has_header=True
+2025-08-25 11:08:43,168 - core.metadata - INFO - Reading CSV with delimiter ',' and encoding 'ascii'
+2025-08-25 11:08:43,169 - core.metadata - INFO - Extracting DataFrame metadata: (1000, 3)
+2025-08-25 11:08:43,194 - core.tools - INFO - Successfully extracted metadata from test_large.csv: 1000 rows, 3 columns
+2025-08-25 11:08:43,194 - core.tools - INFO - Orchestrating metadata extraction for: test/test_quality.csv
+2025-08-25 11:08:43,194 - core.metadata - INFO - Extracting metadata from: test/test_quality.csv
+2025-08-25 11:08:43,194 - core.metadata - INFO - File size: 0.00MB, Extension: csv
+2025-08-25 11:08:43,195 - core.metadata - INFO - Detected encoding: ascii (confidence: 1.00)
+2025-08-25 11:08:43,195 - core.metadata - INFO - Detected CSV parameters: delimiter=',', has_header=True
+2025-08-25 11:08:43,195 - core.metadata - INFO - Reading CSV with delimiter ',' and encoding 'ascii'
+2025-08-25 11:08:43,196 - core.metadata - INFO - Extracting DataFrame metadata: (5, 3)
+2025-08-25 11:08:43,213 - core.tools - INFO - Successfully extracted metadata from test_quality.csv: 5 rows, 3 columns
+2025-08-25 11:08:43,213 - core.tools - INFO - Orchestrating data loading: test/test_load.csv -> DataFrame 'test_csv'
+2025-08-25 11:08:43,213 - core.data_loader - INFO - Loading file 'test/test_load.csv' as DataFrame 'test_csv' in session 'loader_test'
+2025-08-25 11:08:43,214 - core.data_loader - INFO - Using .csv loader with options: {}
+2025-08-25 11:08:43,214 - core.data_loader - INFO - Loading CSV with options: {}
+2025-08-25 11:08:43,223 - core.data_loader - INFO - Loaded DataFrame: (3, 4), Memory: 0.00MB
+2025-08-25 11:08:43,224 - core.data_loader - INFO - Successfully stored DataFrame 'test_csv': DataFrame 'test_csv' added successfully (0.00MB)
+2025-08-25 11:08:43,225 - core.tools - INFO - Successfully loaded test/test_load.csv as 'test_csv'
+2025-08-25 11:08:43,225 - core.tools - INFO - Orchestrating data loading: test/test_load.tsv -> DataFrame 'test_tsv'
+2025-08-25 11:08:43,225 - core.data_loader - INFO - Loading file 'test/test_load.tsv' as DataFrame 'test_tsv' in session 'loader_test'
+2025-08-25 11:08:43,225 - core.data_loader - INFO - Using .tsv loader with options: {'delimiter': '\t'}
+2025-08-25 11:08:43,225 - core.data_loader - INFO - Loading TSV with options: {'delimiter': '\t'}
+2025-08-25 11:08:43,226 - core.data_loader - INFO - Loaded DataFrame: (2, 3), Memory: 0.00MB
+2025-08-25 11:08:43,228 - core.data_loader - INFO - Successfully stored DataFrame 'test_tsv': DataFrame 'test_tsv' added successfully (0.00MB)
+2025-08-25 11:08:43,229 - core.tools - INFO - Successfully loaded test/test_load.tsv as 'test_tsv'
+2025-08-25 11:08:43,236 - core.tools - INFO - Orchestrating data loading: test/test_load.xlsx -> DataFrame 'test_excel'
+2025-08-25 11:08:43,236 - core.data_loader - INFO - Loading file 'test/test_load.xlsx' as DataFrame 'test_excel' in session 'loader_test'
+2025-08-25 11:08:43,236 - core.data_loader - INFO - Using .xlsx loader with options: {}
+2025-08-25 11:08:43,236 - core.data_loader - INFO - Loading Excel with options: {}
+2025-08-25 11:08:43,241 - core.data_loader - INFO - Loaded DataFrame: (3, 3), Memory: 0.00MB
+2025-08-25 11:08:43,244 - core.data_loader - INFO - Successfully stored DataFrame 'test_excel': DataFrame 'test_excel' added successfully (0.00MB)
+2025-08-25 11:08:43,245 - core.tools - INFO - Successfully loaded test/test_load.xlsx as 'test_excel'
+2025-08-25 11:08:43,245 - core.tools - INFO - Orchestrating data loading: test/test_load.xlsx -> DataFrame 'test_excel_sheet2'
+2025-08-25 11:08:43,245 - core.data_loader - INFO - Loading file 'test/test_load.xlsx' as DataFrame 'test_excel_sheet2' in session 'loader_test'
+2025-08-25 11:08:43,245 - core.data_loader - INFO - Using .xlsx loader with options: {'sheet_name': 'Sheet2'}
+2025-08-25 11:08:43,245 - core.data_loader - INFO - Loading Excel with options: {'sheet_name': 'Sheet2'}
+2025-08-25 11:08:43,250 - core.data_loader - INFO - Loaded DataFrame: (3, 3), Memory: 0.00MB
+2025-08-25 11:08:43,253 - core.data_loader - INFO - Successfully stored DataFrame 'test_excel_sheet2': DataFrame 'test_excel_sheet2' added successfully (0.00MB)
+2025-08-25 11:08:43,254 - core.tools - INFO - Successfully loaded test/test_load.xlsx as 'test_excel_sheet2'
+2025-08-25 11:08:43,254 - core.tools - INFO - Orchestrating data loading: test/test_load.json -> DataFrame 'test_json'
+2025-08-25 11:08:43,254 - core.data_loader - INFO - Loading file 'test/test_load.json' as DataFrame 'test_json' in session 'loader_test'
+2025-08-25 11:08:43,254 - core.data_loader - INFO - Using .json loader with options: {}
+2025-08-25 11:08:43,254 - core.data_loader - INFO - Loading JSON with options: {}
+2025-08-25 11:08:43,256 - core.data_loader - INFO - Loaded DataFrame: (3, 3), Memory: 0.00MB
+2025-08-25 11:08:43,260 - core.data_loader - INFO - Successfully stored DataFrame 'test_json': DataFrame 'test_json' added successfully (0.00MB)
+2025-08-25 11:08:43,261 - core.tools - INFO - Successfully loaded test/test_load.json as 'test_json'
+2025-08-25 11:08:43,281 - core.tools - INFO - Orchestrating data loading: test/test_load.parquet -> DataFrame 'test_parquet'
+2025-08-25 11:08:43,282 - core.data_loader - INFO - Loading file 'test/test_load.parquet' as DataFrame 'test_parquet' in session 'loader_test'
+2025-08-25 11:08:43,282 - core.data_loader - INFO - Using .parquet loader with options: {}
+2025-08-25 11:08:43,282 - core.data_loader - INFO - Loading Parquet with options: {}
+2025-08-25 11:08:43,299 - core.data_loader - INFO - Loaded DataFrame: (5, 3), Memory: 0.00MB
+2025-08-25 11:08:43,303 - core.data_loader - INFO - Successfully stored DataFrame 'test_parquet': DataFrame 'test_parquet' added successfully (0.00MB)
+2025-08-25 11:08:43,304 - core.tools - INFO - Successfully loaded test/test_load.parquet as 'test_parquet'
+2025-08-25 11:08:43,304 - core.tools - INFO - Previewing file: test/test_preview.csv
+2025-08-25 11:08:43,304 - core.data_loader - INFO - Loading CSV with options: {'nrows': 10}
+2025-08-25 11:08:43,306 - core.tools - INFO - Listing DataFrames for session: loader_test
+2025-08-25 11:08:43,306 - core.tools - INFO - Getting info for DataFrame 'test_csv' in session 'loader_test'
+2025-08-25 11:08:43,307 - core.tools - INFO - Getting supported file formats
+2025-08-25 11:08:43,307 - core.tools - INFO - Clearing session: loader_test
+2025-08-25 11:08:43,307 - core.tools - INFO - Orchestrating data loading: test/test_exec.csv -> DataFrame 'products'
+2025-08-25 11:08:43,308 - core.data_loader - INFO - Loading file 'test/test_exec.csv' as DataFrame 'products' in session 'exec_test'
+2025-08-25 11:08:43,308 - core.data_loader - INFO - Using .csv loader with options: {}
+2025-08-25 11:08:43,308 - core.data_loader - INFO - Loading CSV with options: {}
+2025-08-25 11:08:43,309 - core.data_loader - INFO - Loaded DataFrame: (3, 3), Memory: 0.00MB
+2025-08-25 11:08:43,310 - core.data_loader - INFO - Successfully stored DataFrame 'products': DataFrame 'products' added successfully (0.00MB)
+2025-08-25 11:08:43,311 - core.tools - INFO - Successfully loaded test/test_exec.csv as 'products'
+2025-08-25 11:08:43,311 - core.tools - INFO - Orchestrating pandas code execution in session exec_test
+2025-08-25 11:08:43,311 - core.execution - INFO - Executing pandas code in session 'exec_test' on DataFrame 'products': products.head(2)...
+2025-08-25 11:08:43,313 - core.execution - INFO - Code executed successfully, result type: dataframe
+2025-08-25 11:08:43,313 - core.tools - INFO - Code executed successfully, result type: dataframe
+2025-08-25 11:08:43,313 - core.tools - INFO - Orchestrating pandas code execution in session exec_test
+2025-08-25 11:08:43,313 - core.execution - INFO - Executing pandas code in session 'exec_test' on DataFrame 'products': products.describe()...
+2025-08-25 11:08:43,317 - core.execution - INFO - Code executed successfully, result type: dataframe
+2025-08-25 11:08:43,317 - core.tools - INFO - Code executed successfully, result type: dataframe
+2025-08-25 11:08:43,317 - core.tools - INFO - Orchestrating pandas code execution in session exec_test
+2025-08-25 11:08:43,317 - core.execution - INFO - Executing pandas code in session 'exec_test' on DataFrame 'products': products['quantity'].sum()...
+2025-08-25 11:08:43,317 - core.execution - INFO - Code executed successfully, result type: scalar
+2025-08-25 11:08:43,317 - core.tools - INFO - Code executed successfully, result type: scalar
+2025-08-25 11:08:43,317 - core.tools - INFO - Orchestrating pandas code execution in session exec_test
+2025-08-25 11:08:43,318 - core.execution - INFO - Executing pandas code in session 'exec_test' on DataFrame 'products': products['total'] = products['quantity'] * products['price']...
+2025-08-25 11:08:43,318 - core.execution - INFO - Code executed successfully, result type: none
+2025-08-25 11:08:43,318 - core.tools - INFO - Code executed successfully, result type: none
+2025-08-25 11:08:43,318 - core.tools - INFO - Orchestrating pandas code execution in session exec_test
+2025-08-25 11:08:43,318 - core.execution - INFO - Executing pandas code in session 'exec_test' on DataFrame 'products': products[products['quantity'] > 5]...
+2025-08-25 11:08:43,320 - core.execution - INFO - Code executed successfully, result type: dataframe
+2025-08-25 11:08:43,320 - core.tools - INFO - Code executed successfully, result type: dataframe
+2025-08-25 11:08:43,320 - core.tools - INFO - Orchestrating pandas code execution in session exec_test
+2025-08-25 11:08:43,320 - core.execution - INFO - Executing pandas code in session 'exec_test' on DataFrame 'products': __import__('os').system('ls')...
+2025-08-25 11:08:43,320 - core.execution - WARNING - Security validation failed: Forbidden operation detected: __import__
+2025-08-25 11:08:43,320 - core.tools - WARNING - Code execution failed: Security validation failed: Forbidden operation detected: __import__
+2025-08-25 11:08:43,320 - core.tools - INFO - Orchestrating pandas code execution in session exec_test
+2025-08-25 11:08:43,320 - core.execution - INFO - Executing pandas code in session 'exec_test' on DataFrame 'products': exec('print(1)')...
+2025-08-25 11:08:43,320 - core.execution - WARNING - Security validation failed: Forbidden operation detected: exec
+2025-08-25 11:08:43,321 - core.tools - WARNING - Code execution failed: Security validation failed: Forbidden operation detected: exec
+2025-08-25 11:08:43,321 - core.tools - INFO - Orchestrating pandas code execution in session exec_test
+2025-08-25 11:08:43,321 - core.execution - INFO - Executing pandas code in session 'exec_test' on DataFrame 'products': eval('1+1')...
+2025-08-25 11:08:43,321 - core.execution - WARNING - Security validation failed: Forbidden operation detected: eval
+2025-08-25 11:08:43,321 - core.tools - WARNING - Code execution failed: Security validation failed: Forbidden operation detected: eval
+2025-08-25 11:08:43,321 - core.tools - INFO - Orchestrating pandas code execution in session exec_test
+2025-08-25 11:08:43,321 - core.execution - INFO - Executing pandas code in session 'exec_test' on DataFrame 'products': open('/etc/passwd')...
+2025-08-25 11:08:43,321 - core.execution - WARNING - Security validation failed: Forbidden operation detected: open
+2025-08-25 11:08:43,321 - core.tools - WARNING - Code execution failed: Security validation failed: Forbidden operation detected: open
+2025-08-25 11:08:43,321 - core.tools - INFO - Orchestrating pandas code execution in session exec_test
+2025-08-25 11:08:43,321 - core.execution - INFO - Executing pandas code in session 'exec_test' on DataFrame 'products': import subprocess...
+2025-08-25 11:08:43,321 - core.execution - WARNING - Security validation failed: Forbidden operation detected: subprocess
+2025-08-25 11:08:43,321 - core.tools - WARNING - Code execution failed: Security validation failed: Forbidden operation detected: subprocess
+2025-08-25 11:08:43,321 - core.tools - INFO - Validating pandas code for DataFrame 'products'
+2025-08-25 11:08:43,321 - core.execution - INFO - Validating pandas code: products.head()...
+2025-08-25 11:08:43,321 - core.execution - INFO - Code validation passed
+2025-08-25 11:08:43,321 - core.tools - INFO - Validating pandas code for DataFrame 'products'
+2025-08-25 11:08:43,321 - core.execution - INFO - Validating pandas code: __import__('os')...
+2025-08-25 11:08:43,321 - core.tools - INFO - Orchestrating pandas code execution in session exec_test
+2025-08-25 11:08:43,321 - core.execution - INFO - Executing pandas code in session 'exec_test' on DataFrame 'products': products.groupby('product')['price'].mean()...
+2025-08-25 11:08:43,323 - core.execution - INFO - Code executed successfully, result type: series
+2025-08-25 11:08:43,323 - core.tools - INFO - Code executed successfully, result type: series
+2025-08-25 11:08:43,323 - core.tools - INFO - Orchestrating pandas code execution in session exec_test
+2025-08-25 11:08:43,323 - core.execution - INFO - Executing pandas code in session 'exec_test' on DataFrame 'products': products.sort_values('price').head(2)...
+2025-08-25 11:08:43,325 - core.execution - INFO - Code executed successfully, result type: dataframe
+2025-08-25 11:08:43,325 - core.tools - INFO - Code executed successfully, result type: dataframe
+2025-08-25 11:08:43,325 - core.tools - INFO - Getting execution context for session 'exec_test'
+2025-08-25 11:08:43,326 - core.tools - INFO - Clearing session: exec_test
+2025-08-25 11:08:43,331 - core.tools - INFO - Getting supported chart types
+2025-08-25 11:08:43,331 - core.tools - INFO - Orchestrating chart suggestions for DataFrame 'sales'
+2025-08-25 11:08:43,331 - core.tools - INFO - Generated 4 chart suggestions
+2025-08-25 11:08:43,331 - core.tools - INFO - Orchestrating chart creation: bar for DataFrame 'sales'
+2025-08-25 11:08:43,331 - core.visualization - INFO - Creating bar visualization for DataFrame 'sales'
+2025-08-25 11:08:43,333 - core.charts.base_chart - INFO - Chart saved to /home/justin/Work/Huawei/pandas-mcp-server/charts/bar_sales_bar_20250825_110843.html
+2025-08-25 11:08:43,333 - core.visualization - INFO - Successfully created bar chart: /home/justin/Work/Huawei/pandas-mcp-server/charts/bar_sales_bar_20250825_110843.html
+2025-08-25 11:08:43,333 - core.tools - INFO - Chart created successfully: /home/justin/Work/Huawei/pandas-mcp-server/charts/bar_sales_bar_20250825_110843.html
+2025-08-25 11:08:43,333 - core.tools - INFO - Orchestrating time series chart for DataFrame 'sales'
+2025-08-25 11:08:43,333 - core.visualization - INFO - Creating line visualization for DataFrame 'sales'
+2025-08-25 11:08:43,334 - core.charts.base_chart - INFO - Chart saved to /home/justin/Work/Huawei/pandas-mcp-server/charts/line_sales_line_20250825_110843.html
+2025-08-25 11:08:43,334 - core.visualization - INFO - Successfully created line chart: /home/justin/Work/Huawei/pandas-mcp-server/charts/line_sales_line_20250825_110843.html
+2025-08-25 11:08:43,334 - core.tools - INFO - Orchestrating chart creation: pie for DataFrame 'sales'
+2025-08-25 11:08:43,334 - core.visualization - INFO - Creating pie visualization for DataFrame 'sales'
+2025-08-25 11:08:43,335 - core.charts.base_chart - INFO - Chart saved to /home/justin/Work/Huawei/pandas-mcp-server/charts/pie_sales_pie_20250825_110843.html
+2025-08-25 11:08:43,335 - core.visualization - INFO - Successfully created pie chart: /home/justin/Work/Huawei/pandas-mcp-server/charts/pie_sales_pie_20250825_110843.html
+2025-08-25 11:08:43,335 - core.tools - INFO - Chart created successfully: /home/justin/Work/Huawei/pandas-mcp-server/charts/pie_sales_pie_20250825_110843.html
+2025-08-25 11:08:43,335 - core.tools - INFO - Orchestrating chart creation: scatter for DataFrame 'features'
+2025-08-25 11:08:43,336 - core.visualization - INFO - Creating scatter visualization for DataFrame 'features'
+2025-08-25 11:08:43,341 - core.charts.base_chart - INFO - Chart saved to /home/justin/Work/Huawei/pandas-mcp-server/charts/scatter_features_scatter_20250825_110843.html
+2025-08-25 11:08:43,341 - core.visualization - INFO - Successfully created scatter chart: /home/justin/Work/Huawei/pandas-mcp-server/charts/scatter_features_scatter_20250825_110843.html
+2025-08-25 11:08:43,341 - core.tools - INFO - Chart created successfully: /home/justin/Work/Huawei/pandas-mcp-server/charts/scatter_features_scatter_20250825_110843.html
+2025-08-25 11:08:43,341 - core.tools - INFO - Orchestrating correlation heatmap for DataFrame 'features'
+2025-08-25 11:08:43,341 - core.visualization - INFO - Creating heatmap visualization for DataFrame 'features'
+2025-08-25 11:08:43,343 - core.charts.base_chart - INFO - Chart saved to /home/justin/Work/Huawei/pandas-mcp-server/charts/matrix_features_heatmap_20250825_110843.html
+2025-08-25 11:08:43,343 - core.visualization - INFO - Successfully created heatmap chart: /home/justin/Work/Huawei/pandas-mcp-server/charts/matrix_features_heatmap_20250825_110843.html
+2025-08-25 11:08:43,343 - core.tools - INFO - Orchestrating chart creation: bar for DataFrame 'nonexistent'
+2025-08-25 11:08:43,343 - core.visualization - INFO - Creating bar visualization for DataFrame 'nonexistent'
+2025-08-25 11:08:43,343 - core.tools - ERROR - Chart creation failed: DataFrame 'nonexistent' not found in session 'test_session'
+2025-08-25 11:08:43,343 - core.tools - INFO - Orchestrating chart creation: invalid_type for DataFrame 'sales'
+2025-08-25 11:08:43,343 - core.visualization - INFO - Creating invalid_type visualization for DataFrame 'sales'
+2025-08-25 11:08:43,343 - core.tools - ERROR - Chart creation failed: Unsupported chart type: invalid_type. Supported types: bar, line, pie, doughnut, scatter, bubble, heatmap, correlation

@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feature Correlations</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 30px;
+            width: 100%;
+            max-width: 800px;
+            animation: slideIn 0.5s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 24px;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 600px;
+            margin-bottom: 30px;
+        }
+        
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            padding: 20px;
+            background: #f7f7f7;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            min-width: 150px;
+        }
+        
+        .control-group label {
+            font-size: 12px;
+            color: #666;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .control-group select,
+        .control-group input {
+            padding: 8px 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+        
+        .control-group select:hover,
+        .control-group input:hover {
+            border-color: #667eea;
+        }
+        
+        .control-group select:focus,
+        .control-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .info-panel {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f0f4ff;
+            border-left: 4px solid #667eea;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #555;
+        }
+        
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+        
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .slider {
+            background-color: #667eea;
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 20px;
+            }
+            
+            .controls {
+                flex-direction: column;
+            }
+            
+            .control-group {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Feature Correlations</h1>
+        <div class="chart-container">
+            <canvas id="myChart"></canvas>
+        </div>
+        
+        <div class="controls">
+            
+            <div class="control-group">
+                <label>Animation</label>
+                <label class="switch">
+                    <input type="checkbox" checked onchange="toggleAnimation()">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        
+
+            <div class="control-group">
+                <label>Legend</label>
+                <label class="switch">
+                    <input type="checkbox" checked onchange="toggleLegend()">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        
+
+            <div class="control-group">
+                <label>&nbsp;</label>
+                <button onclick="downloadChart()">Download</button>
+            </div>
+        
+
+            <div class="control-group">
+                <label>Color Scheme</label>
+                <select onchange="changeColorScheme(this.value)">
+                    <option value="viridis">Viridis</option>
+                    <option value="coolwarm">Cool-Warm</option>
+                    <option value="grayscale">Grayscale</option>
+                </select>
+            </div>
+        
+
+            <div class="control-group">
+                <label>Cell Size</label>
+                <input type="range" min="20" max="100" step="10" value="50" 
+                       onchange="changeCellSize(this.value)">
+            </div>
+        
+
+            <div class="control-group">
+                <label>Show Values</label>
+                <label class="switch">
+                    <input type="checkbox" onchange="toggleValues(this.checked)">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        
+
+        <div class="color-scale" style="margin-top: 20px; padding: 10px; background: #f7f7f7; border-radius: 8px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <span style="font-size: 12px;">-1.00</span>
+                <div style="flex: 1; height: 20px; background: linear-gradient(to right, #440154, #21918c, #fde725); border-radius: 4px;"></div>
+                <span style="font-size: 12px;">1.00</span>
+            </div>
+        </div>
+        
+        </div>
+        
+        <div class="info-panel">
+            <strong>Chart Type:</strong> matrix<br>
+            <strong>Interactive:</strong> Hover over data points for details. Use controls to customize.
+        </div>
+    </div>
+    
+    <script>
+        // Chart data and options
+        const chartData = {
+  "datasets": [
+    {
+      "label": "Heatmap",
+      "data": [
+        {
+          "x": "feature_1",
+          "y": "feature_1",
+          "v": 1.0
+        },
+        {
+          "x": "feature_2",
+          "y": "feature_1",
+          "v": 0.962
+        },
+        {
+          "x": "feature_3",
+          "y": "feature_1",
+          "v": 0.044
+        },
+        {
+          "x": "feature_4",
+          "y": "feature_1",
+          "v": 0.033
+        },
+        {
+          "x": "target",
+          "y": "feature_1",
+          "v": 0.822
+        },
+        {
+          "x": "feature_1",
+          "y": "feature_2",
+          "v": 0.962
+        },
+        {
+          "x": "feature_2",
+          "y": "feature_2",
+          "v": 1.0
+        },
+        {
+          "x": "feature_3",
+          "y": "feature_2",
+          "v": 0.042
+        },
+        {
+          "x": "feature_4",
+          "y": "feature_2",
+          "v": 0.047
+        },
+        {
+          "x": "target",
+          "y": "feature_2",
+          "v": 0.78
+        },
+        {
+          "x": "feature_1",
+          "y": "feature_3",
+          "v": 0.044
+        },
+        {
+          "x": "feature_2",
+          "y": "feature_3",
+          "v": 0.042
+        },
+        {
+          "x": "feature_3",
+          "y": "feature_3",
+          "v": 1.0
+        },
+        {
+          "x": "feature_4",
+          "y": "feature_3",
+          "v": 0.049
+        },
+        {
+          "x": "target",
+          "y": "feature_3",
+          "v": 0.494
+        },
+        {
+          "x": "feature_1",
+          "y": "feature_4",
+          "v": 0.033
+        },
+        {
+          "x": "feature_2",
+          "y": "feature_4",
+          "v": 0.047
+        },
+        {
+          "x": "feature_3",
+          "y": "feature_4",
+          "v": 0.049
+        },
+        {
+          "x": "feature_4",
+          "y": "feature_4",
+          "v": 1.0
+        },
+        {
+          "x": "target",
+          "y": "feature_4",
+          "v": 0.048
+        },
+        {
+          "x": "feature_1",
+          "y": "target",
+          "v": 0.822
+        },
+        {
+          "x": "feature_2",
+          "y": "target",
+          "v": 0.78
+        },
+        {
+          "x": "feature_3",
+          "y": "target",
+          "v": 0.494
+        },
+        {
+          "x": "feature_4",
+          "y": "target",
+          "v": 0.048
+        },
+        {
+          "x": "target",
+          "y": "target",
+          "v": 1.0
+        }
+      ],
+      "backgroundColor": "dynamic",
+      "borderWidth": 1,
+      "borderColor": "#fff",
+      "width": 50,
+      "height": 50
+    }
+  ],
+  "labels": {
+    "x": [
+      "feature_1",
+      "feature_2",
+      "feature_3",
+      "feature_4",
+      "target"
+    ],
+    "y": [
+      "feature_1",
+      "feature_2",
+      "feature_3",
+      "feature_4",
+      "target"
+    ]
+  },
+  "metadata": {
+    "type": "correlation",
+    "min_value": -1.0,
+    "max_value": 1.0,
+    "color_scheme": "coolwarm",
+    "shape": [
+      5,
+      5
+    ],
+    "total_cells": 25
+  }
+};
+        const chartOptions = {
+  "responsive": true,
+  "maintainAspectRatio": false,
+  "plugins": {
+    "legend": {
+      "display": false
+    },
+    "tooltip": {
+      "enabled": true,
+      "backgroundColor": "rgba(0, 0, 0, 0.8)",
+      "callbacks": {}
+    },
+    "title": {
+      "display": true,
+      "font": {
+        "size": 16
+      },
+      "text": "Feature Correlations"
+    }
+  },
+  "scales": {
+    "x": {
+      "type": "category",
+      "position": "top",
+      "grid": {
+        "display": false
+      },
+      "ticks": {
+        "maxRotation": 90,
+        "minRotation": 45,
+        "autoSkip": false
+      }
+    },
+    "y": {
+      "type": "category",
+      "grid": {
+        "display": false
+      },
+      "ticks": {
+        "autoSkip": false
+      }
+    }
+  },
+  "aspectRatio": 1,
+  "layout": {
+    "padding": 10
+  }
+};
+        
+        // Create chart
+        const ctx = document.getElementById('myChart').getContext('2d');
+        let myChart = new Chart(ctx, {
+            type: 'matrix',
+            data: chartData,
+            options: chartOptions
+        });
+        
+        // Update functions
+        function updateChart() {
+            myChart.update();
+        }
+        
+        function toggleAnimation() {
+            myChart.options.animation.duration = myChart.options.animation.duration === 0 ? 1000 : 0;
+            myChart.update();
+        }
+        
+        function changeChartType(newType) {
+            myChart.destroy();
+            myChart = new Chart(ctx, {
+                type: newType,
+                data: chartData,
+                options: chartOptions
+            });
+        }
+        
+        function downloadChart() {
+            const link = document.createElement('a');
+            link.download = 'chart.png';
+            link.href = myChart.toBase64Image();
+            link.click();
+        }
+        
+        function toggleLegend() {
+            myChart.options.plugins.legend.display = !myChart.options.plugins.legend.display;
+            myChart.update();
+        }
+        
+        
+        // Set up color functions
+        const colorSchemes = {
+            viridis: function(value, min, max) {
+                const normalized = (value - min) / (max - min);
+                const r = Math.floor(68 + normalized * 187);
+                const g = Math.floor(1 + normalized * 254);
+                const b = Math.floor(84 + normalized * 171);
+                return 'rgb(' + r + ', ' + g + ', ' + b + ')';
+            },
+            coolwarm: function(value, min, max) {
+                const normalized = (value - min) / (max - min);
+                if (normalized < 0.5) {
+                    const intensity = normalized * 2;
+                    return 'rgb(' + Math.floor(intensity * 255) + ', ' + 
+                           Math.floor(intensity * 255) + ', 255)';
+                } else {
+                    const intensity = (1 - normalized) * 2;
+                    return 'rgb(255, ' + Math.floor(intensity * 255) + ', ' + 
+                           Math.floor(intensity * 255) + ')';
+                }
+            },
+            grayscale: function(value, min, max) {
+                const normalized = (value - min) / (max - min);
+                const gray = Math.floor(normalized * 255);
+                return 'rgb(' + gray + ', ' + gray + ', ' + gray + ')';
+            }
+        };
+        
+        // Get metadata from chart data
+        const metadata = chartData.metadata || {min_value: 0, max_value: 1, color_scheme: 'viridis'};
+        let currentScheme = metadata.color_scheme || 'viridis';
+        
+        // Set initial background color function
+        myChart.data.datasets[0].backgroundColor = function(context) {
+            const value = context.dataset.data[context.dataIndex].v;
+            return colorSchemes[currentScheme](value, metadata.min_value, metadata.max_value);
+        };
+        
+        // Update the chart
+        myChart.update();
+        
+        // Custom tooltip for heatmap
+        myChart.options.plugins.tooltip.callbacks.title = function(context) {
+            const data = context[0].raw;
+            return data.y + ' vs ' + data.x;
+        };
+        
+        myChart.options.plugins.tooltip.callbacks.label = function(context) {
+            return 'Value: ' + context.raw.v;
+        };
+        
+        function changeColorScheme(scheme) {
+            currentScheme = scheme;
+            myChart.data.datasets[0].backgroundColor = function(context) {
+                const value = context.dataset.data[context.dataIndex].v;
+                return colorSchemes[scheme](value, metadata.min_value, metadata.max_value);
+            };
+            myChart.update();
+        }
+        
+        function changeCellSize(size) {
+            myChart.data.datasets[0].width = parseInt(size);
+            myChart.data.datasets[0].height = parseInt(size);
+            myChart.update();
+        }
+        
+        let showValues = false;
+        function toggleValues(show) {
+            showValues = show;
+            if (show) {
+                myChart.options.plugins.datalabels = {
+                    display: true,
+                    color: function(context) {
+                        const value = context.dataset.data[context.dataIndex].v;
+                        const normalized = (value - metadata.min_value) / 
+                                         (metadata.max_value - metadata.min_value);
+                        return normalized > 0.5 ? '#fff' : '#000';
+                    },
+                    font: {
+                        size: 10
+                    },
+                    formatter: function(value, context) {
+                        return value.v.toFixed(2);
+                    }
+                };
+            } else {
+                if (myChart.options.plugins.datalabels) {
+                    myChart.options.plugins.datalabels.display = false;
+                }
+            }
+            myChart.update();
+        }
+        
+        // Highlight row/column on hover
+        let highlightedRow = null;
+        let highlightedCol = null;
+        
+        myChart.options.onHover = function(event, elements) {
+            if (elements.length > 0) {
+                const data = elements[0].element.$context.raw;
+                highlightedRow = data.y;
+                highlightedCol = data.x;
+                
+                // Update opacity for highlighting
+                myChart.data.datasets[0].backgroundColor = function(context) {
+                    const point = context.dataset.data[context.dataIndex];
+                    const baseColor = colorSchemes[currentScheme](
+                        point.v, metadata.min_value, metadata.max_value
+                    );
+                    
+                    if (point.x === highlightedCol || point.y === highlightedRow) {
+                        return baseColor;
+                    } else {
+                        // Add transparency to non-highlighted cells
+                        return baseColor.replace('rgb', 'rgba').replace(')', ', 0.3)');
+                    }
+                };
+                myChart.update();
+            } else {
+                // Reset highlighting
+                highlightedRow = null;
+                highlightedCol = null;
+                myChart.data.datasets[0].backgroundColor = function(context) {
+                    const value = context.dataset.data[context.dataIndex].v;
+                    return colorSchemes[currentScheme](value, metadata.min_value, metadata.max_value);
+                };
+                myChart.update();
+            }
+        };
+        
+    </script>
+</body>
+</html>

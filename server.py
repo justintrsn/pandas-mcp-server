@@ -7,7 +7,7 @@ This is just the MCP interface layer that calls functions from core.tools
 import sys
 import os
 import logging
-from typing import Dict, Any, Optional
+from typing import Dict, List, Any, Optional
 from pathlib import Path
 
 # Add parent directory to path for imports
@@ -28,7 +28,12 @@ from core.tools import (
     get_supported_formats,
     clear_session,
     get_session_info,
-    get_server_info
+    get_server_info,
+    create_chart,
+    suggest_charts,
+    get_chart_types,
+    create_correlation_heatmap,
+    create_time_series_chart
 )
 
 # Import configuration
@@ -310,6 +315,203 @@ async def get_server_info_tool() -> Dict[str, Any]:
     # Just call the orchestration function from tools.py
     return get_server_info()
 
+# ============================================================================
+# Visualization Tools
+# ============================================================================
+
+@mcp.tool()
+async def create_chart_tool(
+    df_name: str,
+    chart_type: str,
+    x_column: Optional[str] = None,
+    y_columns: Optional[List[str]] = None,
+    title: Optional[str] = None,
+    session_id: Optional[str] = "default",
+    width: Optional[int] = None,
+    height: Optional[int] = None,
+    group_by: Optional[str] = None,
+    aggregate: Optional[str] = None,
+    max_points: Optional[int] = None,
+    show_trend: Optional[bool] = None,
+    color_scheme: Optional[str] = None
+) -> Dict[str, Any]:
+    """
+    Create an interactive HTML chart from a DataFrame.
+    
+    Generates beautiful, interactive charts with customization controls.
+    Supported chart types:
+    - bar: Compare values across categories (grouped, stacked, horizontal)
+    - line: Show trends over time or continuous data
+    - pie: Display proportions (also supports doughnut style)
+    - scatter: Reveal relationships between variables (supports bubble charts)
+    - heatmap: Visualize matrix data or correlations
+    
+    Args:
+        df_name: Name of the DataFrame to visualize
+        chart_type: Type of chart (bar, line, pie, scatter, heatmap)
+        x_column: Column for x-axis/labels (auto-detected if not specified)
+        y_columns: List of columns for y-axis/values (auto-detected if not specified)
+        title: Chart title
+        session_id: Session identifier (default: "default")
+        width: Chart width in pixels
+        height: Chart height in pixels
+        group_by: Column to group by for aggregation (bar charts)
+        aggregate: Aggregation function (mean, sum, count, etc.)
+        max_points: Maximum number of data points to display
+        show_trend: Show trend lines (scatter charts)
+        color_scheme: Color scheme (viridis, coolwarm, grayscale for heatmaps)
+    
+    Returns:
+        Dictionary with chart file path and visualization metadata
+    """
+    # Build options dictionary from optional parameters
+    options = {}
+    if width is not None:
+        options['width'] = width
+    if height is not None:
+        options['height'] = height
+    if group_by is not None:
+        options['group_by'] = group_by
+    if aggregate is not None:
+        options['aggregate'] = aggregate
+    if max_points is not None:
+        options['max_points'] = max_points
+    if show_trend is not None:
+        options['show_trend'] = show_trend
+    if color_scheme is not None:
+        options['color_scheme'] = color_scheme
+    
+    # Call the synchronous function from tools.py
+    return create_chart(
+        df_name=df_name,
+        chart_type=chart_type,
+        x_column=x_column,
+        y_columns=y_columns,
+        title=title,
+        session_id=session_id,
+        **options
+    )
+
+
+@mcp.tool()
+async def suggest_charts_tool(
+    df_name: str,
+    session_id: Optional[str] = "default"
+) -> Dict[str, Any]:
+    """
+    Get intelligent chart suggestions based on DataFrame characteristics.
+    
+    Analyzes the DataFrame's structure, column types, and data distribution
+    to recommend the most appropriate visualizations with optimal configurations.
+    
+    Args:
+        df_name: Name of the DataFrame to analyze
+        session_id: Session identifier (default: "default")
+    
+    Returns:
+        Dictionary with ranked chart suggestions and recommended configurations
+    """
+    return suggest_charts(df_name, session_id)
+
+
+@mcp.tool()
+async def get_chart_types_tool() -> Dict[str, Any]:
+    """
+    Get detailed information about all supported chart types.
+    
+    Returns comprehensive documentation for each chart type including:
+    - Description and best use cases
+    - Required and optional data formats
+    - Available customization options
+    - Example configurations
+    
+    Returns:
+        Dictionary with all supported chart types and their specifications
+    """
+    return get_chart_types()
+
+
+@mcp.tool()
+async def create_correlation_heatmap_tool(
+    df_name: str,
+    columns: Optional[List[str]] = None,
+    title: Optional[str] = None,
+    session_id: Optional[str] = "default",
+    color_scheme: Optional[str] = None
+) -> Dict[str, Any]:
+    """
+    Create a correlation heatmap for analyzing relationships between numeric columns.
+    
+    Generates an interactive heatmap showing correlation coefficients between
+    all numeric columns or a specified subset. Perfect for feature analysis
+    and identifying multicollinearity.
+    
+    Args:
+        df_name: Name of the DataFrame
+        columns: Specific columns to include (uses all numeric if not specified)
+        title: Chart title
+        session_id: Session identifier (default: "default")
+        color_scheme: Color scheme (viridis, coolwarm, grayscale)
+    
+    Returns:
+        Dictionary with heatmap file path and correlation statistics
+    """
+    options = {}
+    if color_scheme:
+        options['color_scheme'] = color_scheme
+    
+    return create_correlation_heatmap(
+        df_name=df_name,
+        columns=columns,
+        title=title,
+        session_id=session_id,
+        **options
+    )
+
+
+@mcp.tool()
+async def create_time_series_chart_tool(
+    df_name: str,
+    time_column: Optional[str] = None,
+    value_columns: Optional[List[str]] = None,
+    title: Optional[str] = None,
+    session_id: Optional[str] = "default",
+    fill: Optional[bool] = None,
+    tension: Optional[float] = None
+) -> Dict[str, Any]:
+    """
+    Create an optimized time series line chart.
+    
+    Automatically detects datetime columns and creates a properly formatted
+    time series visualization with intelligent resampling for large datasets.
+    
+    Args:
+        df_name: Name of the DataFrame
+        time_column: Time/date column (auto-detected if not specified)
+        value_columns: Value columns to plot (auto-detected if not specified)
+        title: Chart title
+        session_id: Session identifier (default: "default")
+        fill: Fill area under lines (default: False)
+        tension: Line curve tension 0-0.5 (default: 0.2)
+    
+    Returns:
+        Dictionary with chart file path and time series metadata
+    """
+    options = {}
+    if fill is not None:
+        options['fill'] = fill
+    if tension is not None:
+        options['tension'] = tension
+    
+    return create_time_series_chart(
+        df_name=df_name,
+        time_column=time_column,
+        value_columns=value_columns,
+        title=title,
+        session_id=session_id,
+        **options
+    )
+
 
 # ============================================================================
 # MAIN SERVER FUNCTION
@@ -342,7 +544,12 @@ def main():
         logger.info("  - clear_session_tool: Clear session data")
         logger.info("  - get_session_info_tool: Get session info")
         logger.info("  - get_server_info_tool: Get server configuration")
-        
+        logger.info("  - create_chart_tool: Create interactive charts")
+        logger.info("  - suggest_charts_tool: Get chart recommendations")
+        logger.info("  - get_chart_types_tool: List supported chart types")
+        logger.info("  - create_correlation_heatmap_tool: Create correlation matrix")
+        logger.info("  - create_time_series_chart_tool: Create time series visualization")
+                
         # Start server based on transport
         if SERVER_TRANSPORT == "sse":
             # SSE transport for HTTP
@@ -362,6 +569,11 @@ def main():
             print("  - clear_session_tool")
             print("  - get_session_info_tool")
             print("  - get_server_info_tool")
+            print("  - create_chart_tool")
+            print("  - suggest_charts_tool")
+            print("  - get_chart_types_tool")
+            print("  - create_correlation_heatmap_tool")
+            print("  - create_time_series_chart_tool")
             print()
             print("Press Ctrl+C to stop the server")
             

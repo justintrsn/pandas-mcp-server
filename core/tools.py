@@ -4,7 +4,7 @@ This module contains SIMPLE orchestration logic - validation happens in the core
 """
 
 import logging
-from typing import Dict, Any, Optional
+from typing import Dict, List, Any, Optional
 
 # Import from core modules - each handles its own validation
 from core.metadata import MetadataExtractor
@@ -12,6 +12,7 @@ from core.execution import PandasExecutor
 from core.data_loader import DataLoader
 from storage.dataframe_manager import get_manager
 from core.config import get_config
+from core.visualization import get_orchestrator
 
 logger = logging.getLogger(__name__)
 
@@ -20,6 +21,7 @@ metadata_extractor = MetadataExtractor()
 pandas_executor = PandasExecutor()
 data_loader = DataLoader()
 df_manager = get_manager()
+visualization_orchestrator = get_orchestrator()
 
 
 def read_metadata(filepath: str, sample_size: int = 1000) -> Dict[str, Any]:
@@ -414,3 +416,205 @@ def get_server_info() -> Dict[str, Any]:
     except Exception as e:
         logger.error(f"Failed to get server info: {e}")
         return {"error": str(e)}
+
+def create_chart(
+    df_name: str,
+    chart_type: str,
+    x_column: Optional[str] = None,
+    y_columns: Optional[List[str]] = None,
+    title: Optional[str] = None,
+    session_id: str = "default",
+    **options
+) -> Dict[str, Any]:
+    """
+    Create an interactive HTML chart from a DataFrame.
+    
+    SIMPLE ORCHESTRATION - validation happens INSIDE VisualizationOrchestrator
+    
+    Args:
+        df_name: Name of the DataFrame to visualize
+        chart_type: Type of chart (bar, line, pie, scatter, heatmap)
+        x_column: Column for x-axis/labels (optional)
+        y_columns: Column(s) for y-axis/values (optional)
+        title: Chart title (optional)
+        session_id: Session identifier
+        **options: Additional chart-specific options
+        
+    Returns:
+        Dictionary with chart file path and metadata
+    """
+    try:
+        logger.info(f"Orchestrating chart creation: {chart_type} for DataFrame '{df_name}'")
+        
+        # VisualizationOrchestrator handles ALL validation internally
+        result = visualization_orchestrator.create_visualization(
+            df_name=df_name,
+            chart_type=chart_type,
+            x_column=x_column,
+            y_columns=y_columns,
+            session_id=session_id,
+            title=title,
+            **options
+        )
+        
+        if result.get("success"):
+            logger.info(f"Chart created successfully: {result.get('filepath')}")
+        else:
+            logger.error(f"Chart creation failed: {result.get('error')}")
+        
+        return result
+        
+    except Exception as e:
+        logger.error(f"Chart creation orchestration failed: {e}", exc_info=True)
+        return {"success": False, "error": str(e)}
+
+
+def suggest_charts(
+    df_name: str,
+    session_id: str = "default"
+) -> Dict[str, Any]:
+    """
+    Get chart type suggestions based on DataFrame characteristics.
+    
+    SIMPLE ORCHESTRATION - validation happens INSIDE VisualizationOrchestrator
+    
+    Args:
+        df_name: Name of the DataFrame to analyze
+        session_id: Session identifier
+        
+    Returns:
+        Dictionary with chart suggestions and configurations
+    """
+    try:
+        logger.info(f"Orchestrating chart suggestions for DataFrame '{df_name}'")
+        
+        # VisualizationOrchestrator handles ALL validation internally
+        result = visualization_orchestrator.suggest_charts(df_name, session_id)
+        
+        if result.get("success"):
+            suggestions_count = len(result.get("suggestions", []))
+            logger.info(f"Generated {suggestions_count} chart suggestions")
+        else:
+            logger.error(f"Failed to generate suggestions: {result.get('error')}")
+        
+        return result
+        
+    except Exception as e:
+        logger.error(f"Chart suggestion orchestration failed: {e}", exc_info=True)
+        return {"success": False, "error": str(e)}
+
+
+def get_chart_types() -> Dict[str, Any]:
+    """
+    Get information about all supported chart types.
+    
+    Returns:
+        Dictionary with supported chart types and their details
+    """
+    try:
+        logger.info("Getting supported chart types")
+        
+        # VisualizationOrchestrator provides this info
+        chart_info = visualization_orchestrator.get_supported_charts()
+        
+        return {
+            "success": True,
+            **chart_info
+        }
+        
+    except Exception as e:
+        logger.error(f"Failed to get chart types: {e}", exc_info=True)
+        return {"success": False, "error": str(e)}
+
+
+def create_correlation_heatmap(
+    df_name: str,
+    columns: Optional[List[str]] = None,
+    title: Optional[str] = None,
+    session_id: str = "default",
+    **options
+) -> Dict[str, Any]:
+    """
+    Create a correlation heatmap for numeric columns.
+    
+    Convenience function for creating correlation matrices.
+    
+    Args:
+        df_name: Name of the DataFrame
+        columns: Specific columns to include (optional, uses all numeric if not specified)
+        title: Chart title (optional)
+        session_id: Session identifier
+        **options: Additional options
+        
+    Returns:
+        Dictionary with chart file path and metadata
+    """
+    try:
+        logger.info(f"Orchestrating correlation heatmap for DataFrame '{df_name}'")
+        
+        # Set heatmap-specific options
+        options['heatmap_type'] = 'correlation'
+        
+        result = visualization_orchestrator.create_visualization(
+            df_name=df_name,
+            chart_type='heatmap',
+            x_column=None,
+            y_columns=columns,
+            session_id=session_id,
+            title=title or f"Correlation Matrix - {df_name}",
+            **options
+        )
+        
+        return result
+        
+    except Exception as e:
+        logger.error(f"Correlation heatmap orchestration failed: {e}", exc_info=True)
+        return {"success": False, "error": str(e)}
+
+
+def create_time_series_chart(
+    df_name: str,
+    time_column: Optional[str] = None,
+    value_columns: Optional[List[str]] = None,
+    title: Optional[str] = None,
+    session_id: str = "default",
+    **options
+) -> Dict[str, Any]:
+    """
+    Create a time series line chart.
+    
+    Convenience function for time series visualization.
+    
+    Args:
+        df_name: Name of the DataFrame
+        time_column: Time/date column (optional, auto-detected)
+        value_columns: Value columns to plot (optional, auto-detected)
+        title: Chart title (optional)
+        session_id: Session identifier
+        **options: Additional options
+        
+    Returns:
+        Dictionary with chart file path and metadata
+    """
+    try:
+        logger.info(f"Orchestrating time series chart for DataFrame '{df_name}'")
+        
+        # Set line chart options for time series
+        options['fill'] = options.get('fill', False)
+        options['tension'] = options.get('tension', 0.2)
+        
+        result = visualization_orchestrator.create_visualization(
+            df_name=df_name,
+            chart_type='line',
+            x_column=time_column,
+            y_columns=value_columns,
+            session_id=session_id,
+            title=title or f"Time Series - {df_name}",
+            **options
+        )
+        
+        return result
+        
+    except Exception as e:
+        logger.error(f"Time series chart orchestration failed: {e}", exc_info=True)
+        return {"success": False, "error": str(e)}
