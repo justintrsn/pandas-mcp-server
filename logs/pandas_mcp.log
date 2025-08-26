@@ -784,3 +784,25 @@
 2025-08-25 14:25:03,864 - core.charts.base_chart - INFO - Chart saved to /home/justin/Work/Huawei/pandas-mcp-server/charts/bar_sales_bar_20250825_142503.html
 2025-08-25 14:25:03,864 - core.visualization - INFO - Successfully created bar chart: /home/justin/Work/Huawei/pandas-mcp-server/charts/bar_sales_bar_20250825_142503.html
 2025-08-25 14:25:03,864 - core.tools - INFO - Chart created successfully: /home/justin/Work/Huawei/pandas-mcp-server/charts/bar_sales_bar_20250825_142503.html
+2025-08-26 17:43:41,412 - __main__ - INFO - Starting pandas-mcp-server v0.1.0
+2025-08-26 17:43:41,412 - __main__ - INFO - Server configuration: sse on 0.0.0.0:8000
+2025-08-26 17:43:41,413 - __main__ - INFO - Background cleanup task started
+2025-08-26 17:43:41,413 - __main__ - INFO - Available MCP tools:
+2025-08-26 17:43:41,413 - __main__ - INFO -   - upload_temp_file_tool: Upload files temporarily for processing
+2025-08-26 17:43:41,413 - __main__ - INFO -   - read_metadata_tool: Extract comprehensive file metadata
+2025-08-26 17:43:41,413 - __main__ - INFO -   - run_pandas_code_tool: Execute pandas operations
+2025-08-26 17:43:41,413 - __main__ - INFO -   - load_dataframe_tool: Load data files
+2025-08-26 17:43:41,413 - __main__ - INFO -   - list_dataframes_tool: List loaded DataFrames
+2025-08-26 17:43:41,413 - __main__ - INFO -   - get_dataframe_info_tool: Get DataFrame details
+2025-08-26 17:43:41,413 - __main__ - INFO -   - validate_pandas_code_tool: Validate code without execution
+2025-08-26 17:43:41,413 - __main__ - INFO -   - get_execution_context_tool: Get execution context
+2025-08-26 17:43:41,413 - __main__ - INFO -   - preview_file_tool: Preview files
+2025-08-26 17:43:41,413 - __main__ - INFO -   - get_supported_formats_tool: Get supported formats
+2025-08-26 17:43:41,414 - __main__ - INFO -   - clear_session_tool: Clear session data
+2025-08-26 17:43:41,414 - __main__ - INFO -   - get_session_info_tool: Get session info
+2025-08-26 17:43:41,414 - __main__ - INFO -   - get_server_info_tool: Get server configuration
+2025-08-26 17:43:41,414 - __main__ - INFO -   - create_chart_tool: Create interactive charts
+2025-08-26 17:43:41,414 - __main__ - INFO -   - suggest_charts_tool: Get chart recommendations
+2025-08-26 17:43:41,414 - __main__ - INFO -   - get_chart_types_tool: List supported chart types
+2025-08-26 17:43:41,414 - __main__ - INFO -   - create_correlation_heatmap_tool: Create correlation matrix
+2025-08-26 17:43:41,414 - __main__ - INFO -   - create_time_series_chart_tool: Create time series visualization

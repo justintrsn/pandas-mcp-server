@@ -58,6 +58,7 @@ def test_mcp_registration() -> Dict[str, Any]:
     # Include ALL tools from server.py
     expected_tools = [
         # Data tools
+        'upload_temp_file_tool',
         'read_metadata_tool',
         'run_pandas_code_tool',
         'load_dataframe_tool',

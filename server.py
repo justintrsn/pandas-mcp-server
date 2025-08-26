@@ -7,6 +7,11 @@ This is just the MCP interface layer that calls functions from core.tools
 import sys
 import os
 import logging
+import tempfile
+import base64
+import threading
+import time
+import glob
 from typing import Dict, List, Any, Optional
 from pathlib import Path
 
@@ -64,7 +69,115 @@ logger = logging.getLogger(__name__)
 mcp = FastMCP(SERVER_NAME)
 
 # ============================================================================
-# MCP TOOL DEFINITIONS - THIN WRAPPERS
+# CLIENT-SIDE FILE MANAGEMENT SUPPORT
+# ============================================================================
+
+@mcp.tool()
+async def upload_temp_file_tool(
+    content: str,
+    filename: str,
+    content_type: Optional[str] = "text",
+    session_id: Optional[str] = "default"
+) -> Dict[str, Any]:
+    """
+    Create temporary file from client-uploaded content for immediate processing only.
+    File is automatically cleaned up after session ends or expires.
+    
+    This supports client-side file management where files stay on the client
+    and are only temporarily uploaded when needed for analysis.
+    
+    Args:
+        content: File content (text or base64 encoded)
+        filename: Original filename for reference
+        content_type: "text" or "base64" (default: "text")
+        session_id: Session identifier (default: "default")
+    
+    Returns:
+        Temporary file path for immediate use with load_dataframe_tool
+    """
+    try:
+        # Validate inputs
+        if not content or not filename:
+            return {"success": False, "error": "Content and filename are required"}
+        
+        if content_type not in ["text", "base64"]:
+            return {"success": False, "error": "content_type must be 'text' or 'base64'"}
+        
+        # Create temporary file with appropriate suffix
+        suffix = Path(filename).suffix
+        temp_file = tempfile.NamedTemporaryFile(
+            mode='w+b',
+            suffix=suffix,
+            prefix=f"mcp_temp_{session_id}_",
+            delete=False  # We'll manage cleanup
+        )
+        
+        try:
+            # Write content based on type
+            if content_type == "base64":
+                try:
+                    # Handle data URLs
+                    if content.startswith('data:'):
+                        content = content.split(',', 1)[1]
+                    
+                    file_content = base64.b64decode(content)
+                    temp_file.write(file_content)
+                except Exception as e:
+                    temp_file.close()
+                    if os.path.exists(temp_file.name):
+                        os.unlink(temp_file.name)
+                    return {"success": False, "error": f"Invalid base64 content: {str(e)}"}
+            else:
+                # Text content
+                temp_file.write(content.encode('utf-8'))
+            
+            temp_file.flush()
+            temp_path = temp_file.name
+            temp_file.close()
+            
+            # Register for cleanup with session
+            from storage.dataframe_manager import get_manager
+            df_manager = get_manager()
+            session = df_manager.get_or_create_session(session_id)
+            
+            # Add temp file to session for cleanup
+            if not hasattr(session, 'temp_files'):
+                session.temp_files = set()
+            session.temp_files.add(temp_path)
+            
+            # Get file size
+            file_size = os.path.getsize(temp_path)
+            
+            logger.info(f"Created temporary file for session {session_id}: {filename} ({file_size} bytes)")
+            
+            return {
+                "success": True,
+                "temp_filepath": temp_path,
+                "filename": filename,
+                "session_id": session_id,
+                "size_bytes": file_size,
+                "message": f"Temporary file created: {filename}. Use load_dataframe_tool with this path."
+            }
+            
+        except Exception as e:
+            # Cleanup on error
+            if not temp_file.closed:
+                temp_file.close()
+            if os.path.exists(temp_file.name):
+                try:
+                    os.unlink(temp_file.name)
+                except:
+                    pass
+            raise e
+            
+    except Exception as e:
+        error_msg = f"Temporary file creation failed: {str(e)}"
+        logger.error(error_msg)
+        return {"success": False, "error": error_msg}
+
+
+# ============================================================================
+# MCP TOOL DEFINITIONS - THIN WRAPPERS (EXISTING TOOLS)
 # ============================================================================
 
 @mcp.tool()
@@ -85,7 +198,7 @@ async def read_metadata_tool(
     - Actionable recommendations for data preparation
     
     Args:
-        filepath: Path to the data file to analyze
+        filepath: Path to the data file to analyze (can be temporary file from upload_temp_file_tool)
         sample_size: Number of rows to sample for large files (default: 1000)
     
     Returns:
@@ -134,8 +247,10 @@ async def load_dataframe_tool(
     """
     Load a data file into a DataFrame for analysis.
     
+    Works with both regular files and temporary files from upload_temp_file_tool.
+    
     Args:
-        filepath: Path to the file to load
+        filepath: Path to the file to load (can be temp file path from upload_temp_file_tool)
         df_name: Name to assign to the DataFrame (default: "df")
         session_id: Session identifier (default: "default")
         sheet_name: For Excel files, specify sheet name
@@ -240,7 +355,7 @@ async def preview_file_tool(
     Preview a file without fully loading it.
     
     Args:
-        filepath: Path to the file
+        filepath: Path to the file (can be temp file from upload_temp_file_tool)
         delimiter: CSV delimiter (optional)
         encoding: File encoding (optional)
     
@@ -275,7 +390,7 @@ async def clear_session_tool(
     session_id: Optional[str] = "default"
 ) -> Dict[str, Any]:
     """
-    Clear all data in a session.
+    Clear all data in a session including temporary files.
     
     Args:
         session_id: Session identifier (default: "default")
@@ -514,11 +629,51 @@ async def create_time_series_chart_tool(
 
 
 # ============================================================================
+# BACKGROUND CLEANUP TASK
+# ============================================================================
+
+def start_cleanup_task():
+    """Start background task to clean up expired sessions and orphaned temp files"""
+    def cleanup_loop():
+        while True:
+            try:
+                # Clean up expired sessions (which also cleans their temp files)
+                from storage.dataframe_manager import get_manager
+                manager = get_manager()
+                manager._cleanup_expired_sessions()
+                
+                # Clean up orphaned temp files older than 1 hour
+                temp_pattern = os.path.join(tempfile.gettempdir(), "mcp_temp_*")
+                current_time = time.time()
+                
+                for temp_file in glob.glob(temp_pattern):
+                    try:
+                        if os.path.exists(temp_file):
+                            age = current_time - os.path.getctime(temp_file)
+                            if age > 3600:  # 1 hour
+                                os.unlink(temp_file)
+                                logger.info(f"Cleaned up orphaned temp file: {temp_file}")
+                    except Exception as e:
+                        logger.debug(f"Could not clean temp file {temp_file}: {e}")
+                
+                time.sleep(300)  # Run every 5 minutes
+                
+            except Exception as e:
+                logger.error(f"Cleanup task error: {e}")
+                time.sleep(60)  # Wait before retrying
+    
+    # Start cleanup in background thread
+    cleanup_thread = threading.Thread(target=cleanup_loop, daemon=True)
+    cleanup_thread.start()
+    logger.info("Background cleanup task started")
+
+
+# ============================================================================
 # MAIN SERVER FUNCTION
 # ============================================================================
 
 def main():
-    """Main entry point - just starts the MCP server"""
+    """Main entry point - starts the MCP server"""
     try:
         # Print startup banner
         print("=" * 60)
@@ -530,8 +685,12 @@ def main():
         logger.info(f"Starting {SERVER_NAME} v{SERVER_VERSION}")
         logger.info(f"Server configuration: {SERVER_TRANSPORT} on {SERVER_HOST}:{SERVER_PORT}")
         
-        # Log available tools
+        # Start background cleanup task
+        start_cleanup_task()
+        
+        # Log available tools (including new upload tool)
         logger.info("Available MCP tools:")
+        logger.info("  - upload_temp_file_tool: Upload files temporarily for processing")
         logger.info("  - read_metadata_tool: Extract comprehensive file metadata")
         logger.info("  - run_pandas_code_tool: Execute pandas operations")
         logger.info("  - load_dataframe_tool: Load data files")
@@ -556,7 +715,9 @@ def main():
             print(f"Server running at http://{SERVER_HOST}:{SERVER_PORT}")
             print("Connect your MCP client to this URL")
             print()
+            print()
             print("Available tools:")
+            print("  - upload_temp_file_tool")
             print("  - read_metadata_tool")
             print("  - run_pandas_code_tool")
             print("  - load_dataframe_tool")

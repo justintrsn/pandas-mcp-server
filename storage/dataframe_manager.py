@@ -4,7 +4,9 @@ DataFrame storage and session management for Pandas MCP Server
 
 import pandas as pd
 import numpy as np
-from typing import Dict, List, Optional, Any, Tuple
+import os
+import logging
+from typing import Dict, List, Optional, Any, Tuple, Set
 from datetime import datetime, timedelta
 import hashlib
 import json
@@ -17,6 +19,8 @@ from core.config import (
     CACHE_TTL_SECONDS
 )
 
+logger = logging.getLogger(__name__)
+
 class DataFrameSession:
     """Individual session for managing DataFrames"""
     
@@ -28,6 +32,7 @@ class DataFrameSession:
         self.last_accessed = datetime.now()
         self.operation_history: List[dict] = []
         self.cache: Dict[str, Any] = {}
+        self.temp_files: Set[str] = set()  # NEW: Track temporary files for cleanup
     
     def is_expired(self) -> bool:
         """Check if session has expired"""
@@ -49,6 +54,17 @@ class DataFrameSession:
         # Keep only last 100 operations
         if len(self.operation_history) > 100:
             self.operation_history = self.operation_history[-100:]
+    
+    def cleanup_temp_files(self):
+        """Clean up temporary files associated with this session"""
+        for temp_file in self.temp_files.copy():
+            try:
+                if os.path.exists(temp_file):
+                    os.unlink(temp_file)
+                    logger.info(f"Cleaned up temp file: {temp_file}")
+                self.temp_files.remove(temp_file)
+            except Exception as e:
+                logger.warning(f"Could not clean up temp file {temp_file}: {e}")
 
 
 class DataFrameManager:
@@ -61,6 +77,7 @@ class DataFrameManager:
     - LRU eviction
     - Operation history tracking
     - Caching support
+    - Temporary file cleanup
     """
     
     def __init__(self):
@@ -304,6 +321,20 @@ class DataFrameManager:
         if not session:
             return {"error": "Session not found"}
         
+        # Calculate temp files info
+        temp_files_info = {
+            "count": len(session.temp_files),
+            "total_size_mb": 0.0
+        }
+        
+        for temp_file in session.temp_files:
+            try:
+                if os.path.exists(temp_file):
+                    size_mb = os.path.getsize(temp_file) / 1024 / 1024
+                    temp_files_info["total_size_mb"] += size_mb
+            except Exception:
+                pass  # Ignore errors getting file size
+        
         return {
             "session_id": session_id,
             "created_at": session.created_at.isoformat(),
@@ -314,14 +345,19 @@ class DataFrameManager:
                 for df in session.dataframes.values()
             ),
             "operation_count": len(session.operation_history),
-            "recent_operations": session.operation_history[-5:] if session.operation_history else []
+            "recent_operations": session.operation_history[-5:] if session.operation_history else [],
+            "temp_files": temp_files_info
         }
     
     def clear_session(self, session_id: str = "default") -> bool:
-        """Clear all data in a session"""
+        """Clear all data in a session including temporary files"""
         if session_id in self.sessions:
+            session = self.sessions[session_id]
+            # Clean up temp files before deleting session
+            session.cleanup_temp_files()
             del self.sessions[session_id]
             self.total_memory_mb = self._calculate_total_memory()
+            logger.info(f"Session cleared: {session_id}")
             return True
         return False
     
@@ -359,13 +395,17 @@ class DataFrameManager:
         return freed_mb >= required_mb
     
     def _cleanup_expired_sessions(self):
-        """Remove expired sessions"""
+        """Remove expired sessions and clean up their temporary files"""
         expired = [
             sid for sid, session in self.sessions.items() 
             if session.is_expired()
         ]
         for sid in expired:
+            session = self.sessions[sid]
+            # Clean temp files before removing session
+            session.cleanup_temp_files()
             del self.sessions[sid]
+            logger.info(f"Expired session cleaned up: {sid}")
     
     def _calculate_dataframe_hash(self, df: pd.DataFrame) -> str:
         """Calculate a hash for a DataFrame for change detection"""
