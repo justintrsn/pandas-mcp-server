@@ -177,6 +177,74 @@ class TestOpenAIMCPClient:
         print(f"Response: {response[:500]}..." if len(response) > 500 else f"Response: {response}")
         
         return True
+    
+    async def test_upload_and_load_flow(self):
+        """Test that upload and load work together"""
+        print("\n🧪 Test 5: Upload and Load Flow")
+        print("-" * 40)
+        
+        try:
+            # Upload a file
+            upload_result = await self.session.call_tool("upload_temp_file_tool", {
+                "filename": "test.csv",
+                "content": "name,value\nA,1\nB,2",
+                "session_id": "test"
+            })
+            
+            # Parse upload result
+            if hasattr(upload_result, 'content'):
+                content = upload_result.content
+                if hasattr(content, '__iter__'): 
+                    for item in content:
+                        if hasattr(item, 'text'):
+                            upload_data = json.loads(item.text)
+                            break
+                elif hasattr(content, 'text'):
+                    upload_data = json.loads(content.text)
+                else:
+                    upload_data = content
+            else:
+                upload_data = upload_result
+            
+            # Check upload success
+            if not upload_data.get('success'):
+                print(f"❌ Upload failed: {upload_data.get('error')}")
+                return False
+            
+            print(f"✅ File uploaded: {upload_data.get('filepath')}")
+            
+            # Load using the returned filepath
+            load_result = await self.session.call_tool("load_dataframe_tool", {
+                "filepath": upload_data['filepath'],
+                "df_name": "test_df",
+                "session_id": "test"
+            })
+            
+            # Parse load result
+            if hasattr(load_result, 'content'):
+                content = load_result.content
+                if hasattr(content, '__iter__'):  
+                    for item in content:
+                        if hasattr(item, 'text'):
+                            load_data = json.loads(item.text)
+                            break
+                elif hasattr(content, 'text'):
+                    load_data = json.loads(content.text)
+                else:
+                    load_data = content
+            else:
+                load_data = load_result
+            
+            if load_data.get('success'):
+                print(f"✅ DataFrame loaded: {load_data.get('dataframe_info', {}).get('name')}")
+                return True
+            else:
+                print(f"❌ Load failed: {load_data.get('error')}")
+                return False
+                
+        except Exception as e:
+            print(f"❌ Upload/Load flow failed: {e}")
+            return False
 
     async def process_query(self, query: str) -> str:
         """Process a query using OpenAI and MCP tools"""
@@ -323,11 +391,19 @@ class TestOpenAIMCPClient:
             tests_failed += 1
         
         # Test 4: Create and load data
+
         if await self.test_create_and_load_data():
             tests_passed += 1
         else:
             tests_failed += 1
         
+        # Test 5: Upload and load flow
+
+        if await self.test_upload_and_load_flow():
+            tests_passed += 1
+        else:
+            tests_failed +=1
+
         # Summary
         print("\n" + "="*60)
         print(" 📊 TEST SUMMARY")

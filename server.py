@@ -74,106 +74,35 @@ mcp = FastMCP(SERVER_NAME)
 
 @mcp.tool()
 async def upload_temp_file_tool(
-    content: str,
     filename: str,
-    content_type: Optional[str] = "text",
+    content: str,
     session_id: Optional[str] = "default"
 ) -> Dict[str, Any]:
     """
-    Create temporary file from client-uploaded content for immediate processing only.
-    File is automatically cleaned up after session ends or expires.
-    
-    This supports client-side file management where files stay on the client
-    and are only temporarily uploaded when needed for analysis.
-    
-    Args:
-        content: File content (text or base64 encoded)
-        filename: Original filename for reference
-        content_type: "text" or "base64" (default: "text")
-        session_id: Session identifier (default: "default")
-    
-    Returns:
-        Temporary file path for immediate use with load_dataframe_tool
+    Upload a temporary file for processing.
+    Fixed to save where load_dataframe_tool can find it.
     """
     try:
-        # Validate inputs
-        if not content or not filename:
-            return {"success": False, "error": "Content and filename are required"}
+        from pathlib import Path
         
-        if content_type not in ["text", "base64"]:
-            return {"success": False, "error": "content_type must be 'text' or 'base64'"}
+        # Save to current working directory (where load_dataframe expects files)
+        # Or use data directory from config
+        save_path = Path(f"temp_{session_id}_{filename}")
         
-        # Create temporary file with appropriate suffix
-        suffix = Path(filename).suffix
-        temp_file = tempfile.NamedTemporaryFile(
-            mode='w+b',
-            suffix=suffix,
-            prefix=f"mcp_temp_{session_id}_",
-            delete=False  # We'll manage cleanup
-        )
+        # Write the file
+        save_path.write_text(content, encoding='utf-8')
         
-        try:
-            # Write content based on type
-            if content_type == "base64":
-                try:
-                    # Handle data URLs
-                    if content.startswith('data:'):
-                        content = content.split(',', 1)[1]
-                    
-                    file_content = base64.b64decode(content)
-                    temp_file.write(file_content)
-                except Exception as e:
-                    temp_file.close()
-                    if os.path.exists(temp_file.name):
-                        os.unlink(temp_file.name)
-                    return {"success": False, "error": f"Invalid base64 content: {str(e)}"}
-            else:
-                # Text content
-                temp_file.write(content.encode('utf-8'))
-            
-            temp_file.flush()
-            temp_path = temp_file.name
-            temp_file.close()
-            
-            # Register for cleanup with session
-            from storage.dataframe_manager import get_manager
-            df_manager = get_manager()
-            session = df_manager.get_or_create_session(session_id)
-            
-            # Add temp file to session for cleanup
-            if not hasattr(session, 'temp_files'):
-                session.temp_files = set()
-            session.temp_files.add(temp_path)
-            
-            # Get file size
-            file_size = os.path.getsize(temp_path)
-            
-            logger.info(f"Created temporary file for session {session_id}: {filename} ({file_size} bytes)")
-            
-            return {
-                "success": True,
-                "temp_filepath": temp_path,
-                "filename": filename,
-                "session_id": session_id,
-                "size_bytes": file_size,
-                "message": f"Temporary file created: {filename}. Use load_dataframe_tool with this path."
-            }
-            
-        except Exception as e:
-            # Cleanup on error
-            if not temp_file.closed:
-                temp_file.close()
-            if os.path.exists(temp_file.name):
-                try:
-                    os.unlink(temp_file.name)
-                except:
-                    pass
-            raise e
-            
+        return {
+            "success": True,
+            "filepath": str(save_path),  # Return the path that load_dataframe can use
+            "filename": filename,
+            "session_id": session_id,
+            "size_bytes": len(content.encode('utf-8')),
+            "message": f"File uploaded as {save_path}. Use filepath '{save_path}' with load_dataframe_tool."
+        }
     except Exception as e:
-        error_msg = f"Temporary file creation failed: {str(e)}"
-        logger.error(error_msg)
-        return {"success": False, "error": error_msg}
+        logger.error(f"Upload failed: {e}")
+        return {"success": False, "error": str(e)}
 
 
 # ============================================================================
