@@ -1021,3 +1021,164 @@ TypeError: FastMCP.run_http_async() got an unexpected keyword argument 'app'
 2025-08-28 11:55:15,103 - __main__ - INFO -   - create_correlation_heatmap_tool: Create correlation matrix
 2025-08-28 11:55:15,103 - __main__ - INFO -   - create_time_series_chart_tool: Create time series visualization
 2025-08-28 11:55:29,175 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 14:04:09,340 - __main__ - INFO - Starting pandas-mcp-server v0.1.0
+2025-08-28 14:04:09,340 - __main__ - INFO - Server configuration: sse on 0.0.0.0:8000
+2025-08-28 14:04:09,340 - __main__ - INFO - Background cleanup task started
+2025-08-28 14:04:09,341 - __main__ - INFO - Auto-cleanup task started (30 min session timeout)
+2025-08-28 14:04:09,341 - __main__ - INFO - Session management: Automatic cleanup enabled (30 min timeout)
+2025-08-28 14:04:09,341 - __main__ - INFO - Available MCP tools:
+2025-08-28 14:04:09,341 - __main__ - INFO -   - upload_temp_file_tool: Upload files with auto-cleanup
+2025-08-28 14:04:09,341 - __main__ - INFO -   - get_server_status_tool: Get server status
+2025-08-28 14:04:09,341 - __main__ - INFO -   - read_metadata_tool: Extract file metadata
+2025-08-28 14:04:09,341 - __main__ - INFO -   - run_pandas_code_tool: Execute pandas operations
+2025-08-28 14:04:09,341 - __main__ - INFO -   - load_dataframe_tool: Load data files
+2025-08-28 14:04:09,341 - __main__ - INFO -   - list_dataframes_tool: List loaded DataFrames
+2025-08-28 14:04:09,341 - __main__ - INFO -   - get_dataframe_info_tool: Get DataFrame details
+2025-08-28 14:04:09,341 - __main__ - INFO -   - validate_pandas_code_tool: Validate code without execution
+2025-08-28 14:04:09,341 - __main__ - INFO -   - get_execution_context_tool: Get execution context
+2025-08-28 14:04:09,341 - __main__ - INFO -   - preview_file_tool: Preview files
+2025-08-28 14:04:09,341 - __main__ - INFO -   - get_supported_formats_tool: Get supported formats
+2025-08-28 14:04:09,341 - __main__ - INFO -   - clear_session_tool: Clear session data
+2025-08-28 14:04:09,341 - __main__ - INFO -   - get_session_info_tool: Get session info
+2025-08-28 14:04:09,342 - __main__ - INFO -   - get_server_info_tool: Get server configuration
+2025-08-28 14:04:09,342 - __main__ - INFO -   - create_chart_tool: Create interactive charts
+2025-08-28 14:04:09,342 - __main__ - INFO -   - suggest_charts_tool: Get chart recommendations
+2025-08-28 14:04:09,342 - __main__ - INFO -   - get_chart_types_tool: List supported chart types
+2025-08-28 14:04:09,342 - __main__ - INFO -   - create_correlation_heatmap_tool: Create correlation matrix
+2025-08-28 14:04:09,342 - __main__ - INFO -   - create_time_series_chart_tool: Create time series visualization
+2025-08-28 14:04:49,266 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 14:05:35,243 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 14:05:35,246 - core.tools - INFO - Uploaded anime_dataset.csv to session default
+2025-08-28 14:05:35,251 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 14:05:36,578 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 14:05:36,584 - core.tools - INFO - Orchestrating data loading: sessions/default/anime_dataset.csv -> DataFrame 'df'
+2025-08-28 14:05:36,585 - core.data_loader - INFO - Loading file 'sessions/default/anime_dataset.csv' as DataFrame 'df' in session 'default'
+2025-08-28 14:05:36,585 - core.data_loader - INFO - Using .csv loader with options: {}
+2025-08-28 14:05:36,585 - core.data_loader - INFO - Loading CSV with options: {}
+2025-08-28 14:05:36,595 - core.data_loader - INFO - Loaded DataFrame: (30, 25), Memory: 0.03MB
+2025-08-28 14:05:36,596 - core.data_loader - INFO - Successfully stored DataFrame 'df': DataFrame 'df' added successfully (0.03MB)
+2025-08-28 14:05:36,599 - core.tools - INFO - Successfully loaded sessions/default/anime_dataset.csv as 'df'
+2025-08-28 14:05:36,603 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 14:05:39,136 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 14:05:39,139 - core.tools - INFO - Orchestrating pandas code execution in session default
+2025-08-28 14:05:39,139 - core.execution - INFO - Executing pandas code in session 'default' on DataFrame 'df': df[['title', 'score', 'popularity', 'genres']].loc[df['genres'].str.contains('Action')].sort_values(...
+2025-08-28 14:05:39,145 - core.execution - INFO - Code executed successfully, result type: dataframe
+2025-08-28 14:05:39,145 - core.tools - INFO - Code executed successfully, result type: dataframe
+2025-08-28 14:05:39,148 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 14:06:32,071 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 14:06:32,087 - core.tools - INFO - Orchestrating chart creation: bar for DataFrame 'df'
+2025-08-28 14:06:32,087 - core.visualization - INFO - Creating bar visualization for DataFrame 'df'
+2025-08-28 14:06:32,087 - core.tools - ERROR - Chart creation failed: Column 'Title' not found in DataFrame
+2025-08-28 14:06:32,091 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 14:06:33,191 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 14:06:33,193 - core.tools - INFO - Listing DataFrames for session: default
+2025-08-28 14:06:33,197 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 14:06:34,506 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 14:06:34,509 - core.tools - INFO - Getting info for DataFrame 'df' in session 'default'
+2025-08-28 14:06:34,516 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 14:06:36,472 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 14:06:36,475 - core.tools - INFO - Orchestrating pandas code execution in session default
+2025-08-28 14:06:36,475 - core.execution - INFO - Executing pandas code in session 'default' on DataFrame 'df': top_action_anime = df[df['genres'].str.contains('Action')].nlargest(6, 'score')[['title', 'score']];...
+2025-08-28 14:06:36,478 - core.execution - INFO - Code executed successfully, result type: none
+2025-08-28 14:06:36,478 - core.tools - INFO - Code executed successfully, result type: none
+2025-08-28 14:06:36,481 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 14:06:38,405 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 14:06:38,409 - core.tools - INFO - Orchestrating pandas code execution in session default
+2025-08-28 14:06:38,409 - core.execution - INFO - Executing pandas code in session 'default' on DataFrame 'df': top_action_anime = df[df['genres'].str.contains('Action')].nlargest(6, 'score')[['title', 'score']]
+...
+2025-08-28 14:06:38,412 - core.execution - INFO - Code executed successfully, result type: none
+2025-08-28 14:06:38,412 - core.tools - INFO - Code executed successfully, result type: none
+2025-08-28 14:06:38,417 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 14:06:40,370 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 14:06:40,373 - core.tools - INFO - Orchestrating pandas code execution in session default
+2025-08-28 14:06:40,373 - core.execution - INFO - Executing pandas code in session 'default' on DataFrame 'df': top_action_anime = df[df['genres'].str.contains('Action')].nlargest(6, 'score')[['title', 'score']]
+...
+2025-08-28 14:06:40,376 - core.execution - INFO - Code executed successfully, result type: none
+2025-08-28 14:06:40,376 - core.tools - INFO - Code executed successfully, result type: none
+2025-08-28 14:06:40,381 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 14:06:42,515 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 14:06:42,519 - core.tools - INFO - Orchestrating pandas code execution in session default
+2025-08-28 14:06:42,519 - core.execution - INFO - Executing pandas code in session 'default' on DataFrame 'df': top_action_anime = df[df['genres'].str.contains('Action')].nlargest(6, 'score')[['title', 'score']]
+...
+2025-08-28 14:06:42,522 - core.execution - INFO - Code executed successfully, result type: none
+2025-08-28 14:06:42,522 - core.tools - INFO - Code executed successfully, result type: none
+2025-08-28 14:06:42,526 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 14:06:44,571 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 14:06:44,575 - core.tools - INFO - Orchestrating pandas code execution in session default
+2025-08-28 14:06:44,575 - core.execution - INFO - Executing pandas code in session 'default' on DataFrame 'df': top_action_anime = df[df['genres'].str.contains('Action')].nlargest(6, 'score')[['title', 'score']]
+...
+2025-08-28 14:06:44,577 - core.execution - INFO - Code executed successfully, result type: none
+2025-08-28 14:06:44,578 - core.tools - INFO - Code executed successfully, result type: none
+2025-08-28 14:06:44,581 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 14:06:46,821 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 14:06:46,825 - core.tools - INFO - Orchestrating pandas code execution in session default
+2025-08-28 14:06:46,825 - core.execution - INFO - Executing pandas code in session 'default' on DataFrame 'df': top_action_anime = df[df['genres'].str.contains('Action')].nlargest(6, 'score')[['title', 'score']]
+...
+2025-08-28 14:06:46,827 - core.execution - INFO - Code executed successfully, result type: none
+2025-08-28 14:06:46,828 - core.tools - INFO - Code executed successfully, result type: none
+2025-08-28 14:06:46,831 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 14:06:48,972 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 14:06:48,976 - core.tools - INFO - Orchestrating pandas code execution in session default
+2025-08-28 14:06:48,976 - core.execution - INFO - Executing pandas code in session 'default' on DataFrame 'df': top_action_anime = df[df['genres'].str.contains('Action')].nlargest(6, 'score')[['title', 'score']]
+...
+2025-08-28 14:06:48,979 - core.execution - INFO - Code executed successfully, result type: none
+2025-08-28 14:06:48,979 - core.tools - INFO - Code executed successfully, result type: none
+2025-08-28 14:06:48,982 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 14:28:12,126 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 14:29:02,459 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 14:29:02,464 - core.tools - INFO - File anime_dataset.csv already exists with same content
+2025-08-28 14:29:02,468 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 14:29:03,676 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 14:29:03,683 - core.tools - INFO - Orchestrating data loading: sessions/default/anime_dataset.csv -> DataFrame 'df'
+2025-08-28 14:29:03,683 - core.data_loader - INFO - Loading file 'sessions/default/anime_dataset.csv' as DataFrame 'df' in session 'default'
+2025-08-28 14:29:03,683 - core.data_loader - INFO - Using .csv loader with options: {}
+2025-08-28 14:29:03,683 - core.data_loader - INFO - Loading CSV with options: {}
+2025-08-28 14:29:03,687 - core.data_loader - INFO - Loaded DataFrame: (30, 25), Memory: 0.03MB
+2025-08-28 14:29:03,691 - core.data_loader - INFO - Successfully stored DataFrame 'df': DataFrame 'df' added successfully (0.03MB)
+2025-08-28 14:29:03,695 - core.tools - INFO - Successfully loaded sessions/default/anime_dataset.csv as 'df'
+2025-08-28 14:29:03,698 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 14:29:05,259 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 14:29:05,263 - core.tools - INFO - Orchestrating pandas code execution in session default
+2025-08-28 14:29:05,263 - core.execution - INFO - Executing pandas code in session 'default' on DataFrame 'df': top_action_animes = df[df['genres'].str.contains('Action')].nlargest(6, 'score')[['title', 'score']]...
+2025-08-28 14:29:05,265 - core.execution - INFO - Code executed successfully, result type: none
+2025-08-28 14:29:05,265 - core.tools - INFO - Code executed successfully, result type: none
+2025-08-28 14:29:05,269 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 14:29:06,854 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 14:29:06,870 - core.tools - INFO - Orchestrating chart creation: bar for DataFrame 'top_action_animes'
+2025-08-28 14:29:06,870 - core.visualization - INFO - Creating bar visualization for DataFrame 'top_action_animes'
+2025-08-28 14:29:06,870 - core.tools - ERROR - Chart creation failed: DataFrame 'top_action_animes' not found in session 'default'
+2025-08-28 14:29:06,874 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 14:29:08,801 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 14:29:08,804 - core.tools - INFO - Orchestrating pandas code execution in session default
+2025-08-28 14:29:08,804 - core.execution - INFO - Executing pandas code in session 'default' on DataFrame 'df': top_action_animes = df[df['genres'].str.contains('Action')].nlargest(6, 'score')[['title', 'score']]...
+2025-08-28 14:29:08,807 - core.execution - INFO - Code executed successfully, result type: none
+2025-08-28 14:29:08,807 - core.tools - INFO - Code executed successfully, result type: none
+2025-08-28 14:29:08,810 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 14:29:10,295 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 14:29:10,309 - core.tools - INFO - Orchestrating chart creation: bar for DataFrame 'top_action_animes'
+2025-08-28 14:29:10,309 - core.visualization - INFO - Creating bar visualization for DataFrame 'top_action_animes'
+2025-08-28 14:29:10,309 - core.tools - ERROR - Chart creation failed: DataFrame 'top_action_animes' not found in session 'default'
+2025-08-28 14:29:10,312 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 14:29:12,906 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 14:29:12,910 - core.tools - INFO - Orchestrating pandas code execution in session default
+2025-08-28 14:29:12,910 - core.execution - INFO - Executing pandas code in session 'default' on DataFrame 'df': top_action_animes = df[df['genres'].str.contains('Action')].nlargest(6, 'score')[['title', 'score']]...
+2025-08-28 14:29:12,914 - core.execution - INFO - Code executed successfully, result type: none
+2025-08-28 14:29:12,915 - core.tools - INFO - Code executed successfully, result type: none
+2025-08-28 14:29:12,919 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 14:29:14,434 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 14:29:14,437 - core.tools - INFO - Orchestrating pandas code execution in session default
+2025-08-28 14:29:14,438 - core.execution - INFO - Executing pandas code in session 'default' on DataFrame 'df': top_action_animes = df[df['genres'].str.contains('Action')].nlargest(6, 'score')[['title', 'score']]...
+2025-08-28 14:29:14,440 - core.execution - INFO - Code executed successfully, result type: none
+2025-08-28 14:29:14,440 - core.tools - INFO - Code executed successfully, result type: none
+2025-08-28 14:29:14,443 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 14:29:16,174 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 14:29:16,192 - core.tools - INFO - Orchestrating chart creation: bar for DataFrame 'top_action_animes'
+2025-08-28 14:29:16,192 - core.visualization - INFO - Creating bar visualization for DataFrame 'top_action_animes'
+2025-08-28 14:29:16,192 - core.tools - ERROR - Chart creation failed: DataFrame 'top_action_animes' not found in session 'default'
+2025-08-28 14:29:16,195 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 14:29:17,814 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 14:29:17,818 - core.tools - INFO - Orchestrating pandas code execution in session default
+2025-08-28 14:29:17,818 - core.execution - INFO - Executing pandas code in session 'default' on DataFrame 'df': top_action_animes = df[df['genres'].str.contains('Action')].nlargest(6, 'score')[['title', 'score']]...
+2025-08-28 14:29:17,821 - core.execution - INFO - Code executed successfully, result type: none
+2025-08-28 14:29:17,821 - core.tools - INFO - Code executed successfully, result type: none
+2025-08-28 14:29:17,825 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest

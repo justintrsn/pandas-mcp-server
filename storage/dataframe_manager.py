@@ -274,6 +274,15 @@ class DataFrameManager:
                                 result = None
                         else:
                             result = None
+                        
+                    for var_name, var_value in exec_locals.items():
+                        if isinstance(var_value, pd.DataFrame) and var_name not in session.dataframes:
+                            logger.info(f"Auto-registering new DataFrame: {var_name}")
+                            success, msg = self.add_dataframe(var_value, var_name, session_id)
+                            if success:
+                                logger.info(f"Successfully registered DataFrame '{var_name}': {msg}")
+                            else:
+                                logger.warning(f"Failed to register DataFrame '{var_name}': {msg}")
                 
                 # Determine result type
                 if isinstance(result, pd.DataFrame):
