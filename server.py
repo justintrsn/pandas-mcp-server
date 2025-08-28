@@ -4,24 +4,35 @@ Pandas MCP Server - THIN LAYER
 This is just the MCP interface layer that calls functions from core.tools
 """
 
+"""
+Pandas MCP Server - With Health Endpoints and Auto-Cleanup
+"""
+
 import sys
 import os
 import logging
 import tempfile
-import base64
 import threading
 import time
 import glob
-from typing import Dict, List, Any, Optional
+import shutil
+import json
+from typing import Dict, Optional, Any, List
 from pathlib import Path
+from datetime import datetime
 
 # Add parent directory to path for imports
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from fastmcp import FastMCP
+from fastapi import FastAPI
+from fastapi.responses import JSONResponse, HTMLResponse
 
-# Import ALL orchestration functions from core.tools
+# Import ALL orchestration functions AND session_tracker from core.tools
 from core.tools import (
+    upload_temp_file,
+    cleanup_session_files,
+    session_tracker,  
     read_metadata,
     run_pandas_code,
     load_dataframe,
@@ -65,37 +76,205 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# Initialize FastMCP server - name only (no version parameter)
+# Initialize FastMCP server
 mcp = FastMCP(SERVER_NAME)
 
+# Create FastAPI app for custom endpoints
+app = FastAPI(title=SERVER_NAME, version=SERVER_VERSION)
+
+# Track server start time for status
+server_start_time = time.time()
+
 # ============================================================================
-# CLIENT-SIDE FILE MANAGEMENT SUPPORT
+# SERVER STATUS
+# ============================================================================
+def detailed_status():
+    """Detailed status endpoint with session information"""
+    from storage.dataframe_manager import get_manager
+    manager = get_manager()
+    
+    # Get session information
+    sessions_dir = Path("sessions")
+    active_sessions = []
+    total_files = 0
+    total_size_mb = 0
+    
+    if sessions_dir.exists():
+        for session_dir in sessions_dir.iterdir():
+            if session_dir.is_dir():
+                files = list(session_dir.glob("*"))
+                file_count = len(files)
+                total_files += file_count
+                
+                # Calculate size
+                session_size = sum(f.stat().st_size for f in files if f.is_file()) / 1024 / 1024
+                total_size_mb += session_size
+                
+                # Get metadata
+                metadata_file = session_dir / ".metadata.json"
+                last_activity = None
+                if metadata_file.exists():
+                    try:
+                        metadata = json.loads(metadata_file.read_text())
+                        last_activity = metadata.get("last_activity")
+                    except:
+                        pass
+                
+                # Calculate age
+                age_minutes = None
+                if last_activity:
+                    try:
+                        last_time = datetime.fromisoformat(last_activity)
+                        age_minutes = int((datetime.now() - last_time).total_seconds() / 60)
+                    except:
+                        pass
+                
+                active_sessions.append({
+                    "session_id": session_dir.name,
+                    "files": file_count,
+                    "size_mb": round(session_size, 2),
+                    "last_activity": last_activity,
+                    "age_minutes": age_minutes,
+                    "will_expire_in": max(0, 30 - (age_minutes or 0)) if age_minutes is not None else None
+                })
+    
+    # Sort by last activity
+    active_sessions.sort(key=lambda x: x.get("last_activity") or "", reverse=True)
+    
+    # Get tracked sessions from session_tracker
+    tracked_count = len(session_tracker.sessions) if hasattr(session_tracker, 'sessions') else 0
+    
+    uptime_seconds = int(time.time() - server_start_time)
+    
+    return JSONResponse({
+        "server": {
+            "name": SERVER_NAME,
+            "version": SERVER_VERSION,
+            "description": SERVER_DESCRIPTION,
+            "uptime": {
+                "seconds": uptime_seconds,
+                "human_readable": f"{uptime_seconds // 3600}h {(uptime_seconds % 3600) // 60}m"
+            },
+            "started_at": datetime.fromtimestamp(server_start_time).isoformat()
+        },
+        "configuration": {
+            "host": SERVER_HOST,
+            "port": SERVER_PORT,
+            "transport": SERVER_TRANSPORT,
+            "auto_cleanup": {
+                "enabled": True,
+                "timeout_minutes": 30,
+                "check_interval_minutes": 5
+            }
+        },
+        "sessions": {
+            "active_count": len(active_sessions),
+            "tracked_count": tracked_count,
+            "total_files": total_files,
+            "total_size_mb": round(total_size_mb, 2),
+            "details": active_sessions
+        },
+        "dataframes": {
+            "loaded_count": sum(
+                len(session.dataframes) 
+                for session in manager.sessions.values()
+            ),
+            "memory_usage_mb": manager._calculate_total_memory() if hasattr(manager, '_calculate_total_memory') else 0
+        },
+        "timestamp": datetime.now().isoformat()
+    })
+
+# ============================================================================
+# AUTO-CLEANUP BACKGROUND TASK
 # ============================================================================
 
+def start_auto_cleanup_task():
+    """Background task that automatically cleans inactive sessions"""
+    def cleanup_loop():
+        while True:
+            try:
+                # Get sessions inactive for 30+ minutes
+                inactive_sessions = session_tracker.get_inactive_sessions(30)
+                
+                for session_id in inactive_sessions:
+                    # Clean session directory
+                    session_dir = Path(f"sessions/{session_id}")
+                    if session_dir.exists():
+                        shutil.rmtree(session_dir)
+                        logger.info(f"Auto-cleaned inactive session: {session_id} (30 min timeout)")
+                    
+                    # Clear from DataFrame manager
+                    from storage.dataframe_manager import get_manager
+                    manager = get_manager()
+                    manager.clear_session(session_id)
+                    
+                    # Remove from tracker
+                    session_tracker.remove(session_id)
+                
+                if inactive_sessions:
+                    logger.info(f"Cleaned {len(inactive_sessions)} inactive sessions")
+                
+                # Clean orphaned session directories
+                sessions_dir = Path("sessions")
+                if sessions_dir.exists():
+                    for session_dir in sessions_dir.iterdir():
+                        if session_dir.is_dir():
+                            age_hours = (time.time() - session_dir.stat().st_mtime) / 3600
+                            if age_hours > 1:  # Older than 1 hour
+                                session_id = session_dir.name
+                                if session_id not in session_tracker.sessions:
+                                    shutil.rmtree(session_dir)
+                                    logger.info(f"Cleaned orphaned session directory: {session_id}")
+                
+                # Clean old temp files
+                temp_pattern = os.path.join(tempfile.gettempdir(), "mcp_temp_*")
+                for temp_file in glob.glob(temp_pattern):
+                    if os.path.exists(temp_file):
+                        age = time.time() - os.path.getctime(temp_file)
+                        if age > 3600:  # 1 hour
+                            os.unlink(temp_file)
+                            logger.debug(f"Cleaned old temp file: {temp_file}")
+                
+                time.sleep(300)  # Run every 5 minutes
+                
+            except Exception as e:
+                logger.error(f"Auto-cleanup error: {e}")
+                time.sleep(60)
+
+    cleanup_thread = threading.Thread(target=cleanup_loop, daemon=True)
+    cleanup_thread.start()
+    logger.info("Auto-cleanup task started (30 min session timeout)")
+
+# ============================================================================
+# MCP TOOL DEFINITIONS - THIN WRAPPERS 
+# ============================================================================
 @mcp.tool()
 async def upload_temp_file_tool(
     filename: str,
     content: str,
     session_id: Optional[str] = "default"
 ) -> Dict[str, Any]:
-    """Upload a file that can be loaded with load_dataframe_tool"""
-    try:
-        # Save to current directory where load_dataframe expects files
-        filepath = Path(filename)  # Just use the filename directly
-        filepath.write_text(content, encoding='utf-8')
-        
-        return {
-            "success": True,
-            "filepath": filename,  # Return the filename that load_dataframe can use
-            "message": f"File uploaded. Use filepath='{filename}' with load_dataframe_tool"
-        }
-    except Exception as e:
-        return {"success": False, "error": str(e)}
+    """
+    Upload a file for data analysis with intelligent deduplication.
+    
+    Files are stored in session-specific directories (sessions/{session_id}/).
+    If the exact same file already exists, returns the existing path without re-uploading.
+    
+    Args:
+        filename: Name of the file (e.g., 'sales_data.csv')
+        content: File content as string
+        session_id: Session identifier for isolation (default: 'default')
+    
+    Returns:
+        Dict with filepath to use with load_dataframe_tool and cached status
+    """
+    return upload_temp_file(filename, content, session_id)
 
-
-# ============================================================================
-# MCP TOOL DEFINITIONS - THIN WRAPPERS (EXISTING TOOLS)
-# ============================================================================
+@mcp.tool()
+async def get_server_status_tool() -> Dict[str, Any]:
+    """Get server status via MCP tool"""
+    response = await detailed_status()
+    return json.loads(response.body)
 
 @mcp.tool()
 async def read_metadata_tool(
@@ -590,7 +769,7 @@ def start_cleanup_task():
 # ============================================================================
 
 def main():
-    """Main entry point - starts the MCP server"""
+    """Main entry point - starts the MCP server with health endpoints"""
     try:
         # Print startup banner
         print("=" * 60)
@@ -598,17 +777,23 @@ def main():
         print(f" {SERVER_DESCRIPTION}")
         print("=" * 60)
         print()
+        print("AUTO-CLEANUP: Sessions expire after 30 minutes of inactivity")
+        print("=" * 60)
+        print()
         
         logger.info(f"Starting {SERVER_NAME} v{SERVER_VERSION}")
         logger.info(f"Server configuration: {SERVER_TRANSPORT} on {SERVER_HOST}:{SERVER_PORT}")
         
-        # Start background cleanup task
-        start_cleanup_task()
+        # Start BOTH cleanup tasks
+        start_cleanup_task()  # Original cleanup for DataFrame manager
+        start_auto_cleanup_task()  # New auto-cleanup for sessions
         
-        # Log available tools (including new upload tool)
+        # Log available tools
+        logger.info("Session management: Automatic cleanup enabled (30 min timeout)")
         logger.info("Available MCP tools:")
-        logger.info("  - upload_temp_file_tool: Upload files temporarily for processing")
-        logger.info("  - read_metadata_tool: Extract comprehensive file metadata")
+        logger.info("  - upload_temp_file_tool: Upload files with auto-cleanup")
+        logger.info("  - get_server_status_tool: Get server status")
+        logger.info("  - read_metadata_tool: Extract file metadata")
         logger.info("  - run_pandas_code_tool: Execute pandas operations")
         logger.info("  - load_dataframe_tool: Load data files")
         logger.info("  - list_dataframes_tool: List loaded DataFrames")
@@ -625,37 +810,36 @@ def main():
         logger.info("  - get_chart_types_tool: List supported chart types")
         logger.info("  - create_correlation_heatmap_tool: Create correlation matrix")
         logger.info("  - create_time_series_chart_tool: Create time series visualization")
-                
+        
         # Start server based on transport
         if SERVER_TRANSPORT == "sse":
             # SSE transport for HTTP
-            print(f"Server running at http://{SERVER_HOST}:{SERVER_PORT}")
-            print("Connect your MCP client to this URL")
+            print(f"🚀 Server running at http://{SERVER_HOST}:{SERVER_PORT}")
             print()
+            print("📍 HTTP Endpoints:")
+            print(f"   • Base:   http://{SERVER_HOST}:{SERVER_PORT}/")
+            print(f"   • Health: http://{SERVER_HOST}:{SERVER_PORT}/health")
+            print(f"   • Status: http://{SERVER_HOST}:{SERVER_PORT}/status")
+            print(f"   • MCP:    http://{SERVER_HOST}:{SERVER_PORT}/sse")
             print()
-            print("Available tools:")
-            print("  - upload_temp_file_tool")
-            print("  - read_metadata_tool")
-            print("  - run_pandas_code_tool")
-            print("  - load_dataframe_tool")
-            print("  - list_dataframes_tool")
-            print("  - get_dataframe_info_tool")
-            print("  - validate_pandas_code_tool")
-            print("  - get_execution_context_tool")
-            print("  - preview_file_tool")
-            print("  - get_supported_formats_tool")
-            print("  - clear_session_tool")
-            print("  - get_session_info_tool")
-            print("  - get_server_info_tool")
-            print("  - create_chart_tool")
-            print("  - suggest_charts_tool")
-            print("  - get_chart_types_tool")
-            print("  - create_correlation_heatmap_tool")
-            print("  - create_time_series_chart_tool")
+            print("🧹 Auto-Cleanup Settings:")
+            print("   • Sessions expire: 30 minutes after last activity")
+            print("   • Check interval: Every 5 minutes")
+            print("   • Orphaned files: Cleaned after 1 hour")
+            print()
+            print("📊 Available MCP Tools:")
+            print("   • upload_temp_file_tool    - Upload files with deduplication")
+            print("   • load_dataframe_tool      - Load CSVs, Excel, JSON as DataFrames")
+            print("   • run_pandas_code_tool     - Execute pandas operations")
+            print("   • create_chart_tool        - Generate interactive visualizations")
+            print("   • read_metadata_tool       - Extract comprehensive metadata")
+            print("   • list_dataframes_tool     - See all loaded DataFrames")
+            print("   ... and 12 more tools")
             print()
             print("Press Ctrl+C to stop the server")
+            print("=" * 60)
             
-            # Run with SSE transport
+            # Run with SSE transport AND custom FastAPI app
             mcp.run(
                 transport="sse",
                 host=SERVER_HOST,
@@ -664,18 +848,33 @@ def main():
         else:
             # Default to stdio transport
             print("Running in stdio mode")
+            print("Auto-cleanup: Sessions expire after 30 minutes")
             print("Connect via stdio transport")
             print()
             mcp.run(transport="stdio")
         
     except KeyboardInterrupt:
         logger.info("Server shutdown requested")
-        print("\nShutting down server...")
+        print("\n" + "=" * 60)
+        print("Shutting down server...")
+        
+        # Clean all sessions on shutdown
+        sessions_dir = Path("sessions")
+        if sessions_dir.exists():
+            try:
+                shutil.rmtree(sessions_dir)
+                logger.info("Cleaned all session data on shutdown")
+                print("✓ All session data cleaned")
+            except Exception as e:
+                logger.error(f"Error cleaning sessions: {e}")
+        
+        print("Server stopped")
+        print("=" * 60)
+        
     except Exception as e:
         logger.error(f"Server failed to start: {e}", exc_info=True)
-        print(f"Error: {e}")
+        print(f"❌ Error: {e}")
         sys.exit(1)
-
 
 if __name__ == "__main__":
     main()

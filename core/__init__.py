@@ -12,6 +12,9 @@ from core.visualization import VisualizationOrchestrator
 
 # Import tool functions for easy access
 from core.tools import (
+    upload_temp_file,
+    cleanup_session_files,
+    session_tracker,
     read_metadata,
     run_pandas_code,
     load_dataframe,
@@ -59,6 +62,9 @@ __all__ = [
     'HeatmapChart',
     
     # Core Functions
+    'upload_temp_file',
+    'cleanup_session_files',
+    'session_tracker',
     'get_config',
     'read_metadata',
     'run_pandas_code',

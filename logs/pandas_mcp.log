@@ -806,3 +806,218 @@
 2025-08-26 17:43:41,414 - __main__ - INFO -   - get_chart_types_tool: List supported chart types
 2025-08-26 17:43:41,414 - __main__ - INFO -   - create_correlation_heatmap_tool: Create correlation matrix
 2025-08-26 17:43:41,414 - __main__ - INFO -   - create_time_series_chart_tool: Create time series visualization
+2025-08-28 10:49:42,630 - __main__ - INFO - Starting pandas-mcp-server v0.1.0
+2025-08-28 10:49:42,630 - __main__ - INFO - Server configuration: sse on 0.0.0.0:8000
+2025-08-28 10:49:42,630 - __main__ - INFO - Background cleanup task started
+2025-08-28 10:49:42,630 - __main__ - INFO - Available MCP tools:
+2025-08-28 10:49:42,631 - __main__ - INFO -   - upload_temp_file_tool: Upload files temporarily for processing
+2025-08-28 10:49:42,631 - __main__ - INFO -   - read_metadata_tool: Extract comprehensive file metadata
+2025-08-28 10:49:42,631 - __main__ - INFO -   - run_pandas_code_tool: Execute pandas operations
+2025-08-28 10:49:42,631 - __main__ - INFO -   - load_dataframe_tool: Load data files
+2025-08-28 10:49:42,631 - __main__ - INFO -   - list_dataframes_tool: List loaded DataFrames
+2025-08-28 10:49:42,631 - __main__ - INFO -   - get_dataframe_info_tool: Get DataFrame details
+2025-08-28 10:49:42,631 - __main__ - INFO -   - validate_pandas_code_tool: Validate code without execution
+2025-08-28 10:49:42,631 - __main__ - INFO -   - get_execution_context_tool: Get execution context
+2025-08-28 10:49:42,631 - __main__ - INFO -   - preview_file_tool: Preview files
+2025-08-28 10:49:42,631 - __main__ - INFO -   - get_supported_formats_tool: Get supported formats
+2025-08-28 10:49:42,631 - __main__ - INFO -   - clear_session_tool: Clear session data
+2025-08-28 10:49:42,631 - __main__ - INFO -   - get_session_info_tool: Get session info
+2025-08-28 10:49:42,631 - __main__ - INFO -   - get_server_info_tool: Get server configuration
+2025-08-28 10:49:42,631 - __main__ - INFO -   - create_chart_tool: Create interactive charts
+2025-08-28 10:49:42,631 - __main__ - INFO -   - suggest_charts_tool: Get chart recommendations
+2025-08-28 10:49:42,631 - __main__ - INFO -   - get_chart_types_tool: List supported chart types
+2025-08-28 10:49:42,631 - __main__ - INFO -   - create_correlation_heatmap_tool: Create correlation matrix
+2025-08-28 10:49:42,631 - __main__ - INFO -   - create_time_series_chart_tool: Create time series visualization
+2025-08-28 11:27:40,048 - __main__ - INFO - Starting pandas-mcp-server v0.1.0
+2025-08-28 11:27:40,048 - __main__ - INFO - Server configuration: sse on 0.0.0.0:8000
+2025-08-28 11:27:40,048 - __main__ - INFO - Background cleanup task started
+2025-08-28 11:27:40,049 - __main__ - INFO - Available MCP tools:
+2025-08-28 11:27:40,049 - __main__ - INFO -   - upload_temp_file_tool: Upload files temporarily for processing
+2025-08-28 11:27:40,049 - __main__ - INFO -   - read_metadata_tool: Extract comprehensive file metadata
+2025-08-28 11:27:40,049 - __main__ - INFO -   - run_pandas_code_tool: Execute pandas operations
+2025-08-28 11:27:40,049 - __main__ - INFO -   - load_dataframe_tool: Load data files
+2025-08-28 11:27:40,049 - __main__ - INFO -   - list_dataframes_tool: List loaded DataFrames
+2025-08-28 11:27:40,049 - __main__ - INFO -   - get_dataframe_info_tool: Get DataFrame details
+2025-08-28 11:27:40,049 - __main__ - INFO -   - validate_pandas_code_tool: Validate code without execution
+2025-08-28 11:27:40,049 - __main__ - INFO -   - get_execution_context_tool: Get execution context
+2025-08-28 11:27:40,049 - __main__ - INFO -   - preview_file_tool: Preview files
+2025-08-28 11:27:40,049 - __main__ - INFO -   - get_supported_formats_tool: Get supported formats
+2025-08-28 11:27:40,049 - __main__ - INFO -   - clear_session_tool: Clear session data
+2025-08-28 11:27:40,049 - __main__ - INFO -   - get_session_info_tool: Get session info
+2025-08-28 11:27:40,049 - __main__ - INFO -   - get_server_info_tool: Get server configuration
+2025-08-28 11:27:40,049 - __main__ - INFO -   - create_chart_tool: Create interactive charts
+2025-08-28 11:27:40,049 - __main__ - INFO -   - suggest_charts_tool: Get chart recommendations
+2025-08-28 11:27:40,049 - __main__ - INFO -   - get_chart_types_tool: List supported chart types
+2025-08-28 11:27:40,049 - __main__ - INFO -   - create_correlation_heatmap_tool: Create correlation matrix
+2025-08-28 11:27:40,049 - __main__ - INFO -   - create_time_series_chart_tool: Create time series visualization
+2025-08-28 11:29:14,521 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 11:31:10,804 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 11:31:10,807 - core.tools - INFO - Uploaded anime_dataset.csv to session default
+2025-08-28 11:31:10,811 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 11:31:12,575 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 11:31:12,582 - core.tools - INFO - Orchestrating data loading: sessions/default/anime_dataset.csv -> DataFrame 'df'
+2025-08-28 11:31:12,583 - core.data_loader - INFO - Loading file 'sessions/default/anime_dataset.csv' as DataFrame 'df' in session 'default'
+2025-08-28 11:31:12,583 - core.data_loader - INFO - Using .csv loader with options: {}
+2025-08-28 11:31:12,583 - core.data_loader - INFO - Loading CSV with options: {}
+2025-08-28 11:31:12,599 - core.data_loader - INFO - Loaded DataFrame: (30, 25), Memory: 0.03MB
+2025-08-28 11:31:12,600 - core.data_loader - INFO - Successfully stored DataFrame 'df': DataFrame 'df' added successfully (0.03MB)
+2025-08-28 11:31:12,603 - core.tools - INFO - Successfully loaded sessions/default/anime_dataset.csv as 'df'
+2025-08-28 11:31:12,607 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 11:31:14,467 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 11:31:14,470 - core.tools - INFO - Orchestrating pandas code execution in session default
+2025-08-28 11:31:14,471 - core.execution - INFO - Executing pandas code in session 'default' on DataFrame 'df': df.loc[df['score'].idxmax()]...
+2025-08-28 11:31:14,472 - core.execution - ERROR - Execution failed: module 'numpy' has no attribute 'bool8'
+Traceback (most recent call last):
+  File "/home/justin/Work/Huawei/pandas-mcp-server/core/execution.py", line 96, in execute
+    formatted_result = format_execution_result(result, result_type)
+  File "/home/justin/Work/Huawei/pandas-mcp-server/utils/formatters.py", line 26, in format_execution_result
+    return format_series(result)
+  File "/home/justin/Work/Huawei/pandas-mcp-server/utils/formatters.py", line 107, in format_series
+    converted_values = [convert_value(v) for v in series.head(max_items)]
+  File "/home/justin/Work/Huawei/pandas-mcp-server/utils/formatters.py", line 107, in <listcomp>
+    converted_values = [convert_value(v) for v in series.head(max_items)]
+  File "/home/justin/Work/Huawei/pandas-mcp-server/utils/formatters.py", line 97, in convert_value
+    elif isinstance(val, (np.bool_, np.bool8)):
+  File "/home/justin/Work/Huawei/pandas-mcp-server/.venv/lib/python3.10/site-packages/numpy/__init__.py", line 414, in __getattr__
+    raise AttributeError("module {!r} has no attribute "
+AttributeError: module 'numpy' has no attribute 'bool8'. Did you mean: 'bool'?
+2025-08-28 11:31:14,474 - core.tools - WARNING - Code execution failed: Execution failed: module 'numpy' has no attribute 'bool8'
+2025-08-28 11:31:14,477 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 11:31:16,008 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 11:31:16,011 - core.tools - INFO - Orchestrating pandas code execution in session default
+2025-08-28 11:31:16,011 - core.execution - INFO - Executing pandas code in session 'default' on DataFrame 'df': df.loc[df['score'].idxmax()]['title']...
+2025-08-28 11:31:16,012 - core.execution - INFO - Code executed successfully, result type: scalar
+2025-08-28 11:31:16,012 - core.tools - INFO - Code executed successfully, result type: scalar
+2025-08-28 11:31:16,015 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 11:31:33,766 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 11:31:33,769 - core.tools - INFO - File anime_dataset.csv already exists with same content
+2025-08-28 11:31:33,772 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 11:31:35,559 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 11:31:35,566 - core.tools - INFO - Orchestrating data loading: sessions/default/anime_dataset.csv -> DataFrame 'anime_data'
+2025-08-28 11:31:35,566 - core.data_loader - INFO - Loading file 'sessions/default/anime_dataset.csv' as DataFrame 'anime_data' in session 'default'
+2025-08-28 11:31:35,566 - core.data_loader - INFO - Using .csv loader with options: {}
+2025-08-28 11:31:35,566 - core.data_loader - INFO - Loading CSV with options: {}
+2025-08-28 11:31:35,569 - core.data_loader - INFO - Loaded DataFrame: (30, 25), Memory: 0.03MB
+2025-08-28 11:31:35,572 - core.data_loader - INFO - Successfully stored DataFrame 'anime_data': DataFrame 'anime_data' added successfully (0.03MB)
+2025-08-28 11:31:35,576 - core.tools - INFO - Successfully loaded sessions/default/anime_dataset.csv as 'anime_data'
+2025-08-28 11:31:35,579 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 11:31:39,555 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 11:31:39,559 - core.tools - INFO - Orchestrating pandas code execution in session default
+2025-08-28 11:31:39,559 - core.execution - INFO - Executing pandas code in session 'default' on DataFrame 'anime_data': anime_data[anime_data['genres'].str.contains('Action')].sort_values(by='score', ascending=False).hea...
+2025-08-28 11:31:39,565 - core.execution - INFO - Code executed successfully, result type: dataframe
+2025-08-28 11:31:39,565 - core.tools - INFO - Code executed successfully, result type: dataframe
+2025-08-28 11:31:39,569 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 11:52:33,916 - __main__ - INFO - Starting pandas-mcp-server v0.1.0
+2025-08-28 11:52:33,916 - __main__ - INFO - Server configuration: sse on 0.0.0.0:8000
+2025-08-28 11:52:33,917 - __main__ - INFO - Background cleanup task started
+2025-08-28 11:52:33,917 - __main__ - INFO - Auto-cleanup task started (30 min session timeout)
+2025-08-28 11:52:33,917 - __main__ - INFO - Session management: Automatic cleanup enabled (30 min timeout)
+2025-08-28 11:52:33,917 - __main__ - INFO - Available MCP tools:
+2025-08-28 11:52:33,917 - __main__ - INFO -   - upload_temp_file_tool: Upload files with auto-cleanup
+2025-08-28 11:52:33,917 - __main__ - INFO -   - get_server_status_tool: Get server status
+2025-08-28 11:52:33,917 - __main__ - INFO -   - read_metadata_tool: Extract file metadata
+2025-08-28 11:52:33,918 - __main__ - INFO -   - run_pandas_code_tool: Execute pandas operations
+2025-08-28 11:52:33,918 - __main__ - INFO -   - load_dataframe_tool: Load data files
+2025-08-28 11:52:33,918 - __main__ - INFO -   - list_dataframes_tool: List loaded DataFrames
+2025-08-28 11:52:33,918 - __main__ - INFO -   - get_dataframe_info_tool: Get DataFrame details
+2025-08-28 11:52:33,918 - __main__ - INFO -   - validate_pandas_code_tool: Validate code without execution
+2025-08-28 11:52:33,918 - __main__ - INFO -   - get_execution_context_tool: Get execution context
+2025-08-28 11:52:33,918 - __main__ - INFO -   - preview_file_tool: Preview files
+2025-08-28 11:52:33,918 - __main__ - INFO -   - get_supported_formats_tool: Get supported formats
+2025-08-28 11:52:33,918 - __main__ - INFO -   - clear_session_tool: Clear session data
+2025-08-28 11:52:33,918 - __main__ - INFO -   - get_session_info_tool: Get session info
+2025-08-28 11:52:33,918 - __main__ - INFO -   - get_server_info_tool: Get server configuration
+2025-08-28 11:52:33,918 - __main__ - INFO -   - create_chart_tool: Create interactive charts
+2025-08-28 11:52:33,918 - __main__ - INFO -   - suggest_charts_tool: Get chart recommendations
+2025-08-28 11:52:33,918 - __main__ - INFO -   - get_chart_types_tool: List supported chart types
+2025-08-28 11:52:33,918 - __main__ - INFO -   - create_correlation_heatmap_tool: Create correlation matrix
+2025-08-28 11:52:33,918 - __main__ - INFO -   - create_time_series_chart_tool: Create time series visualization
+2025-08-28 11:52:33,921 - __main__ - ERROR - Server failed to start: FastMCP.run_http_async() got an unexpected keyword argument 'app'
+Traceback (most recent call last):
+  File "/home/justin/Work/Huawei/pandas-mcp-server/server.py", line 953, in main
+    mcp.run(
+  File "/home/justin/Work/Huawei/pandas-mcp-server/.venv/lib/python3.10/site-packages/fastmcp/server/server.py", line 352, in run
+    anyio.run(
+  File "/home/justin/Work/Huawei/pandas-mcp-server/.venv/lib/python3.10/site-packages/anyio/_core/_eventloop.py", line 74, in run
+    return async_backend.run(func, args, {}, backend_options)
+  File "/home/justin/Work/Huawei/pandas-mcp-server/.venv/lib/python3.10/site-packages/anyio/_backends/_asyncio.py", line 2316, in run
+    return runner.run(wrapper())
+  File "/home/justin/Work/Huawei/pandas-mcp-server/.venv/lib/python3.10/site-packages/anyio/_backends/_asyncio.py", line 217, in run
+    return self._loop.run_until_complete(task)
+  File "/usr/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/home/justin/Work/Huawei/pandas-mcp-server/.venv/lib/python3.10/site-packages/anyio/_backends/_asyncio.py", line 2304, in wrapper
+    return await func(*args)
+  File "/home/justin/Work/Huawei/pandas-mcp-server/.venv/lib/python3.10/site-packages/fastmcp/server/server.py", line 332, in run_async
+    await self.run_http_async(
+TypeError: FastMCP.run_http_async() got an unexpected keyword argument 'app'
+2025-08-28 11:52:48,168 - __main__ - INFO - Starting pandas-mcp-server v0.1.0
+2025-08-28 11:52:48,169 - __main__ - INFO - Server configuration: sse on 0.0.0.0:8000
+2025-08-28 11:52:48,169 - __main__ - INFO - Background cleanup task started
+2025-08-28 11:52:48,169 - __main__ - INFO - Auto-cleanup task started (30 min session timeout)
+2025-08-28 11:52:48,169 - __main__ - INFO - Session management: Automatic cleanup enabled (30 min timeout)
+2025-08-28 11:52:48,170 - __main__ - INFO - Available MCP tools:
+2025-08-28 11:52:48,170 - __main__ - INFO -   - upload_temp_file_tool: Upload files with auto-cleanup
+2025-08-28 11:52:48,170 - __main__ - INFO -   - get_server_status_tool: Get server status
+2025-08-28 11:52:48,170 - __main__ - INFO -   - read_metadata_tool: Extract file metadata
+2025-08-28 11:52:48,170 - __main__ - INFO -   - run_pandas_code_tool: Execute pandas operations
+2025-08-28 11:52:48,170 - __main__ - INFO -   - load_dataframe_tool: Load data files
+2025-08-28 11:52:48,170 - __main__ - INFO -   - list_dataframes_tool: List loaded DataFrames
+2025-08-28 11:52:48,170 - __main__ - INFO -   - get_dataframe_info_tool: Get DataFrame details
+2025-08-28 11:52:48,170 - __main__ - INFO -   - validate_pandas_code_tool: Validate code without execution
+2025-08-28 11:52:48,170 - __main__ - INFO -   - get_execution_context_tool: Get execution context
+2025-08-28 11:52:48,170 - __main__ - INFO -   - preview_file_tool: Preview files
+2025-08-28 11:52:48,170 - __main__ - INFO -   - get_supported_formats_tool: Get supported formats
+2025-08-28 11:52:48,170 - __main__ - INFO -   - clear_session_tool: Clear session data
+2025-08-28 11:52:48,170 - __main__ - INFO -   - get_session_info_tool: Get session info
+2025-08-28 11:52:48,170 - __main__ - INFO -   - get_server_info_tool: Get server configuration
+2025-08-28 11:52:48,170 - __main__ - INFO -   - create_chart_tool: Create interactive charts
+2025-08-28 11:52:48,171 - __main__ - INFO -   - suggest_charts_tool: Get chart recommendations
+2025-08-28 11:52:48,171 - __main__ - INFO -   - get_chart_types_tool: List supported chart types
+2025-08-28 11:52:48,171 - __main__ - INFO -   - create_correlation_heatmap_tool: Create correlation matrix
+2025-08-28 11:52:48,171 - __main__ - INFO -   - create_time_series_chart_tool: Create time series visualization
+2025-08-28 11:52:48,173 - __main__ - ERROR - Server failed to start: FastMCP.run_http_async() got an unexpected keyword argument 'app'
+Traceback (most recent call last):
+  File "/home/justin/Work/Huawei/pandas-mcp-server/server.py", line 953, in main
+    mcp.run(
+  File "/home/justin/Work/Huawei/pandas-mcp-server/.venv/lib/python3.10/site-packages/fastmcp/server/server.py", line 352, in run
+    anyio.run(
+  File "/home/justin/Work/Huawei/pandas-mcp-server/.venv/lib/python3.10/site-packages/anyio/_core/_eventloop.py", line 74, in run
+    return async_backend.run(func, args, {}, backend_options)
+  File "/home/justin/Work/Huawei/pandas-mcp-server/.venv/lib/python3.10/site-packages/anyio/_backends/_asyncio.py", line 2316, in run
+    return runner.run(wrapper())
+  File "/home/justin/Work/Huawei/pandas-mcp-server/.venv/lib/python3.10/site-packages/anyio/_backends/_asyncio.py", line 217, in run
+    return self._loop.run_until_complete(task)
+  File "/usr/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/home/justin/Work/Huawei/pandas-mcp-server/.venv/lib/python3.10/site-packages/anyio/_backends/_asyncio.py", line 2304, in wrapper
+    return await func(*args)
+  File "/home/justin/Work/Huawei/pandas-mcp-server/.venv/lib/python3.10/site-packages/fastmcp/server/server.py", line 332, in run_async
+    await self.run_http_async(
+TypeError: FastMCP.run_http_async() got an unexpected keyword argument 'app'
+2025-08-28 11:55:15,101 - __main__ - INFO - Starting pandas-mcp-server v0.1.0
+2025-08-28 11:55:15,101 - __main__ - INFO - Server configuration: sse on 0.0.0.0:8000
+2025-08-28 11:55:15,101 - __main__ - INFO - Background cleanup task started
+2025-08-28 11:55:15,102 - __main__ - INFO - Auto-cleanup task started (30 min session timeout)
+2025-08-28 11:55:15,102 - __main__ - INFO - Session management: Automatic cleanup enabled (30 min timeout)
+2025-08-28 11:55:15,102 - __main__ - INFO - Available MCP tools:
+2025-08-28 11:55:15,102 - __main__ - INFO -   - upload_temp_file_tool: Upload files with auto-cleanup
+2025-08-28 11:55:15,102 - __main__ - INFO -   - get_server_status_tool: Get server status
+2025-08-28 11:55:15,102 - __main__ - INFO -   - read_metadata_tool: Extract file metadata
+2025-08-28 11:55:15,102 - __main__ - INFO -   - run_pandas_code_tool: Execute pandas operations
+2025-08-28 11:55:15,102 - __main__ - INFO -   - load_dataframe_tool: Load data files
+2025-08-28 11:55:15,102 - __main__ - INFO -   - list_dataframes_tool: List loaded DataFrames
+2025-08-28 11:55:15,103 - __main__ - INFO -   - get_dataframe_info_tool: Get DataFrame details
+2025-08-28 11:55:15,103 - __main__ - INFO -   - validate_pandas_code_tool: Validate code without execution
+2025-08-28 11:55:15,103 - __main__ - INFO -   - get_execution_context_tool: Get execution context
+2025-08-28 11:55:15,103 - __main__ - INFO -   - preview_file_tool: Preview files
+2025-08-28 11:55:15,103 - __main__ - INFO -   - get_supported_formats_tool: Get supported formats
+2025-08-28 11:55:15,103 - __main__ - INFO -   - clear_session_tool: Clear session data
+2025-08-28 11:55:15,103 - __main__ - INFO -   - get_session_info_tool: Get session info
+2025-08-28 11:55:15,103 - __main__ - INFO -   - get_server_info_tool: Get server configuration
+2025-08-28 11:55:15,103 - __main__ - INFO -   - create_chart_tool: Create interactive charts
+2025-08-28 11:55:15,103 - __main__ - INFO -   - suggest_charts_tool: Get chart recommendations
+2025-08-28 11:55:15,103 - __main__ - INFO -   - get_chart_types_tool: List supported chart types
+2025-08-28 11:55:15,103 - __main__ - INFO -   - create_correlation_heatmap_tool: Create correlation matrix
+2025-08-28 11:55:15,103 - __main__ - INFO -   - create_time_series_chart_tool: Create time series visualization
+2025-08-28 11:55:29,175 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest

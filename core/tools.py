@@ -4,7 +4,13 @@ This module contains SIMPLE orchestration logic - validation happens in the core
 """
 
 import logging
+import hashlib
+import shutil
+import threading
+import json
 from typing import Dict, List, Any, Optional
+from pathlib import Path
+from datetime import datetime, timedelta
 
 # Import from core modules - each handles its own validation
 from core.metadata import MetadataExtractor
@@ -23,6 +29,141 @@ data_loader = DataLoader()
 df_manager = get_manager()
 visualization_orchestrator = get_orchestrator()
 
+# ============================================================================
+# SESSION TRACKING FOR AUTO-CLEANUP
+# ============================================================================
+
+class SessionTracker:
+    """Track session activity for time-based cleanup"""
+    
+    def __init__(self):
+        self.sessions = {}  # {session_id: last_activity}
+        self.lock = threading.Lock()
+    
+    def touch(self, session_id: str):
+        """Update session last activity"""
+        with self.lock:
+            self.sessions[session_id] = datetime.now()
+    
+    def get_inactive_sessions(self, max_age_minutes: int = 30):
+        """Get sessions inactive for more than max_age_minutes"""
+        with self.lock:
+            now = datetime.now()
+            inactive = []
+            for sid, last_activity in self.sessions.items():
+                if (now - last_activity).total_seconds() > max_age_minutes * 60:
+                    inactive.append(sid)
+            return inactive
+    
+    def remove(self, session_id: str):
+        """Remove session from tracking"""
+        with self.lock:
+            self.sessions.pop(session_id, None)
+
+# Global session tracker
+session_tracker = SessionTracker()
+
+# ============================================================================
+# FILE UPLOAD WITH AUTO-CLEANUP
+# ============================================================================
+
+def upload_temp_file(
+    filename: str,
+    content: str,
+    session_id: str = "default"
+) -> Dict[str, Any]:
+    """
+    Upload with deduplication and session tracking.
+    Files auto-cleaned after 30 min of inactivity.
+    """
+    try:
+        # Track session activity
+        session_tracker.touch(session_id)
+        
+        # Create session directory
+        session_dir = Path(f"sessions/{session_id}")
+        session_dir.mkdir(parents=True, exist_ok=True)
+        
+        # Create session metadata file
+        metadata_file = session_dir / ".metadata.json"
+        metadata = {}
+        if metadata_file.exists():
+            metadata = json.loads(metadata_file.read_text())
+        
+        metadata["last_activity"] = datetime.now().isoformat()
+        metadata["session_id"] = session_id
+        
+        # Check for duplicate file
+        filepath = session_dir / filename
+        content_hash = hashlib.md5(content.encode()).hexdigest()
+        
+        if filepath.exists():
+            existing_content = filepath.read_text(encoding='utf-8')
+            existing_hash = hashlib.md5(existing_content.encode()).hexdigest()
+            
+            if existing_hash == content_hash:
+                logger.info(f"File {filename} already exists with same content")
+                metadata["files"] = metadata.get("files", {})
+                metadata["files"][filename] = {"hash": content_hash, "cached_hit": True}
+                
+                metadata_file.write_text(json.dumps(metadata, indent=2))
+                
+                return {
+                    "success": True,
+                    "filepath": str(filepath),
+                    "cached": True,
+                    "message": f"Using cached file at '{filepath}'"
+                }
+        
+        # Write new file
+        filepath.write_text(content, encoding='utf-8')
+        
+        # Update metadata
+        metadata["files"] = metadata.get("files", {})
+        metadata["files"][filename] = {
+            "hash": content_hash,
+            "uploaded_at": datetime.now().isoformat()
+        }
+        
+        metadata_file.write_text(json.dumps(metadata, indent=2))
+        
+        logger.info(f"Uploaded {filename} to session {session_id}")
+        
+        return {
+            "success": True,
+            "filepath": str(filepath),
+            "cached": False,
+            "message": f"File uploaded to '{filepath}'"
+        }
+        
+    except Exception as e:
+        logger.error(f"Upload failed: {e}")
+        return {"success": False, "error": str(e)}
+
+def cleanup_session_files(session_id: str = "default") -> Dict[str, Any]:
+    """
+    Clean up session files and remove from tracking.
+    Called by the auto-cleanup task.
+    """
+    try:
+        session_dir = Path(f"sessions/{session_id}")
+        
+        if session_dir.exists():
+            shutil.rmtree(session_dir)
+            logger.info(f"Cleaned session directory: {session_dir}")
+        
+        # Remove from tracker
+        session_tracker.remove(session_id)
+        
+        return {
+            "success": True,
+            "message": f"Session '{session_id}' cleaned"
+        }
+        
+    except Exception as e:
+        logger.error(f"Cleanup failed: {e}")
+        return {"success": False, "error": str(e)}
+    
 
 def read_metadata(filepath: str, sample_size: int = 1000) -> Dict[str, Any]:
     """
