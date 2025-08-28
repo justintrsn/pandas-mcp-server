@@ -206,14 +206,17 @@ class SecurityASTVisitor(ast.NodeVisitor):
     
     def visit_Import(self, node):
         """Check import statements"""
+        # Allow safe imports
+        safe_modules = ['pandas', 'numpy', 'pd', 'np']
         for alias in node.names:
-            if alias.name not in ['pandas', 'numpy']:
+            if alias.name not in safe_modules:
                 self.violations.append(f"Import of '{alias.name}' not allowed")
         self.generic_visit(node)
     
     def visit_ImportFrom(self, node):
         """Check from-import statements"""
-        if node.module not in ['pandas', 'numpy']:
+        safe_modules = ['pandas', 'numpy']
+        if node.module not in safe_modules:
             self.violations.append(f"Import from '{node.module}' not allowed")
         self.generic_visit(node)
     

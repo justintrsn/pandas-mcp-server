@@ -279,7 +279,20 @@ class DataFrameManager:
                 if isinstance(result, pd.DataFrame):
                     result_type = "dataframe"
                 elif isinstance(result, pd.Series):
-                    result_type = "series"
+                    result_type = "series"  
+                    result = result.copy()
+                    if result.dtype in ['int64', 'int32', 'int16', 'int8']:
+                        result = result.astype('object')
+                        result = result.apply(lambda x: int(x) if pd.notna(x) else None)
+                    elif result.dtype in ['float64', 'float32', 'float16']:
+                        result = result.astype('object') 
+                        result = result.apply(lambda x: float(x) if pd.notna(x) else None)
+                elif isinstance(result, np.ndarray):
+                    result = result.tolist()
+                    result_type = "list"  
+                elif isinstance(result, (np.integer, np.floating, np.bool_)):
+                    result = result.item()
+                    result_type = "scalar"
                 elif isinstance(result, (list, tuple)):
                     result_type = "list"
                 elif isinstance(result, dict):

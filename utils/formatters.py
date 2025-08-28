@@ -37,23 +37,37 @@ def format_execution_result(result: Any, result_type: str) -> Any:
 def format_dataframe(df: pd.DataFrame, max_rows: int = 100) -> Dict[str, Any]:
     """
     Format a DataFrame for response.
-    
-    Args:
-        df: DataFrame to format
-        max_rows: Maximum rows to include in data
-        
-    Returns:
-        Formatted DataFrame dictionary
     """
     if not isinstance(df, pd.DataFrame):
         return {"error": "Not a DataFrame"}
+    
+    # Convert DataFrame to records with proper type conversion
+    def convert_record(record):
+        converted = {}
+        for key, value in record.items():
+            if pd.isna(value):
+                converted[key] = None
+            elif isinstance(value, (np.integer, np.int64, np.int32)):
+                converted[key] = int(value)
+            elif isinstance(value, (np.floating, np.float64, np.float32)):
+                converted[key] = float(value)
+            elif isinstance(value, np.bool_):
+                converted[key] = bool(value)
+            elif isinstance(value, np.ndarray):
+                converted[key] = value.tolist()
+            else:
+                converted[key] = value
+        return converted
+    
+    records = df.head(max_rows).to_dict('records')
+    converted_records = [convert_record(r) for r in records]
     
     return {
         "shape": df.shape,
         "columns": df.columns.tolist(),
         "dtypes": {col: str(dtype) for col, dtype in df.dtypes.items()},
         "preview": df.head(10).to_string(max_cols=10),
-        "data": df.head(max_rows).to_dict('records'),
+        "data": converted_records,
         "truncated": len(df) > max_rows
     }
 
@@ -72,15 +86,36 @@ def format_series(series: pd.Series, max_items: int = 100) -> Dict[str, Any]:
     if not isinstance(series, pd.Series):
         return {"error": "Not a Series"}
     
+    # Convert numpy types to Python native types
+    def convert_value(val):
+        if pd.isna(val):
+            return None
+        elif isinstance(val, (np.integer, np.int64, np.int32, np.int16, np.int8)):
+            return int(val)
+        elif isinstance(val, (np.floating, np.float64, np.float32, np.float16)):
+            return float(val)
+        elif isinstance(val, (np.bool_, np.bool8)):
+            return bool(val)
+        elif isinstance(val, np.ndarray):
+            return val.tolist()
+        elif isinstance(val, (int, float, str, bool, type(None))):
+            return val
+        else:
+            return str(val)
+    
+    # Convert all values
+    converted_values = [convert_value(v) for v in series.head(max_items)]
+    
     return {
         "name": series.name,
         "dtype": str(series.dtype),
         "length": len(series),
         "preview": series.head(10).to_string(),
-        "data": series.head(max_items).tolist(),
+        "data": converted_values,
         "index": series.head(max_items).index.tolist(),
         "truncated": len(series) > max_items
     }
+
 
 
 def format_list(lst: list, max_items: int = 1000) -> Union[list, Dict[str, Any]]:
