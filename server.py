@@ -78,30 +78,18 @@ async def upload_temp_file_tool(
     content: str,
     session_id: Optional[str] = "default"
 ) -> Dict[str, Any]:
-    """
-    Upload a temporary file for processing.
-    Fixed to save where load_dataframe_tool can find it.
-    """
+    """Upload a file that can be loaded with load_dataframe_tool"""
     try:
-        from pathlib import Path
-        
-        # Save to current working directory (where load_dataframe expects files)
-        # Or use data directory from config
-        save_path = Path(f"temp_{session_id}_{filename}")
-        
-        # Write the file
-        save_path.write_text(content, encoding='utf-8')
+        # Save to current directory where load_dataframe expects files
+        filepath = Path(filename)  # Just use the filename directly
+        filepath.write_text(content, encoding='utf-8')
         
         return {
             "success": True,
-            "filepath": str(save_path),  # Return the path that load_dataframe can use
-            "filename": filename,
-            "session_id": session_id,
-            "size_bytes": len(content.encode('utf-8')),
-            "message": f"File uploaded as {save_path}. Use filepath '{save_path}' with load_dataframe_tool."
+            "filepath": filename,  # Return the filename that load_dataframe can use
+            "message": f"File uploaded. Use filepath='{filename}' with load_dataframe_tool"
         }
     except Exception as e:
-        logger.error(f"Upload failed: {e}")
         return {"success": False, "error": str(e)}
 
 
