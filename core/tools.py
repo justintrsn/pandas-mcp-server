@@ -139,30 +139,6 @@ def upload_temp_file(
     except Exception as e:
         logger.error(f"Upload failed: {e}")
         return {"success": False, "error": str(e)}
-
-def cleanup_session_files(session_id: str = "default") -> Dict[str, Any]:
-    """
-    Clean up session files and remove from tracking.
-    Called by the auto-cleanup task.
-    """
-    try:
-        session_dir = Path(f"sessions/{session_id}")
-        
-        if session_dir.exists():
-            shutil.rmtree(session_dir)
-            logger.info(f"Cleaned session directory: {session_dir}")
-        
-        # Remove from tracker
-        session_tracker.remove(session_id)
-        
-        return {
-            "success": True,
-            "message": f"Session '{session_id}' cleaned"
-        }
-        
-    except Exception as e:
-        logger.error(f"Cleanup failed: {e}")
-        return {"success": False, "error": str(e)}
     
 
 def read_metadata(filepath: str, sample_size: int = 1000) -> Dict[str, Any]:
@@ -758,4 +734,37 @@ def create_time_series_chart(
         
     except Exception as e:
         logger.error(f"Time series chart orchestration failed: {e}", exc_info=True)
+        return {"success": False, "error": str(e)}
+
+def get_chart_html(filepath: str) -> Dict[str, Any]:
+    """
+    Retrieve HTML content of a generated chart.
+    
+    Args:
+        filepath: Path to the chart HTML file
+        
+    Returns:
+        Dictionary with HTML content or error
+    """
+    try:
+        from pathlib import Path
+        chart_path = Path(filepath)
+        
+        if not chart_path.exists():
+            return {"success": False, "error": f"Chart file not found: {filepath}"}
+            
+        html_content = chart_path.read_text()
+        
+        logger.info(f"Retrieved HTML chart: {filepath}")
+        
+        return {
+            "success": True,
+            "html_content": html_content,
+            "filepath": str(filepath),
+            "filename": chart_path.name,
+            "size_bytes": len(html_content)
+        }
+        
+    except Exception as e:
+        logger.error(f"Failed to read chart HTML: {e}")
         return {"success": False, "error": str(e)}

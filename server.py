@@ -31,7 +31,6 @@ from fastapi.responses import JSONResponse, HTMLResponse
 # Import ALL orchestration functions AND session_tracker from core.tools
 from core.tools import (
     upload_temp_file,
-    cleanup_session_files,
     session_tracker,  
     read_metadata,
     run_pandas_code,
@@ -49,7 +48,8 @@ from core.tools import (
     suggest_charts,
     get_chart_types,
     create_correlation_heatmap,
-    create_time_series_chart
+    create_time_series_chart,
+    get_chart_html
 )
 
 # Import configuration
@@ -723,6 +723,20 @@ async def create_time_series_chart_tool(
         **options
     )
 
+@mcp.tool()
+async def get_chart_html_tool(
+    filepath: str
+) -> Dict[str, Any]:
+    """
+    Retrieve HTML content of a generated chart file.
+    
+    Args:
+        filepath: Path to the chart HTML file (from create_chart_tool response)
+    
+    Returns:
+        Dictionary with HTML content and metadata
+    """
+    return get_chart_html(filepath)
 
 # ============================================================================
 # BACKGROUND CLEANUP TASK

@@ -32,7 +32,8 @@ from core.tools import (
     suggest_charts,
     get_chart_types,
     create_correlation_heatmap,
-    create_time_series_chart
+    create_time_series_chart,
+    get_chart_html
 )
 
 # Import chart classes for advanced usage
@@ -63,7 +64,6 @@ __all__ = [
     
     # Core Functions
     'upload_temp_file',
-    'cleanup_session_files',
     'session_tracker',
     'get_config',
     'read_metadata',
@@ -84,5 +84,6 @@ __all__ = [
     'suggest_charts',
     'get_chart_types',
     'create_correlation_heatmap',
-    'create_time_series_chart'
+    'create_time_series_chart',
+    'get_chart_html'
 ]
