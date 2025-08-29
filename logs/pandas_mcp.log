@@ -1671,3 +1671,336 @@ TypeError: FastMCP.run_http_async() got an unexpected keyword argument 'app'
 2025-08-29 09:44:19,865 - __main__ - INFO - Cleaned 1 inactive sessions
 2025-08-29 10:08:05,921 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
 2025-08-29 10:08:17,146 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-29 16:24:48,114 - __main__ - INFO - Starting pandas-mcp-server v0.1.0
+2025-08-29 16:24:48,114 - __main__ - INFO - Server configuration: sse on 0.0.0.0:8000
+2025-08-29 16:24:48,114 - __main__ - INFO - Background cleanup task started
+2025-08-29 16:24:48,115 - __main__ - INFO - Auto-cleanup task started (30 min session timeout)
+2025-08-29 16:24:48,115 - __main__ - INFO - Session management: Automatic cleanup enabled (30 min timeout)
+2025-08-29 16:24:48,115 - __main__ - INFO - Available MCP tools:
+2025-08-29 16:24:48,115 - __main__ - INFO -   - upload_temp_file_tool: Upload files with auto-cleanup
+2025-08-29 16:24:48,115 - __main__ - INFO -   - get_server_status_tool: Get server status
+2025-08-29 16:24:48,115 - __main__ - INFO -   - read_metadata_tool: Extract file metadata
+2025-08-29 16:24:48,115 - __main__ - INFO -   - run_pandas_code_tool: Execute pandas operations
+2025-08-29 16:24:48,116 - __main__ - INFO -   - load_dataframe_tool: Load data files
+2025-08-29 16:24:48,116 - __main__ - INFO -   - list_dataframes_tool: List loaded DataFrames
+2025-08-29 16:24:48,116 - __main__ - INFO -   - get_dataframe_info_tool: Get DataFrame details
+2025-08-29 16:24:48,116 - __main__ - INFO -   - validate_pandas_code_tool: Validate code without execution
+2025-08-29 16:24:48,116 - __main__ - INFO -   - get_execution_context_tool: Get execution context
+2025-08-29 16:24:48,116 - __main__ - INFO -   - preview_file_tool: Preview files
+2025-08-29 16:24:48,116 - __main__ - INFO -   - get_supported_formats_tool: Get supported formats
+2025-08-29 16:24:48,116 - __main__ - INFO -   - clear_session_tool: Clear session data
+2025-08-29 16:24:48,116 - __main__ - INFO -   - get_session_info_tool: Get session info
+2025-08-29 16:24:48,116 - __main__ - INFO -   - get_server_info_tool: Get server configuration
+2025-08-29 16:24:48,116 - __main__ - INFO -   - create_chart_tool: Create interactive charts
+2025-08-29 16:24:48,116 - __main__ - INFO -   - suggest_charts_tool: Get chart recommendations
+2025-08-29 16:24:48,116 - __main__ - INFO -   - get_chart_types_tool: List supported chart types
+2025-08-29 16:24:48,116 - __main__ - INFO -   - create_correlation_heatmap_tool: Create correlation matrix
+2025-08-29 16:24:48,116 - __main__ - INFO -   - create_time_series_chart_tool: Create time series visualization
+2025-08-29 16:25:00,769 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-29 16:25:25,955 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-29 16:25:25,959 - core.tools - INFO - Uploaded anime_ratings.xls to session default
+2025-08-29 16:25:25,962 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-29 16:25:27,299 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-29 16:25:27,306 - core.tools - INFO - Orchestrating data loading: sessions/default/anime_ratings.xls -> DataFrame 'df'
+2025-08-29 16:25:27,306 - core.data_loader - INFO - Loading file 'sessions/default/anime_ratings.xls' as DataFrame 'df' in session 'default'
+2025-08-29 16:25:27,307 - core.data_loader - INFO - Using .xls loader with options: {}
+2025-08-29 16:25:27,307 - core.data_loader - INFO - Loading Excel with options: {}
+2025-08-29 16:25:27,319 - core.data_loader - ERROR - Failed to load sessions/default/anime_ratings.xls: Excel file format cannot be determined, you must specify an engine manually.
+Traceback (most recent call last):
+  File "/home/justin/Work/Huawei/pandas-mcp-server/core/data_loader.py", line 103, in load
+    df = self.loaders[file_ext](filepath, **cleaned_options)
+  File "/home/justin/Work/Huawei/pandas-mcp-server/core/data_loader.py", line 268, in _load_excel
+    return pd.read_excel(filepath, **options)
+  File "/home/justin/Work/Huawei/pandas-mcp-server/.venv/lib/python3.10/site-packages/pandas/io/excel/_base.py", line 495, in read_excel
+    io = ExcelFile(
+  File "/home/justin/Work/Huawei/pandas-mcp-server/.venv/lib/python3.10/site-packages/pandas/io/excel/_base.py", line 1554, in __init__
+    raise ValueError(
+ValueError: Excel file format cannot be determined, you must specify an engine manually.
+2025-08-29 16:25:27,320 - core.tools - ERROR - Failed to load sessions/default/anime_ratings.xls: Failed to load sessions/default/anime_ratings.xls: Excel file format cannot be determined, you must specify an engine manually.
+2025-08-29 16:25:27,324 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-29 16:25:29,229 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-29 16:25:29,238 - core.tools - INFO - Orchestrating data loading: sessions/default/anime_ratings.xls -> DataFrame 'anime_ratings'
+2025-08-29 16:25:29,238 - core.data_loader - INFO - Loading file 'sessions/default/anime_ratings.xls' as DataFrame 'anime_ratings' in session 'default'
+2025-08-29 16:25:29,238 - core.data_loader - INFO - Using .xls loader with options: {'sheet_name': 'Sheet1'}
+2025-08-29 16:25:29,238 - core.data_loader - INFO - Loading Excel with options: {'sheet_name': 'Sheet1'}
+2025-08-29 16:25:29,238 - core.data_loader - ERROR - Failed to load sessions/default/anime_ratings.xls: Excel file format cannot be determined, you must specify an engine manually.
+Traceback (most recent call last):
+  File "/home/justin/Work/Huawei/pandas-mcp-server/core/data_loader.py", line 103, in load
+    df = self.loaders[file_ext](filepath, **cleaned_options)
+  File "/home/justin/Work/Huawei/pandas-mcp-server/core/data_loader.py", line 268, in _load_excel
+    return pd.read_excel(filepath, **options)
+  File "/home/justin/Work/Huawei/pandas-mcp-server/.venv/lib/python3.10/site-packages/pandas/io/excel/_base.py", line 495, in read_excel
+    io = ExcelFile(
+  File "/home/justin/Work/Huawei/pandas-mcp-server/.venv/lib/python3.10/site-packages/pandas/io/excel/_base.py", line 1554, in __init__
+    raise ValueError(
+ValueError: Excel file format cannot be determined, you must specify an engine manually.
+2025-08-29 16:25:29,239 - core.tools - ERROR - Failed to load sessions/default/anime_ratings.xls: Failed to load sessions/default/anime_ratings.xls: Excel file format cannot be determined, you must specify an engine manually.
+2025-08-29 16:25:29,241 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-29 16:25:30,788 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-29 16:25:30,794 - core.tools - INFO - Orchestrating data loading: sessions/default/anime_ratings.xls -> DataFrame 'anime_ratings'
+2025-08-29 16:25:30,794 - core.data_loader - INFO - Loading file 'sessions/default/anime_ratings.xls' as DataFrame 'anime_ratings' in session 'default'
+2025-08-29 16:25:30,795 - core.data_loader - INFO - Using .xls loader with options: {'sheet_name': 'Sheet1'}
+2025-08-29 16:25:30,795 - core.data_loader - INFO - Loading Excel with options: {'sheet_name': 'Sheet1'}
+2025-08-29 16:25:30,795 - core.data_loader - ERROR - Failed to load sessions/default/anime_ratings.xls: Excel file format cannot be determined, you must specify an engine manually.
+Traceback (most recent call last):
+  File "/home/justin/Work/Huawei/pandas-mcp-server/core/data_loader.py", line 103, in load
+    df = self.loaders[file_ext](filepath, **cleaned_options)
+  File "/home/justin/Work/Huawei/pandas-mcp-server/core/data_loader.py", line 268, in _load_excel
+    return pd.read_excel(filepath, **options)
+  File "/home/justin/Work/Huawei/pandas-mcp-server/.venv/lib/python3.10/site-packages/pandas/io/excel/_base.py", line 495, in read_excel
+    io = ExcelFile(
+  File "/home/justin/Work/Huawei/pandas-mcp-server/.venv/lib/python3.10/site-packages/pandas/io/excel/_base.py", line 1554, in __init__
+    raise ValueError(
+ValueError: Excel file format cannot be determined, you must specify an engine manually.
+2025-08-29 16:25:30,795 - core.tools - ERROR - Failed to load sessions/default/anime_ratings.xls: Failed to load sessions/default/anime_ratings.xls: Excel file format cannot be determined, you must specify an engine manually.
+2025-08-29 16:25:30,798 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-29 16:25:32,415 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-29 16:25:32,423 - core.tools - INFO - Orchestrating data loading: sessions/default/anime_ratings.xls -> DataFrame 'anime_ratings'
+2025-08-29 16:25:32,423 - core.data_loader - INFO - Loading file 'sessions/default/anime_ratings.xls' as DataFrame 'anime_ratings' in session 'default'
+2025-08-29 16:25:32,423 - core.data_loader - INFO - Using .xls loader with options: {'sheet_name': 'Sheet1'}
+2025-08-29 16:25:32,423 - core.data_loader - INFO - Loading Excel with options: {'sheet_name': 'Sheet1'}
+2025-08-29 16:25:32,423 - core.data_loader - ERROR - Failed to load sessions/default/anime_ratings.xls: Excel file format cannot be determined, you must specify an engine manually.
+Traceback (most recent call last):
+  File "/home/justin/Work/Huawei/pandas-mcp-server/core/data_loader.py", line 103, in load
+    df = self.loaders[file_ext](filepath, **cleaned_options)
+  File "/home/justin/Work/Huawei/pandas-mcp-server/core/data_loader.py", line 268, in _load_excel
+    return pd.read_excel(filepath, **options)
+  File "/home/justin/Work/Huawei/pandas-mcp-server/.venv/lib/python3.10/site-packages/pandas/io/excel/_base.py", line 495, in read_excel
+    io = ExcelFile(
+  File "/home/justin/Work/Huawei/pandas-mcp-server/.venv/lib/python3.10/site-packages/pandas/io/excel/_base.py", line 1554, in __init__
+    raise ValueError(
+ValueError: Excel file format cannot be determined, you must specify an engine manually.
+2025-08-29 16:25:32,424 - core.tools - ERROR - Failed to load sessions/default/anime_ratings.xls: Failed to load sessions/default/anime_ratings.xls: Excel file format cannot be determined, you must specify an engine manually.
+2025-08-29 16:25:32,427 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-29 16:25:34,082 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-29 16:25:34,088 - core.tools - INFO - Orchestrating data loading: sessions/default/anime_ratings.xls -> DataFrame 'anime_ratings'
+2025-08-29 16:25:34,088 - core.data_loader - INFO - Loading file 'sessions/default/anime_ratings.xls' as DataFrame 'anime_ratings' in session 'default'
+2025-08-29 16:25:34,089 - core.data_loader - INFO - Using .xls loader with options: {'sheet_name': 'Sheet1'}
+2025-08-29 16:25:34,089 - core.data_loader - INFO - Loading Excel with options: {'sheet_name': 'Sheet1'}
+2025-08-29 16:25:34,089 - core.data_loader - ERROR - Failed to load sessions/default/anime_ratings.xls: Excel file format cannot be determined, you must specify an engine manually.
+Traceback (most recent call last):
+  File "/home/justin/Work/Huawei/pandas-mcp-server/core/data_loader.py", line 103, in load
+    df = self.loaders[file_ext](filepath, **cleaned_options)
+  File "/home/justin/Work/Huawei/pandas-mcp-server/core/data_loader.py", line 268, in _load_excel
+    return pd.read_excel(filepath, **options)
+  File "/home/justin/Work/Huawei/pandas-mcp-server/.venv/lib/python3.10/site-packages/pandas/io/excel/_base.py", line 495, in read_excel
+    io = ExcelFile(
+  File "/home/justin/Work/Huawei/pandas-mcp-server/.venv/lib/python3.10/site-packages/pandas/io/excel/_base.py", line 1554, in __init__
+    raise ValueError(
+ValueError: Excel file format cannot be determined, you must specify an engine manually.
+2025-08-29 16:25:34,089 - core.tools - ERROR - Failed to load sessions/default/anime_ratings.xls: Failed to load sessions/default/anime_ratings.xls: Excel file format cannot be determined, you must specify an engine manually.
+2025-08-29 16:25:34,092 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-29 16:25:35,360 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-29 16:25:35,363 - core.tools - INFO - Previewing file: sessions/default/anime_ratings.xls
+2025-08-29 16:25:35,363 - core.data_loader - INFO - Loading Excel with options: {'nrows': 10}
+2025-08-29 16:25:35,367 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-29 16:25:36,491 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-29 16:25:36,492 - core.tools - INFO - Getting supported file formats
+2025-08-29 16:25:36,495 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-29 16:25:38,230 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-29 16:25:38,237 - core.tools - INFO - Orchestrating data loading: sessions/default/anime_ratings.xls -> DataFrame 'anime_ratings'
+2025-08-29 16:25:38,237 - core.data_loader - INFO - Loading file 'sessions/default/anime_ratings.xls' as DataFrame 'anime_ratings' in session 'default'
+2025-08-29 16:25:38,237 - core.data_loader - INFO - Using .xls loader with options: {'sheet_name': 'Sheet1'}
+2025-08-29 16:25:38,237 - core.data_loader - INFO - Loading Excel with options: {'sheet_name': 'Sheet1'}
+2025-08-29 16:25:38,238 - core.data_loader - ERROR - Failed to load sessions/default/anime_ratings.xls: Excel file format cannot be determined, you must specify an engine manually.
+Traceback (most recent call last):
+  File "/home/justin/Work/Huawei/pandas-mcp-server/core/data_loader.py", line 103, in load
+    df = self.loaders[file_ext](filepath, **cleaned_options)
+  File "/home/justin/Work/Huawei/pandas-mcp-server/core/data_loader.py", line 268, in _load_excel
+    return pd.read_excel(filepath, **options)
+  File "/home/justin/Work/Huawei/pandas-mcp-server/.venv/lib/python3.10/site-packages/pandas/io/excel/_base.py", line 495, in read_excel
+    io = ExcelFile(
+  File "/home/justin/Work/Huawei/pandas-mcp-server/.venv/lib/python3.10/site-packages/pandas/io/excel/_base.py", line 1554, in __init__
+    raise ValueError(
+ValueError: Excel file format cannot be determined, you must specify an engine manually.
+2025-08-29 16:25:38,238 - core.tools - ERROR - Failed to load sessions/default/anime_ratings.xls: Failed to load sessions/default/anime_ratings.xls: Excel file format cannot be determined, you must specify an engine manually.
+2025-08-29 16:25:38,241 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-29 16:25:39,973 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-29 16:25:39,981 - core.tools - INFO - Orchestrating data loading: sessions/default/anime_ratings.xls -> DataFrame 'anime_ratings'
+2025-08-29 16:25:39,981 - core.data_loader - INFO - Loading file 'sessions/default/anime_ratings.xls' as DataFrame 'anime_ratings' in session 'default'
+2025-08-29 16:25:39,981 - core.data_loader - INFO - Using .xls loader with options: {'encoding': 'utf-8', 'sheet_name': 'Sheet1'}
+2025-08-29 16:25:39,981 - core.data_loader - INFO - Loading Excel with options: {'encoding': 'utf-8', 'sheet_name': 'Sheet1'}
+2025-08-29 16:25:39,981 - core.data_loader - ERROR - Failed to load sessions/default/anime_ratings.xls: read_excel() got an unexpected keyword argument 'encoding'
+Traceback (most recent call last):
+  File "/home/justin/Work/Huawei/pandas-mcp-server/core/data_loader.py", line 103, in load
+    df = self.loaders[file_ext](filepath, **cleaned_options)
+  File "/home/justin/Work/Huawei/pandas-mcp-server/core/data_loader.py", line 268, in _load_excel
+    return pd.read_excel(filepath, **options)
+TypeError: read_excel() got an unexpected keyword argument 'encoding'
+2025-08-29 16:25:39,981 - core.tools - ERROR - Failed to load sessions/default/anime_ratings.xls: Failed to load sessions/default/anime_ratings.xls: read_excel() got an unexpected keyword argument 'encoding'
+2025-08-29 16:25:39,985 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-29 16:34:33,270 - __main__ - INFO - Starting pandas-mcp-server v0.1.0
+2025-08-29 16:34:33,271 - __main__ - INFO - Server configuration: sse on 0.0.0.0:8000
+2025-08-29 16:34:33,271 - __main__ - INFO - Background cleanup task started
+2025-08-29 16:34:33,271 - __main__ - INFO - Auto-cleanup task started (30 min session timeout)
+2025-08-29 16:34:33,271 - __main__ - INFO - Session management: Automatic cleanup enabled (30 min timeout)
+2025-08-29 16:34:33,271 - __main__ - INFO - Available MCP tools:
+2025-08-29 16:34:33,271 - __main__ - INFO -   - upload_temp_file_tool: Upload files with auto-cleanup
+2025-08-29 16:34:33,272 - __main__ - INFO -   - get_server_status_tool: Get server status
+2025-08-29 16:34:33,272 - __main__ - INFO -   - read_metadata_tool: Extract file metadata
+2025-08-29 16:34:33,272 - __main__ - INFO -   - run_pandas_code_tool: Execute pandas operations
+2025-08-29 16:34:33,272 - __main__ - INFO -   - load_dataframe_tool: Load data files
+2025-08-29 16:34:33,272 - __main__ - INFO -   - list_dataframes_tool: List loaded DataFrames
+2025-08-29 16:34:33,272 - __main__ - INFO -   - get_dataframe_info_tool: Get DataFrame details
+2025-08-29 16:34:33,272 - __main__ - INFO -   - validate_pandas_code_tool: Validate code without execution
+2025-08-29 16:34:33,272 - __main__ - INFO -   - get_execution_context_tool: Get execution context
+2025-08-29 16:34:33,272 - __main__ - INFO -   - preview_file_tool: Preview files
+2025-08-29 16:34:33,272 - __main__ - INFO -   - get_supported_formats_tool: Get supported formats
+2025-08-29 16:34:33,272 - __main__ - INFO -   - clear_session_tool: Clear session data
+2025-08-29 16:34:33,272 - __main__ - INFO -   - get_session_info_tool: Get session info
+2025-08-29 16:34:33,272 - __main__ - INFO -   - get_server_info_tool: Get server configuration
+2025-08-29 16:34:33,272 - __main__ - INFO -   - create_chart_tool: Create interactive charts
+2025-08-29 16:34:33,272 - __main__ - INFO -   - suggest_charts_tool: Get chart recommendations
+2025-08-29 16:34:33,273 - __main__ - INFO -   - get_chart_types_tool: List supported chart types
+2025-08-29 16:34:33,273 - __main__ - INFO -   - create_correlation_heatmap_tool: Create correlation matrix
+2025-08-29 16:34:33,273 - __main__ - INFO -   - create_time_series_chart_tool: Create time series visualization
+2025-08-29 16:35:00,252 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-29 16:42:38,430 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-29 16:43:28,222 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-29 16:43:28,226 - core.tools - INFO - Uploaded anime_ratings.xls to session default
+2025-08-29 16:43:28,230 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-29 16:43:30,171 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-29 16:43:30,177 - core.tools - INFO - Orchestrating data loading: sessions/default/anime_ratings.xls -> DataFrame 'df'
+2025-08-29 16:43:30,177 - core.data_loader - INFO - Loading file 'sessions/default/anime_ratings.xls' as DataFrame 'df' in session 'default'
+2025-08-29 16:43:30,178 - core.data_loader - INFO - Using .xls loader with options: {}
+2025-08-29 16:43:30,181 - core.data_loader - ERROR - Failed to load sessions/default/anime_ratings.xls: Unsupported format, or corrupt file: Expected BOF record; found b'\x11\xe0\xa1\xb1\x1a\x00\x00\x00'
+Traceback (most recent call last):
+  File "/home/justin/Work/Huawei/pandas-mcp-server/core/data_loader.py", line 103, in load
+    df = self.loaders[file_ext](filepath, **cleaned_options)
+  File "/home/justin/Work/Huawei/pandas-mcp-server/core/data_loader.py", line 276, in _load_excel
+    return pd.read_excel(filepath, **options)
+  File "/home/justin/Work/Huawei/pandas-mcp-server/.venv/lib/python3.10/site-packages/pandas/io/excel/_base.py", line 495, in read_excel
+    io = ExcelFile(
+  File "/home/justin/Work/Huawei/pandas-mcp-server/.venv/lib/python3.10/site-packages/pandas/io/excel/_base.py", line 1567, in __init__
+    self._reader = self._engines[engine](
+  File "/home/justin/Work/Huawei/pandas-mcp-server/.venv/lib/python3.10/site-packages/pandas/io/excel/_xlrd.py", line 46, in __init__
+    super().__init__(
+  File "/home/justin/Work/Huawei/pandas-mcp-server/.venv/lib/python3.10/site-packages/pandas/io/excel/_base.py", line 573, in __init__
+    self.book = self.load_workbook(self.handles.handle, engine_kwargs)
+  File "/home/justin/Work/Huawei/pandas-mcp-server/.venv/lib/python3.10/site-packages/pandas/io/excel/_xlrd.py", line 63, in load_workbook
+    return open_workbook(file_contents=data, **engine_kwargs)
+  File "/home/justin/Work/Huawei/pandas-mcp-server/.venv/lib/python3.10/site-packages/xlrd/__init__.py", line 172, in open_workbook
+    bk = open_workbook_xls(
+  File "/home/justin/Work/Huawei/pandas-mcp-server/.venv/lib/python3.10/site-packages/xlrd/book.py", line 79, in open_workbook_xls
+    biff_version = bk.getbof(XL_WORKBOOK_GLOBALS)
+  File "/home/justin/Work/Huawei/pandas-mcp-server/.venv/lib/python3.10/site-packages/xlrd/book.py", line 1284, in getbof
+    bof_error('Expected BOF record; found %r' % self.mem[savpos:savpos+8])
+  File "/home/justin/Work/Huawei/pandas-mcp-server/.venv/lib/python3.10/site-packages/xlrd/book.py", line 1278, in bof_error
+    raise XLRDError('Unsupported format, or corrupt file: ' + msg)
+xlrd.biffh.XLRDError: Unsupported format, or corrupt file: Expected BOF record; found b'\x11\xe0\xa1\xb1\x1a\x00\x00\x00'
+2025-08-29 16:43:30,188 - core.tools - ERROR - Failed to load sessions/default/anime_ratings.xls: Failed to load sessions/default/anime_ratings.xls: Unsupported format, or corrupt file: Expected BOF record; found b'\x11\xe0\xa1\xb1\x1a\x00\x00\x00'
+2025-08-29 16:43:30,191 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-29 16:43:31,495 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-29 16:43:31,499 - core.tools - INFO - Previewing file: sessions/default/anime_ratings.xls
+2025-08-29 16:43:31,502 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-29 16:43:32,836 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-29 16:43:32,837 - core.tools - INFO - Getting supported file formats
+2025-08-29 16:43:32,842 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-29 16:45:22,093 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-29 16:45:22,096 - core.tools - INFO - Uploaded anime_dataset.xlsx to session default
+2025-08-29 16:45:22,100 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-29 16:45:23,617 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-29 16:45:23,623 - core.tools - INFO - Orchestrating data loading: sessions/default/anime_dataset.xlsx -> DataFrame 'df'
+2025-08-29 16:45:23,624 - core.data_loader - INFO - Loading file 'sessions/default/anime_dataset.xlsx' as DataFrame 'df' in session 'default'
+2025-08-29 16:45:23,624 - core.data_loader - INFO - Using .xlsx loader with options: {}
+2025-08-29 16:45:23,727 - core.data_loader - ERROR - Failed to load sessions/default/anime_dataset.xlsx: File is not a zip file
+Traceback (most recent call last):
+  File "/home/justin/Work/Huawei/pandas-mcp-server/core/data_loader.py", line 103, in load
+    df = self.loaders[file_ext](filepath, **cleaned_options)
+  File "/home/justin/Work/Huawei/pandas-mcp-server/core/data_loader.py", line 276, in _load_excel
+    return pd.read_excel(filepath, **options)
+  File "/home/justin/Work/Huawei/pandas-mcp-server/.venv/lib/python3.10/site-packages/pandas/io/excel/_base.py", line 495, in read_excel
+    io = ExcelFile(
+  File "/home/justin/Work/Huawei/pandas-mcp-server/.venv/lib/python3.10/site-packages/pandas/io/excel/_base.py", line 1567, in __init__
+    self._reader = self._engines[engine](
+  File "/home/justin/Work/Huawei/pandas-mcp-server/.venv/lib/python3.10/site-packages/pandas/io/excel/_openpyxl.py", line 553, in __init__
+    super().__init__(
+  File "/home/justin/Work/Huawei/pandas-mcp-server/.venv/lib/python3.10/site-packages/pandas/io/excel/_base.py", line 573, in __init__
+    self.book = self.load_workbook(self.handles.handle, engine_kwargs)
+  File "/home/justin/Work/Huawei/pandas-mcp-server/.venv/lib/python3.10/site-packages/pandas/io/excel/_openpyxl.py", line 572, in load_workbook
+    return load_workbook(
+  File "/home/justin/Work/Huawei/pandas-mcp-server/.venv/lib/python3.10/site-packages/openpyxl/reader/excel.py", line 346, in load_workbook
+    reader = ExcelReader(filename, read_only, keep_vba,
+  File "/home/justin/Work/Huawei/pandas-mcp-server/.venv/lib/python3.10/site-packages/openpyxl/reader/excel.py", line 123, in __init__
+    self.archive = _validate_archive(fn)
+  File "/home/justin/Work/Huawei/pandas-mcp-server/.venv/lib/python3.10/site-packages/openpyxl/reader/excel.py", line 95, in _validate_archive
+    archive = ZipFile(filename, 'r')
+  File "/usr/lib/python3.10/zipfile.py", line 1272, in __init__
+    self._RealGetContents()
+  File "/usr/lib/python3.10/zipfile.py", line 1339, in _RealGetContents
+    raise BadZipFile("File is not a zip file")
+zipfile.BadZipFile: File is not a zip file
+2025-08-29 16:45:23,729 - core.tools - ERROR - Failed to load sessions/default/anime_dataset.xlsx: Failed to load sessions/default/anime_dataset.xlsx: File is not a zip file
+2025-08-29 16:45:23,732 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-29 16:49:26,704 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-29 16:49:26,708 - core.tools - INFO - Uploaded anime_dataset.xlsx to session default
+2025-08-29 16:49:26,712 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-29 16:49:27,959 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-29 16:49:27,967 - core.tools - INFO - Orchestrating data loading: sessions/default/anime_dataset.xlsx -> DataFrame 'df'
+2025-08-29 16:49:27,967 - core.data_loader - INFO - Loading file 'sessions/default/anime_dataset.xlsx' as DataFrame 'df' in session 'default'
+2025-08-29 16:49:27,967 - core.data_loader - INFO - Using .xlsx loader with options: {}
+2025-08-29 16:49:27,967 - core.data_loader - ERROR - Failed to load sessions/default/anime_dataset.xlsx: File is not a zip file
+Traceback (most recent call last):
+  File "/home/justin/Work/Huawei/pandas-mcp-server/core/data_loader.py", line 103, in load
+    df = self.loaders[file_ext](filepath, **cleaned_options)
+  File "/home/justin/Work/Huawei/pandas-mcp-server/core/data_loader.py", line 276, in _load_excel
+    return pd.read_excel(filepath, **options)
+  File "/home/justin/Work/Huawei/pandas-mcp-server/.venv/lib/python3.10/site-packages/pandas/io/excel/_base.py", line 495, in read_excel
+    io = ExcelFile(
+  File "/home/justin/Work/Huawei/pandas-mcp-server/.venv/lib/python3.10/site-packages/pandas/io/excel/_base.py", line 1567, in __init__
+    self._reader = self._engines[engine](
+  File "/home/justin/Work/Huawei/pandas-mcp-server/.venv/lib/python3.10/site-packages/pandas/io/excel/_openpyxl.py", line 553, in __init__
+    super().__init__(
+  File "/home/justin/Work/Huawei/pandas-mcp-server/.venv/lib/python3.10/site-packages/pandas/io/excel/_base.py", line 573, in __init__
+    self.book = self.load_workbook(self.handles.handle, engine_kwargs)
+  File "/home/justin/Work/Huawei/pandas-mcp-server/.venv/lib/python3.10/site-packages/pandas/io/excel/_openpyxl.py", line 572, in load_workbook
+    return load_workbook(
+  File "/home/justin/Work/Huawei/pandas-mcp-server/.venv/lib/python3.10/site-packages/openpyxl/reader/excel.py", line 346, in load_workbook
+    reader = ExcelReader(filename, read_only, keep_vba,
+  File "/home/justin/Work/Huawei/pandas-mcp-server/.venv/lib/python3.10/site-packages/openpyxl/reader/excel.py", line 123, in __init__
+    self.archive = _validate_archive(fn)
+  File "/home/justin/Work/Huawei/pandas-mcp-server/.venv/lib/python3.10/site-packages/openpyxl/reader/excel.py", line 95, in _validate_archive
+    archive = ZipFile(filename, 'r')
+  File "/usr/lib/python3.10/zipfile.py", line 1272, in __init__
+    self._RealGetContents()
+  File "/usr/lib/python3.10/zipfile.py", line 1339, in _RealGetContents
+    raise BadZipFile("File is not a zip file")
+zipfile.BadZipFile: File is not a zip file
+2025-08-29 16:49:27,968 - core.tools - ERROR - Failed to load sessions/default/anime_dataset.xlsx: Failed to load sessions/default/anime_dataset.xlsx: File is not a zip file
+2025-08-29 16:49:27,971 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-29 16:52:34,328 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-29 16:52:34,332 - core.tools - INFO - Uploaded anime_dataset.xlsx to session default
+2025-08-29 16:52:34,335 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-29 16:52:36,172 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-29 16:52:36,178 - core.tools - INFO - Orchestrating data loading: sessions/default/anime_dataset.xlsx -> DataFrame 'df'
+2025-08-29 16:52:36,179 - core.data_loader - INFO - Loading file 'sessions/default/anime_dataset.xlsx' as DataFrame 'df' in session 'default'
+2025-08-29 16:52:36,179 - core.data_loader - INFO - Using .xlsx loader with options: {}
+2025-08-29 16:52:36,179 - core.data_loader - ERROR - Failed to load sessions/default/anime_dataset.xlsx: File is not a zip file
+Traceback (most recent call last):
+  File "/home/justin/Work/Huawei/pandas-mcp-server/core/data_loader.py", line 103, in load
+    df = self.loaders[file_ext](filepath, **cleaned_options)
+  File "/home/justin/Work/Huawei/pandas-mcp-server/core/data_loader.py", line 276, in _load_excel
+    return pd.read_excel(filepath, **options)
+  File "/home/justin/Work/Huawei/pandas-mcp-server/.venv/lib/python3.10/site-packages/pandas/io/excel/_base.py", line 495, in read_excel
+    io = ExcelFile(
+  File "/home/justin/Work/Huawei/pandas-mcp-server/.venv/lib/python3.10/site-packages/pandas/io/excel/_base.py", line 1567, in __init__
+    self._reader = self._engines[engine](
+  File "/home/justin/Work/Huawei/pandas-mcp-server/.venv/lib/python3.10/site-packages/pandas/io/excel/_openpyxl.py", line 553, in __init__
+    super().__init__(
+  File "/home/justin/Work/Huawei/pandas-mcp-server/.venv/lib/python3.10/site-packages/pandas/io/excel/_base.py", line 573, in __init__
+    self.book = self.load_workbook(self.handles.handle, engine_kwargs)
+  File "/home/justin/Work/Huawei/pandas-mcp-server/.venv/lib/python3.10/site-packages/pandas/io/excel/_openpyxl.py", line 572, in load_workbook
+    return load_workbook(
+  File "/home/justin/Work/Huawei/pandas-mcp-server/.venv/lib/python3.10/site-packages/openpyxl/reader/excel.py", line 346, in load_workbook
+    reader = ExcelReader(filename, read_only, keep_vba,
+  File "/home/justin/Work/Huawei/pandas-mcp-server/.venv/lib/python3.10/site-packages/openpyxl/reader/excel.py", line 123, in __init__
+    self.archive = _validate_archive(fn)
+  File "/home/justin/Work/Huawei/pandas-mcp-server/.venv/lib/python3.10/site-packages/openpyxl/reader/excel.py", line 95, in _validate_archive
+    archive = ZipFile(filename, 'r')
+  File "/usr/lib/python3.10/zipfile.py", line 1272, in __init__
+    self._RealGetContents()
+  File "/usr/lib/python3.10/zipfile.py", line 1339, in _RealGetContents
+    raise BadZipFile("File is not a zip file")
+zipfile.BadZipFile: File is not a zip file
+2025-08-29 16:52:36,179 - core.tools - ERROR - Failed to load sessions/default/anime_dataset.xlsx: Failed to load sessions/default/anime_dataset.xlsx: File is not a zip file
+2025-08-29 16:52:36,183 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest

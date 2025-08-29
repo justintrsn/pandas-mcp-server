@@ -264,6 +264,24 @@ class DataLoader:
     
     def _load_excel(self, filepath: Path, **options) -> pd.DataFrame:
         """Load Excel file"""
+        import os
+        file_ext = os.path.splitext(filepath)[1].lower()
+        if 'engine' not in options:
+            if file_ext == '.xls':
+                options['engine'] = 'xlrd'
+            elif file_ext in ['.xlsx', '.xlsm', '.xlsb']:
+                options['engine'] = 'openpyxl'
+        
+        try:
+            return pd.read_excel(filepath, **options)
+        
+        except ImportError as e:
+            if 'xlrd' in str(e):
+                raise ImportError("xlrd library is required for .xls files. Install it with: pip install xlrd")
+            elif 'openpyxl' in str(e):
+                raise ImportError("openpyxl library is required for .xlsx files. Install it with: pip install openpyxl")
+            else:
+                raise
         logger.info(f"Loading Excel with options: {options}")
         return pd.read_excel(filepath, **options)
     
