@@ -36,6 +36,7 @@ from core.tools import (
     run_pandas_code,
     load_dataframe,
     list_dataframes,
+    store_dataframe,
     get_dataframe_info,
     validate_pandas_code,
     get_execution_context,
@@ -383,6 +384,24 @@ async def list_dataframes_tool(
     # Just call the orchestration function from tools.py
     return list_dataframes(session_id)
 
+@mcp.tool()
+async def store_dataframe_tool(
+    source_df_name: str,
+    new_df_name: str,
+    session_id: Optional[str] = "default"
+) -> Dict[str, Any]:
+    """
+    Explicitly store a DataFrame result in the session.
+    
+    Args:
+        source_df_name: Name of the source DataFrame variable to store
+        new_df_name: New name for the stored DataFrame
+        session_id: Session identifier
+    
+    Returns:
+        Success status and message
+    """
+    return store_dataframe(source_df_name, new_df_name, session_id)
 
 @mcp.tool()
 async def get_dataframe_info_tool(

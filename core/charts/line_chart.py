@@ -156,7 +156,9 @@ class LineChart(BaseChart):
                 "pointBorderColor": "#fff",
                 "pointBorderWidth": 1,
                 "tension": kwargs.get('tension', 0.2),  # Curve tension
-                "fill": kwargs.get('fill', False)  # Area fill
+                "fill": kwargs.get('fill', False),  # Area fill
+                "borderDash": [],  # For line style
+                "stepped": False  # For stepped interpolation
             }
             
             datasets.append(dataset)
@@ -173,6 +175,7 @@ class LineChart(BaseChart):
             }
         }
     
+
     def get_default_options(self) -> Dict[str, Any]:
         """Get default options for line chart"""
         options = super().DEFAULT_OPTIONS.copy()
@@ -197,7 +200,7 @@ class LineChart(BaseChart):
                     }
                 },
                 "y": {
-                    "beginAtZero": False,  # Auto-scale for line charts
+                    "beginAtZero": False,
                     "grid": {
                         "color": "rgba(0, 0, 0, 0.05)"
                     }
@@ -224,10 +227,17 @@ class LineChart(BaseChart):
                     "borderWidth": 1,
                     "cornerRadius": 4,
                     "padding": 10
-                },
-                "zoom": {
-                    "enabled": False,  # Could be enabled with Chart.js zoom plugin
-                    "mode": "x"
+                }
+            },
+            "animation": {
+                "duration": 1000,
+                "easing": "easeInOutQuart"
+            },
+            "transitions": {
+                "active": {
+                    "animation": {
+                        "duration": 400
+                    }
                 }
             }
         })
@@ -271,13 +281,39 @@ class LineChart(BaseChart):
         return resampled
     
     def _generate_controls_html(self, chart_data: Dict[str, Any]) -> str:
-        """Generate line chart specific controls"""
+        """Generate line chart specific controls with custom dropdowns"""
         base_controls = super()._generate_controls_html(chart_data)
         
         # Add line-specific controls
         line_controls = []
         
-        # Curve tension control
+        # Interpolation mode using custom dropdown
+        interpolation_dropdown = self._create_custom_dropdown(
+            label="Line Style",
+            options=[
+                ("smooth", "Smooth"),
+                ("linear", "Linear"),
+                ("stepped", "Stepped")
+            ],
+            callback="changeInterpolation",
+            default_value="smooth"
+        )
+        line_controls.append(interpolation_dropdown)
+        
+        # Line pattern using custom dropdown
+        pattern_dropdown = self._create_custom_dropdown(
+            label="Line Pattern",
+            options=[
+                ("solid", "Solid"),
+                ("dashed", "Dashed"),
+                ("dotted", "Dotted")
+            ],
+            callback="changeLinePattern",
+            default_value="solid"
+        )
+        line_controls.append(pattern_dropdown)
+        
+        # Curve tension control (for smooth interpolation)
         line_controls.append('''
             <div class="control-group">
                 <label>Smoothness</label>
@@ -324,17 +360,83 @@ class LineChart(BaseChart):
     def _get_custom_scripts(self) -> str:
         """Get custom JavaScript for line chart"""
         return '''
+        // Add progressive animation
+        myChart.options.animation.delay = function(context) {
+            return context.dataIndex * 50;
+        };
+        
+        function changeInterpolation(mode) {
+            myChart.data.datasets.forEach(dataset => {
+                switch(mode) {
+                    case 'smooth':
+                        dataset.tension = 0.3;
+                        dataset.stepped = false;
+                        break;
+                    case 'linear':
+                        dataset.tension = 0;
+                        dataset.stepped = false;
+                        break;
+                    case 'stepped':
+                        dataset.tension = 0;
+                        dataset.stepped = 'before';
+                        break;
+                }
+            });
+            
+            // Update smoothness slider visibility
+            const smoothnessControl = document.querySelector('input[type="range"][onchange*="changeTension"]');
+            if (smoothnessControl) {
+                smoothnessControl.parentElement.style.display = mode === 'smooth' ? 'flex' : 'none';
+            }
+            
+            myChart.update();
+        }
+        
+        function changeLinePattern(pattern) {
+            myChart.data.datasets.forEach(dataset => {
+                switch(pattern) {
+                    case 'solid':
+                        dataset.borderDash = [];
+                        break;
+                    case 'dashed':
+                        dataset.borderDash = [10, 5];
+                        break;
+                    case 'dotted':
+                        dataset.borderDash = [2, 3];
+                        break;
+                }
+            });
+            myChart.update();
+        }
+        
         function changeTension(value) {
             myChart.data.datasets.forEach(dataset => {
-                dataset.tension = parseFloat(value);
+                if (!dataset.stepped) {
+                    dataset.tension = parseFloat(value);
+                }
             });
             myChart.update();
         }
         
         function toggleFill(isFilled) {
-            myChart.data.datasets.forEach(dataset => {
-                dataset.fill = isFilled;
-            });
+            if (isFilled) {
+                // Fill all datasets with gradient
+                myChart.data.datasets.forEach((dataset, index) => {
+                    dataset.fill = 'origin';
+                    // Create gradient fill
+                    const ctx = myChart.ctx;
+                    const gradient = ctx.createLinearGradient(0, 0, 0, myChart.height);
+                    const color = dataset.borderColor;
+                    gradient.addColorStop(0, color + '40');
+                    gradient.addColorStop(1, color + '00');
+                    dataset.backgroundColor = gradient;
+                });
+            } else {
+                myChart.data.datasets.forEach(dataset => {
+                    dataset.fill = false;
+                    dataset.backgroundColor = dataset.borderColor + '20';
+                });
+            }
             myChart.update();
         }
         
@@ -351,55 +453,9 @@ class LineChart(BaseChart):
             myChart.update();
         }
         
-        // Toggle dataset visibility
         function toggleDataset(index) {
             const meta = myChart.getDatasetMeta(index);
             meta.hidden = meta.hidden === null ? !myChart.data.datasets[index].hidden : null;
-            myChart.update();
-        }
-        
-        // Change line style
-        function changeLineStyle(style) {
-            myChart.data.datasets.forEach(dataset => {
-                if (style === 'dashed') {
-                    dataset.borderDash = [5, 5];
-                } else if (style === 'dotted') {
-                    dataset.borderDash = [2, 2];
-                } else {
-                    dataset.borderDash = [];
-                }
-            });
-            myChart.update();
-        }
-        
-        // Zoom functionality (basic)
-        let zoomLevel = 1;
-        function zoomIn() {
-            zoomLevel *= 0.8;
-            const numPoints = Math.floor(chartData.labels.length * zoomLevel);
-            myChart.data.labels = chartData.labels.slice(0, Math.max(10, numPoints));
-            myChart.data.datasets.forEach((dataset, i) => {
-                dataset.data = chartData.datasets[i].data.slice(0, Math.max(10, numPoints));
-            });
-            myChart.update();
-        }
-        
-        function zoomOut() {
-            zoomLevel = Math.min(1, zoomLevel * 1.2);
-            const numPoints = Math.floor(chartData.labels.length * zoomLevel);
-            myChart.data.labels = chartData.labels.slice(0, numPoints);
-            myChart.data.datasets.forEach((dataset, i) => {
-                dataset.data = chartData.datasets[i].data.slice(0, numPoints);
-            });
-            myChart.update();
-        }
-        
-        function resetZoom() {
-            zoomLevel = 1;
-            myChart.data.labels = chartData.labels;
-            myChart.data.datasets.forEach((dataset, i) => {
-                dataset.data = chartData.datasets[i].data;
-            });
             myChart.update();
         }
         '''

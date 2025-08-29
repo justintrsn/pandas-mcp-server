@@ -185,55 +185,64 @@ class HeatmapChart(BaseChart):
         """Get default options for heatmap"""
         options = super().DEFAULT_OPTIONS.copy()
         
-        # Heatmap-specific options
         options.update({
+            "responsive": True,
+            "maintainAspectRatio": False,
+            "plugins": {
+                **options.get("plugins", {}),
+                "legend": {
+                    "display": False  # Heatmaps don't need traditional legends
+                },
+                "tooltip": {
+                    "enabled": True,
+                    "backgroundColor": "rgba(0, 0, 0, 0.9)",
+                    "titleColor": "#fff",
+                    "bodyColor": "#fff",
+                    "borderColor": "#ddd",
+                    "borderWidth": 1,
+                    "cornerRadius": 4,
+                    "padding": 10
+                }
+            },
             "scales": {
                 "x": {
                     "type": "category",
-                    "position": "top",
+                    "position": "bottom",
                     "grid": {
                         "display": False
                     },
                     "ticks": {
-                        "maxRotation": 90,
-                        "minRotation": 45,
-                        "autoSkip": False
+                        "maxRotation": 45,
+                        "minRotation": 0
                     }
                 },
                 "y": {
                     "type": "category",
+                    "position": "left",
                     "grid": {
                         "display": False
-                    },
-                    "ticks": {
-                        "autoSkip": False
                     }
                 }
             },
-            "plugins": {
-                **options.get("plugins", {}),
-                "legend": {
-                    "display": False  # Will create custom color scale
-                },
-                "tooltip": {
-                    "enabled": True,
-                    "backgroundColor": "rgba(0, 0, 0, 0.8)",
-                    "callbacks": {}  # Will be set in JavaScript
-                }
+            "animation": {
+                "duration": 1500,
+                "easing": "easeInOutQuad"
             },
-            "aspectRatio": 1,
-            "layout": {
-                "padding": 10
+            "transitions": {
+                "active": {
+                    "animation": {
+                        "duration": 400
+                    }
+                }
             }
         })
         
         return options
-    
+
     def _generate_controls_html(self, chart_data: Dict[str, Any]) -> str:
         """Generate heatmap specific controls"""
         base_controls = super()._generate_controls_html(chart_data)
         
-        # Add heatmap-specific controls
         heatmap_controls = []
         
         # Color scheme selector
@@ -244,6 +253,7 @@ class HeatmapChart(BaseChart):
                     <option value="viridis">Viridis</option>
                     <option value="coolwarm">Cool-Warm</option>
                     <option value="grayscale">Grayscale</option>
+                    <option value="plasma">Plasma</option>
                 </select>
             </div>
         ''')
@@ -252,12 +262,12 @@ class HeatmapChart(BaseChart):
         heatmap_controls.append('''
             <div class="control-group">
                 <label>Cell Size</label>
-                <input type="range" min="20" max="100" step="10" value="50" 
-                       onchange="changeCellSize(this.value)">
+                <input type="range" min="10" max="50" step="5" value="20" 
+                    onchange="changeCellSize(this.value)">
             </div>
         ''')
         
-        # Show values toggle
+        # Values display toggle
         heatmap_controls.append('''
             <div class="control-group">
                 <label>Show Values</label>
@@ -268,77 +278,60 @@ class HeatmapChart(BaseChart):
             </div>
         ''')
         
-        # Add color scale legend
-        metadata = chart_data.get("metadata", {})
-        min_val = metadata.get("min_value", 0)
-        max_val = metadata.get("max_value", 1)
-        
-        color_scale_html = f'''
-        <div class="color-scale" style="margin-top: 20px; padding: 10px; background: #f7f7f7; border-radius: 8px;">
-            <div style="display: flex; align-items: center; gap: 10px;">
-                <span style="font-size: 12px;">{min_val:.2f}</span>
-                <div style="flex: 1; height: 20px; background: linear-gradient(to right, #440154, #21918c, #fde725); border-radius: 4px;"></div>
-                <span style="font-size: 12px;">{max_val:.2f}</span>
-            </div>
-        </div>
-        '''
-        
-        heatmap_controls.append(color_scale_html)
-        
         return base_controls + '\n' + '\n'.join(heatmap_controls)
-    
+
     def _get_custom_scripts(self) -> str:
         """Get custom JavaScript for heatmap"""
         return '''
-        // Set up color functions
+        // Add fade-in animation for heatmap cells
+        myChart.options.animation.delay = function(context) {
+            return context.dataIndex * 50;
+        };
+        
+        // Color schemes
         const colorSchemes = {
             viridis: function(value, min, max) {
                 const normalized = (value - min) / (max - min);
-                const r = Math.floor(68 + normalized * 187);
-                const g = Math.floor(1 + normalized * 254);
-                const b = Math.floor(84 + normalized * 171);
-                return 'rgb(' + r + ', ' + g + ', ' + b + ')';
+                const colors = [
+                    [68, 1, 84], [72, 40, 120], [62, 74, 137], [49, 104, 142],
+                    [38, 130, 142], [31, 158, 137], [53, 183, 121], [109, 205, 89],
+                    [180, 222, 44], [253, 231, 37]
+                ];
+                const index = Math.floor(normalized * (colors.length - 1));
+                const color = colors[Math.min(index, colors.length - 1)];
+                return `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
             },
             coolwarm: function(value, min, max) {
                 const normalized = (value - min) / (max - min);
-                if (normalized < 0.5) {
-                    const intensity = normalized * 2;
-                    return 'rgb(' + Math.floor(intensity * 255) + ', ' + 
-                           Math.floor(intensity * 255) + ', 255)';
-                } else {
-                    const intensity = (1 - normalized) * 2;
-                    return 'rgb(255, ' + Math.floor(intensity * 255) + ', ' + 
-                           Math.floor(intensity * 255) + ')';
-                }
+                const r = Math.floor(255 * normalized);
+                const b = Math.floor(255 * (1 - normalized));
+                return `rgb(${r}, 100, ${b})`;
+            },
+            plasma: function(value, min, max) {
+                const normalized = (value - min) / (max - min);
+                const colors = [
+                    [13, 8, 135], [75, 3, 161], [125, 3, 168], [168, 34, 150],
+                    [203, 70, 121], [229, 107, 93], [248, 148, 65], [253, 195, 40],
+                    [240, 249, 33], [252, 253, 191]
+                ];
+                const index = Math.floor(normalized * (colors.length - 1));
+                const color = colors[Math.min(index, colors.length - 1)];
+                return `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
             },
             grayscale: function(value, min, max) {
                 const normalized = (value - min) / (max - min);
                 const gray = Math.floor(normalized * 255);
-                return 'rgb(' + gray + ', ' + gray + ', ' + gray + ')';
+                return `rgb(${gray}, ${gray}, ${gray})`;
             }
         };
         
-        // Get metadata from chart data
-        const metadata = chartData.metadata || {min_value: 0, max_value: 1, color_scheme: 'viridis'};
+        const metadata = myChart.data.metadata || {min_value: 0, max_value: 1, color_scheme: 'viridis'};
         let currentScheme = metadata.color_scheme || 'viridis';
         
-        // Set initial background color function
+        // Apply initial colors
         myChart.data.datasets[0].backgroundColor = function(context) {
             const value = context.dataset.data[context.dataIndex].v;
             return colorSchemes[currentScheme](value, metadata.min_value, metadata.max_value);
-        };
-        
-        // Update the chart
-        myChart.update();
-        
-        // Custom tooltip for heatmap
-        myChart.options.plugins.tooltip.callbacks.title = function(context) {
-            const data = context[0].raw;
-            return data.y + ' vs ' + data.x;
-        };
-        
-        myChart.options.plugins.tooltip.callbacks.label = function(context) {
-            return 'Value: ' + context.raw.v;
         };
         
         function changeColorScheme(scheme) {
@@ -360,63 +353,38 @@ class HeatmapChart(BaseChart):
         function toggleValues(show) {
             showValues = show;
             if (show) {
-                myChart.options.plugins.datalabels = {
-                    display: true,
-                    color: function(context) {
-                        const value = context.dataset.data[context.dataIndex].v;
-                        const normalized = (value - metadata.min_value) / 
-                                         (metadata.max_value - metadata.min_value);
-                        return normalized > 0.5 ? '#fff' : '#000';
-                    },
-                    font: {
-                        size: 10
-                    },
-                    formatter: function(value, context) {
-                        return value.v.toFixed(2);
+                // Add text overlay for values
+                Chart.register({
+                    id: 'heatmapValues',
+                    afterDatasetsDraw: function(chart) {
+                        const ctx = chart.ctx;
+                        chart.data.datasets.forEach((dataset, datasetIndex) => {
+                            const meta = chart.getDatasetMeta(datasetIndex);
+                            meta.data.forEach((element, index) => {
+                                const data = dataset.data[index];
+                                if (data && data.v !== undefined) {
+                                    ctx.fillStyle = '#333';
+                                    ctx.font = 'bold 10px Arial';
+                                    ctx.textAlign = 'center';
+                                    ctx.textBaseline = 'middle';
+                                    ctx.fillText(data.v.toFixed(2), element.x, element.y);
+                                }
+                            });
+                        });
                     }
-                };
-            } else {
-                if (myChart.options.plugins.datalabels) {
-                    myChart.options.plugins.datalabels.display = false;
-                }
+                });
             }
             myChart.update();
         }
         
-        // Highlight row/column on hover
-        let highlightedRow = null;
-        let highlightedCol = null;
-        
-        myChart.options.onHover = function(event, elements) {
-            if (elements.length > 0) {
-                const data = elements[0].element.$context.raw;
-                highlightedRow = data.y;
-                highlightedCol = data.x;
-                
-                // Update opacity for highlighting
-                myChart.data.datasets[0].backgroundColor = function(context) {
-                    const point = context.dataset.data[context.dataIndex];
-                    const baseColor = colorSchemes[currentScheme](
-                        point.v, metadata.min_value, metadata.max_value
-                    );
-                    
-                    if (point.x === highlightedCol || point.y === highlightedRow) {
-                        return baseColor;
-                    } else {
-                        // Add transparency to non-highlighted cells
-                        return baseColor.replace('rgb', 'rgba').replace(')', ', 0.3)');
-                    }
-                };
-                myChart.update();
-            } else {
-                // Reset highlighting
-                highlightedRow = null;
-                highlightedCol = null;
-                myChart.data.datasets[0].backgroundColor = function(context) {
-                    const value = context.dataset.data[context.dataIndex].v;
-                    return colorSchemes[currentScheme](value, metadata.min_value, metadata.max_value);
-                };
-                myChart.update();
+        // Enhanced tooltip
+        myChart.options.plugins.tooltip.callbacks = {
+            title: function(context) {
+                const data = context[0].raw;
+                return `${data.y} vs ${data.x}`;
+            },
+            label: function(context) {
+                return `Value: ${context.raw.v.toFixed(3)}`;
             }
         };
         '''

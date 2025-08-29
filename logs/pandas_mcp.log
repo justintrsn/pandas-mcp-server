@@ -1182,3 +1182,492 @@ TypeError: FastMCP.run_http_async() got an unexpected keyword argument 'app'
 2025-08-28 14:29:17,821 - core.execution - INFO - Code executed successfully, result type: none
 2025-08-28 14:29:17,821 - core.tools - INFO - Code executed successfully, result type: none
 2025-08-28 14:29:17,825 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 14:50:06,138 - __main__ - INFO - Starting pandas-mcp-server v0.1.0
+2025-08-28 14:50:06,138 - __main__ - INFO - Server configuration: sse on 0.0.0.0:8000
+2025-08-28 14:50:06,139 - __main__ - INFO - Background cleanup task started
+2025-08-28 14:50:06,139 - __main__ - INFO - Auto-cleanup task started (30 min session timeout)
+2025-08-28 14:50:06,139 - __main__ - INFO - Session management: Automatic cleanup enabled (30 min timeout)
+2025-08-28 14:50:06,139 - __main__ - INFO - Available MCP tools:
+2025-08-28 14:50:06,139 - __main__ - INFO -   - upload_temp_file_tool: Upload files with auto-cleanup
+2025-08-28 14:50:06,139 - __main__ - INFO -   - get_server_status_tool: Get server status
+2025-08-28 14:50:06,139 - __main__ - INFO -   - read_metadata_tool: Extract file metadata
+2025-08-28 14:50:06,139 - __main__ - INFO -   - run_pandas_code_tool: Execute pandas operations
+2025-08-28 14:50:06,139 - __main__ - INFO -   - load_dataframe_tool: Load data files
+2025-08-28 14:50:06,139 - __main__ - INFO -   - list_dataframes_tool: List loaded DataFrames
+2025-08-28 14:50:06,139 - __main__ - INFO -   - get_dataframe_info_tool: Get DataFrame details
+2025-08-28 14:50:06,139 - __main__ - INFO -   - validate_pandas_code_tool: Validate code without execution
+2025-08-28 14:50:06,139 - __main__ - INFO -   - get_execution_context_tool: Get execution context
+2025-08-28 14:50:06,139 - __main__ - INFO -   - preview_file_tool: Preview files
+2025-08-28 14:50:06,139 - __main__ - INFO -   - get_supported_formats_tool: Get supported formats
+2025-08-28 14:50:06,139 - __main__ - INFO -   - clear_session_tool: Clear session data
+2025-08-28 14:50:06,139 - __main__ - INFO -   - get_session_info_tool: Get session info
+2025-08-28 14:50:06,140 - __main__ - INFO -   - get_server_info_tool: Get server configuration
+2025-08-28 14:50:06,140 - __main__ - INFO -   - create_chart_tool: Create interactive charts
+2025-08-28 14:50:06,140 - __main__ - INFO -   - suggest_charts_tool: Get chart recommendations
+2025-08-28 14:50:06,140 - __main__ - INFO -   - get_chart_types_tool: List supported chart types
+2025-08-28 14:50:06,140 - __main__ - INFO -   - create_correlation_heatmap_tool: Create correlation matrix
+2025-08-28 14:50:06,140 - __main__ - INFO -   - create_time_series_chart_tool: Create time series visualization
+2025-08-28 14:50:21,241 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 14:51:20,603 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 14:51:20,607 - core.tools - INFO - Uploaded anime_dataset.csv to session default
+2025-08-28 14:51:20,611 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 14:51:22,230 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 14:51:22,237 - core.tools - INFO - Orchestrating data loading: sessions/default/anime_dataset.csv -> DataFrame 'df'
+2025-08-28 14:51:22,237 - core.data_loader - INFO - Loading file 'sessions/default/anime_dataset.csv' as DataFrame 'df' in session 'default'
+2025-08-28 14:51:22,238 - core.data_loader - INFO - Using .csv loader with options: {}
+2025-08-28 14:51:22,238 - core.data_loader - INFO - Loading CSV with options: {}
+2025-08-28 14:51:22,249 - core.data_loader - INFO - Loaded DataFrame: (30, 25), Memory: 0.03MB
+2025-08-28 14:51:22,250 - core.data_loader - INFO - Successfully stored DataFrame 'df': DataFrame 'df' added successfully (0.03MB)
+2025-08-28 14:51:22,253 - core.tools - INFO - Successfully loaded sessions/default/anime_dataset.csv as 'df'
+2025-08-28 14:51:22,258 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 14:51:24,583 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 14:51:24,587 - core.tools - INFO - Orchestrating pandas code execution in session default
+2025-08-28 14:51:24,587 - core.execution - INFO - Executing pandas code in session 'default' on DataFrame 'df': top_action_animes = df[df['genres'].str.contains('Action')].nlargest(6, 'score')[['title', 'score']]...
+2025-08-28 14:51:24,590 - storage.dataframe_manager - INFO - Auto-registering new DataFrame: top_action_animes
+2025-08-28 14:51:24,592 - storage.dataframe_manager - INFO - Successfully registered DataFrame 'top_action_animes': DataFrame 'top_action_animes' added successfully (0.00MB)
+2025-08-28 14:51:24,592 - core.execution - INFO - Code executed successfully, result type: none
+2025-08-28 14:51:24,592 - core.tools - INFO - Code executed successfully, result type: none
+2025-08-28 14:51:24,595 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 14:51:26,716 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 14:51:26,732 - core.tools - INFO - Orchestrating chart creation: bar for DataFrame 'df'
+2025-08-28 14:51:26,732 - core.visualization - INFO - Creating bar visualization for DataFrame 'df'
+2025-08-28 14:51:26,732 - core.charts.base_chart - INFO - Chart saved to /home/justin/Work/Huawei/pandas-mcp-server/charts/bar_df_bar_20250828_145126.html
+2025-08-28 14:51:26,732 - core.visualization - INFO - Successfully created bar chart: /home/justin/Work/Huawei/pandas-mcp-server/charts/bar_df_bar_20250828_145126.html
+2025-08-28 14:51:26,732 - core.tools - INFO - Chart created successfully: /home/justin/Work/Huawei/pandas-mcp-server/charts/bar_df_bar_20250828_145126.html
+2025-08-28 14:51:26,736 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 14:51:26,793 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 14:51:26,795 - core.tools - INFO - Retrieved HTML chart: /home/justin/Work/Huawei/pandas-mcp-server/charts/bar_df_bar_20250828_145126.html
+2025-08-28 14:51:26,798 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 15:08:28,910 - __main__ - INFO - Starting pandas-mcp-server v0.1.0
+2025-08-28 15:08:28,910 - __main__ - INFO - Server configuration: sse on 0.0.0.0:8000
+2025-08-28 15:08:28,910 - __main__ - INFO - Background cleanup task started
+2025-08-28 15:08:28,910 - __main__ - INFO - Auto-cleanup task started (30 min session timeout)
+2025-08-28 15:08:28,910 - __main__ - INFO - Session management: Automatic cleanup enabled (30 min timeout)
+2025-08-28 15:08:28,910 - __main__ - INFO - Available MCP tools:
+2025-08-28 15:08:28,910 - __main__ - INFO -   - upload_temp_file_tool: Upload files with auto-cleanup
+2025-08-28 15:08:28,911 - __main__ - INFO -   - get_server_status_tool: Get server status
+2025-08-28 15:08:28,911 - __main__ - INFO -   - read_metadata_tool: Extract file metadata
+2025-08-28 15:08:28,911 - __main__ - INFO -   - run_pandas_code_tool: Execute pandas operations
+2025-08-28 15:08:28,911 - __main__ - INFO -   - load_dataframe_tool: Load data files
+2025-08-28 15:08:28,911 - __main__ - INFO -   - list_dataframes_tool: List loaded DataFrames
+2025-08-28 15:08:28,911 - __main__ - INFO -   - get_dataframe_info_tool: Get DataFrame details
+2025-08-28 15:08:28,911 - __main__ - INFO -   - validate_pandas_code_tool: Validate code without execution
+2025-08-28 15:08:28,911 - __main__ - INFO -   - get_execution_context_tool: Get execution context
+2025-08-28 15:08:28,911 - __main__ - INFO -   - preview_file_tool: Preview files
+2025-08-28 15:08:28,911 - __main__ - INFO -   - get_supported_formats_tool: Get supported formats
+2025-08-28 15:08:28,911 - __main__ - INFO -   - clear_session_tool: Clear session data
+2025-08-28 15:08:28,911 - __main__ - INFO -   - get_session_info_tool: Get session info
+2025-08-28 15:08:28,911 - __main__ - INFO -   - get_server_info_tool: Get server configuration
+2025-08-28 15:08:28,911 - __main__ - INFO -   - create_chart_tool: Create interactive charts
+2025-08-28 15:08:28,911 - __main__ - INFO -   - suggest_charts_tool: Get chart recommendations
+2025-08-28 15:08:28,911 - __main__ - INFO -   - get_chart_types_tool: List supported chart types
+2025-08-28 15:08:28,912 - __main__ - INFO -   - create_correlation_heatmap_tool: Create correlation matrix
+2025-08-28 15:08:28,912 - __main__ - INFO -   - create_time_series_chart_tool: Create time series visualization
+2025-08-28 15:08:47,270 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 15:09:39,364 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 15:09:39,368 - core.tools - INFO - File anime_dataset.csv already exists with same content
+2025-08-28 15:09:39,373 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 15:09:40,890 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 15:09:40,900 - core.tools - INFO - Orchestrating data loading: sessions/default/anime_dataset.csv -> DataFrame 'df'
+2025-08-28 15:09:40,901 - core.data_loader - INFO - Loading file 'sessions/default/anime_dataset.csv' as DataFrame 'df' in session 'default'
+2025-08-28 15:09:40,901 - core.data_loader - INFO - Using .csv loader with options: {}
+2025-08-28 15:09:40,901 - core.data_loader - INFO - Loading CSV with options: {}
+2025-08-28 15:09:40,911 - core.data_loader - INFO - Loaded DataFrame: (30, 25), Memory: 0.03MB
+2025-08-28 15:09:40,913 - core.data_loader - INFO - Successfully stored DataFrame 'df': DataFrame 'df' added successfully (0.03MB)
+2025-08-28 15:09:40,916 - core.tools - INFO - Successfully loaded sessions/default/anime_dataset.csv as 'df'
+2025-08-28 15:09:40,920 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 15:09:43,145 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 15:09:43,148 - core.tools - INFO - Orchestrating pandas code execution in session default
+2025-08-28 15:09:43,148 - core.execution - INFO - Executing pandas code in session 'default' on DataFrame 'df': top_action_animes = df[df['genres'].str.contains('Action')].nlargest(6, 'score')[['title', 'score']]...
+2025-08-28 15:09:43,151 - storage.dataframe_manager - INFO - Auto-registering new DataFrame: top_action_animes
+2025-08-28 15:09:43,154 - storage.dataframe_manager - INFO - Successfully registered DataFrame 'top_action_animes': DataFrame 'top_action_animes' added successfully (0.00MB)
+2025-08-28 15:09:43,154 - core.execution - INFO - Code executed successfully, result type: none
+2025-08-28 15:09:43,154 - core.tools - INFO - Code executed successfully, result type: none
+2025-08-28 15:09:43,158 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 15:09:45,358 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 15:09:45,373 - core.tools - INFO - Orchestrating chart creation: bar for DataFrame 'top_action_animes'
+2025-08-28 15:09:45,373 - core.visualization - INFO - Creating bar visualization for DataFrame 'top_action_animes'
+2025-08-28 15:09:45,373 - core.charts.base_chart - INFO - Chart saved to /home/justin/Work/Huawei/pandas-mcp-server/charts/bar_top_action_animes_bar_20250828_150945.html
+2025-08-28 15:09:45,373 - core.visualization - INFO - Successfully created bar chart: /home/justin/Work/Huawei/pandas-mcp-server/charts/bar_top_action_animes_bar_20250828_150945.html
+2025-08-28 15:09:45,373 - core.tools - INFO - Chart created successfully: /home/justin/Work/Huawei/pandas-mcp-server/charts/bar_top_action_animes_bar_20250828_150945.html
+2025-08-28 15:09:45,377 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 15:09:45,451 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 15:09:45,452 - core.tools - INFO - Retrieved HTML chart: /home/justin/Work/Huawei/pandas-mcp-server/charts/bar_top_action_animes_bar_20250828_150945.html
+2025-08-28 15:09:45,456 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 15:15:12,981 - __main__ - INFO - Starting pandas-mcp-server v0.1.0
+2025-08-28 15:15:12,982 - __main__ - INFO - Server configuration: sse on 0.0.0.0:8000
+2025-08-28 15:15:12,982 - __main__ - INFO - Background cleanup task started
+2025-08-28 15:15:12,982 - __main__ - INFO - Auto-cleanup task started (30 min session timeout)
+2025-08-28 15:15:12,982 - __main__ - INFO - Session management: Automatic cleanup enabled (30 min timeout)
+2025-08-28 15:15:12,982 - __main__ - INFO - Available MCP tools:
+2025-08-28 15:15:12,982 - __main__ - INFO -   - upload_temp_file_tool: Upload files with auto-cleanup
+2025-08-28 15:15:12,982 - __main__ - INFO -   - get_server_status_tool: Get server status
+2025-08-28 15:15:12,982 - __main__ - INFO -   - read_metadata_tool: Extract file metadata
+2025-08-28 15:15:12,983 - __main__ - INFO -   - run_pandas_code_tool: Execute pandas operations
+2025-08-28 15:15:12,983 - __main__ - INFO -   - load_dataframe_tool: Load data files
+2025-08-28 15:15:12,983 - __main__ - INFO -   - list_dataframes_tool: List loaded DataFrames
+2025-08-28 15:15:12,983 - __main__ - INFO -   - get_dataframe_info_tool: Get DataFrame details
+2025-08-28 15:15:12,983 - __main__ - INFO -   - validate_pandas_code_tool: Validate code without execution
+2025-08-28 15:15:12,983 - __main__ - INFO -   - get_execution_context_tool: Get execution context
+2025-08-28 15:15:12,983 - __main__ - INFO -   - preview_file_tool: Preview files
+2025-08-28 15:15:12,983 - __main__ - INFO -   - get_supported_formats_tool: Get supported formats
+2025-08-28 15:15:12,983 - __main__ - INFO -   - clear_session_tool: Clear session data
+2025-08-28 15:15:12,983 - __main__ - INFO -   - get_session_info_tool: Get session info
+2025-08-28 15:15:12,983 - __main__ - INFO -   - get_server_info_tool: Get server configuration
+2025-08-28 15:15:12,983 - __main__ - INFO -   - create_chart_tool: Create interactive charts
+2025-08-28 15:15:12,983 - __main__ - INFO -   - suggest_charts_tool: Get chart recommendations
+2025-08-28 15:15:12,983 - __main__ - INFO -   - get_chart_types_tool: List supported chart types
+2025-08-28 15:15:12,984 - __main__ - INFO -   - create_correlation_heatmap_tool: Create correlation matrix
+2025-08-28 15:15:12,984 - __main__ - INFO -   - create_time_series_chart_tool: Create time series visualization
+2025-08-28 15:15:25,789 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 15:16:25,885 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 15:16:25,888 - core.tools - INFO - File anime_dataset.csv already exists with same content
+2025-08-28 15:16:25,892 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 15:16:27,314 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 15:16:27,323 - core.tools - INFO - Orchestrating data loading: sessions/default/anime_dataset.csv -> DataFrame 'df'
+2025-08-28 15:16:27,323 - core.data_loader - INFO - Loading file 'sessions/default/anime_dataset.csv' as DataFrame 'df' in session 'default'
+2025-08-28 15:16:27,323 - core.data_loader - INFO - Using .csv loader with options: {}
+2025-08-28 15:16:27,323 - core.data_loader - INFO - Loading CSV with options: {}
+2025-08-28 15:16:27,339 - core.data_loader - INFO - Loaded DataFrame: (30, 25), Memory: 0.03MB
+2025-08-28 15:16:27,342 - core.data_loader - INFO - Successfully stored DataFrame 'df': DataFrame 'df' added successfully (0.03MB)
+2025-08-28 15:16:27,348 - core.tools - INFO - Successfully loaded sessions/default/anime_dataset.csv as 'df'
+2025-08-28 15:16:27,352 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 15:16:29,064 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 15:16:29,068 - core.tools - INFO - Orchestrating pandas code execution in session default
+2025-08-28 15:16:29,068 - core.execution - INFO - Executing pandas code in session 'default' on DataFrame 'df': top_romance_anime = df[df['genres'].str.contains('Romance', na=False)].nlargest(3, 'score')[['title'...
+2025-08-28 15:16:29,071 - storage.dataframe_manager - INFO - Auto-registering new DataFrame: top_romance_anime
+2025-08-28 15:16:29,073 - storage.dataframe_manager - INFO - Successfully registered DataFrame 'top_romance_anime': DataFrame 'top_romance_anime' added successfully (0.00MB)
+2025-08-28 15:16:29,073 - core.execution - INFO - Code executed successfully, result type: none
+2025-08-28 15:16:29,073 - core.tools - INFO - Code executed successfully, result type: none
+2025-08-28 15:16:29,077 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 15:16:30,695 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 15:16:30,710 - core.tools - INFO - Orchestrating chart creation: bar for DataFrame 'df'
+2025-08-28 15:16:30,710 - core.visualization - INFO - Creating bar visualization for DataFrame 'df'
+2025-08-28 15:16:30,710 - core.charts.base_chart - INFO - Chart saved to /home/justin/Work/Huawei/pandas-mcp-server/charts/bar_df_bar_20250828_151630.html
+2025-08-28 15:16:30,711 - core.visualization - INFO - Successfully created bar chart: /home/justin/Work/Huawei/pandas-mcp-server/charts/bar_df_bar_20250828_151630.html
+2025-08-28 15:16:30,711 - core.tools - INFO - Chart created successfully: /home/justin/Work/Huawei/pandas-mcp-server/charts/bar_df_bar_20250828_151630.html
+2025-08-28 15:16:30,714 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 15:16:30,779 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 15:16:30,781 - core.tools - INFO - Retrieved HTML chart: /home/justin/Work/Huawei/pandas-mcp-server/charts/bar_df_bar_20250828_151630.html
+2025-08-28 15:16:30,787 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 15:17:48,419 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 15:17:48,422 - core.tools - INFO - File anime_dataset.csv already exists with same content
+2025-08-28 15:17:48,425 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 15:17:49,742 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 15:17:49,748 - core.tools - INFO - Orchestrating data loading: sessions/default/anime_dataset.csv -> DataFrame 'df'
+2025-08-28 15:17:49,749 - core.data_loader - INFO - Loading file 'sessions/default/anime_dataset.csv' as DataFrame 'df' in session 'default'
+2025-08-28 15:17:49,749 - core.data_loader - INFO - Using .csv loader with options: {}
+2025-08-28 15:17:49,749 - core.data_loader - INFO - Loading CSV with options: {}
+2025-08-28 15:17:49,752 - core.data_loader - INFO - Loaded DataFrame: (30, 25), Memory: 0.03MB
+2025-08-28 15:17:49,755 - core.data_loader - INFO - Successfully stored DataFrame 'df': DataFrame 'df' added successfully (0.03MB)
+2025-08-28 15:17:49,758 - core.tools - INFO - Successfully loaded sessions/default/anime_dataset.csv as 'df'
+2025-08-28 15:17:49,762 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 15:17:51,492 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 15:17:51,498 - core.tools - INFO - Orchestrating pandas code execution in session default
+2025-08-28 15:17:51,498 - core.execution - INFO - Executing pandas code in session 'default' on DataFrame 'df': top_romance_anime = df[df['genres'].str.contains('Romance')].nlargest(5, 'score')[['title', 'score']...
+2025-08-28 15:17:51,502 - core.execution - INFO - Code executed successfully, result type: none
+2025-08-28 15:17:51,502 - core.tools - INFO - Code executed successfully, result type: none
+2025-08-28 15:17:51,506 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 15:17:53,333 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 15:17:53,355 - core.tools - INFO - Orchestrating chart creation: bar for DataFrame 'top_romance_anime'
+2025-08-28 15:17:53,355 - core.visualization - INFO - Creating bar visualization for DataFrame 'top_romance_anime'
+2025-08-28 15:17:53,356 - core.charts.base_chart - INFO - Chart saved to /home/justin/Work/Huawei/pandas-mcp-server/charts/bar_top_romance_anime_bar_20250828_151753.html
+2025-08-28 15:17:53,356 - core.visualization - INFO - Successfully created bar chart: /home/justin/Work/Huawei/pandas-mcp-server/charts/bar_top_romance_anime_bar_20250828_151753.html
+2025-08-28 15:17:53,356 - core.tools - INFO - Chart created successfully: /home/justin/Work/Huawei/pandas-mcp-server/charts/bar_top_romance_anime_bar_20250828_151753.html
+2025-08-28 15:17:53,360 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 15:17:53,416 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 15:17:53,417 - core.tools - INFO - Retrieved HTML chart: /home/justin/Work/Huawei/pandas-mcp-server/charts/bar_top_romance_anime_bar_20250828_151753.html
+2025-08-28 15:17:53,421 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 15:18:52,621 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 15:18:52,624 - core.tools - INFO - File anime_dataset.csv already exists with same content
+2025-08-28 15:18:52,628 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 15:18:54,259 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 15:18:54,268 - core.tools - INFO - Orchestrating data loading: sessions/default/anime_dataset.csv -> DataFrame 'anime_df'
+2025-08-28 15:18:54,268 - core.data_loader - INFO - Loading file 'sessions/default/anime_dataset.csv' as DataFrame 'anime_df' in session 'default'
+2025-08-28 15:18:54,268 - core.data_loader - INFO - Using .csv loader with options: {}
+2025-08-28 15:18:54,268 - core.data_loader - INFO - Loading CSV with options: {}
+2025-08-28 15:18:54,271 - core.data_loader - INFO - Loaded DataFrame: (30, 25), Memory: 0.03MB
+2025-08-28 15:18:54,274 - core.data_loader - INFO - Successfully stored DataFrame 'anime_df': DataFrame 'anime_df' added successfully (0.03MB)
+2025-08-28 15:18:54,277 - core.tools - INFO - Successfully loaded sessions/default/anime_dataset.csv as 'anime_df'
+2025-08-28 15:18:54,281 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 15:18:56,002 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 15:18:56,006 - core.tools - INFO - Orchestrating pandas code execution in session default
+2025-08-28 15:18:56,006 - core.execution - INFO - Executing pandas code in session 'default' on DataFrame 'anime_df': top_action_anime = anime_df[anime_df['genres'].str.contains('Action')].nlargest(6, 'score')...
+2025-08-28 15:18:56,009 - storage.dataframe_manager - INFO - Auto-registering new DataFrame: top_action_anime
+2025-08-28 15:18:56,014 - storage.dataframe_manager - INFO - Successfully registered DataFrame 'top_action_anime': DataFrame 'top_action_anime' added successfully (0.01MB)
+2025-08-28 15:18:56,014 - core.execution - INFO - Code executed successfully, result type: none
+2025-08-28 15:18:56,014 - core.tools - INFO - Code executed successfully, result type: none
+2025-08-28 15:18:56,019 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 15:18:59,083 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 15:18:59,098 - core.tools - INFO - Orchestrating chart creation: bar for DataFrame 'anime_df'
+2025-08-28 15:18:59,098 - core.visualization - INFO - Creating bar visualization for DataFrame 'anime_df'
+2025-08-28 15:18:59,099 - core.charts.base_chart - INFO - Chart saved to /home/justin/Work/Huawei/pandas-mcp-server/charts/bar_anime_df_bar_20250828_151859.html
+2025-08-28 15:18:59,099 - core.visualization - INFO - Successfully created bar chart: /home/justin/Work/Huawei/pandas-mcp-server/charts/bar_anime_df_bar_20250828_151859.html
+2025-08-28 15:18:59,099 - core.tools - INFO - Chart created successfully: /home/justin/Work/Huawei/pandas-mcp-server/charts/bar_anime_df_bar_20250828_151859.html
+2025-08-28 15:18:59,102 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 15:18:59,155 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 15:18:59,157 - core.tools - INFO - Retrieved HTML chart: /home/justin/Work/Huawei/pandas-mcp-server/charts/bar_anime_df_bar_20250828_151859.html
+2025-08-28 15:18:59,161 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 15:45:39,860 - __main__ - INFO - Starting pandas-mcp-server v0.1.0
+2025-08-28 15:45:39,860 - __main__ - INFO - Server configuration: sse on 0.0.0.0:8000
+2025-08-28 15:45:39,861 - __main__ - INFO - Background cleanup task started
+2025-08-28 15:45:39,861 - __main__ - INFO - Auto-cleanup task started (30 min session timeout)
+2025-08-28 15:45:39,861 - __main__ - INFO - Session management: Automatic cleanup enabled (30 min timeout)
+2025-08-28 15:45:39,861 - __main__ - INFO - Available MCP tools:
+2025-08-28 15:45:39,861 - __main__ - INFO -   - upload_temp_file_tool: Upload files with auto-cleanup
+2025-08-28 15:45:39,861 - __main__ - INFO -   - get_server_status_tool: Get server status
+2025-08-28 15:45:39,861 - __main__ - INFO -   - read_metadata_tool: Extract file metadata
+2025-08-28 15:45:39,861 - __main__ - INFO -   - run_pandas_code_tool: Execute pandas operations
+2025-08-28 15:45:39,861 - __main__ - INFO -   - load_dataframe_tool: Load data files
+2025-08-28 15:45:39,861 - __main__ - INFO -   - list_dataframes_tool: List loaded DataFrames
+2025-08-28 15:45:39,861 - __main__ - INFO -   - get_dataframe_info_tool: Get DataFrame details
+2025-08-28 15:45:39,861 - __main__ - INFO -   - validate_pandas_code_tool: Validate code without execution
+2025-08-28 15:45:39,861 - __main__ - INFO -   - get_execution_context_tool: Get execution context
+2025-08-28 15:45:39,861 - __main__ - INFO -   - preview_file_tool: Preview files
+2025-08-28 15:45:39,861 - __main__ - INFO -   - get_supported_formats_tool: Get supported formats
+2025-08-28 15:45:39,861 - __main__ - INFO -   - clear_session_tool: Clear session data
+2025-08-28 15:45:39,861 - __main__ - INFO -   - get_session_info_tool: Get session info
+2025-08-28 15:45:39,862 - __main__ - INFO -   - get_server_info_tool: Get server configuration
+2025-08-28 15:45:39,862 - __main__ - INFO -   - create_chart_tool: Create interactive charts
+2025-08-28 15:45:39,862 - __main__ - INFO -   - suggest_charts_tool: Get chart recommendations
+2025-08-28 15:45:39,862 - __main__ - INFO -   - get_chart_types_tool: List supported chart types
+2025-08-28 15:45:39,862 - __main__ - INFO -   - create_correlation_heatmap_tool: Create correlation matrix
+2025-08-28 15:45:39,862 - __main__ - INFO -   - create_time_series_chart_tool: Create time series visualization
+2025-08-28 15:47:30,146 - __main__ - INFO - Starting pandas-mcp-server v0.1.0
+2025-08-28 15:47:30,146 - __main__ - INFO - Server configuration: sse on 0.0.0.0:8000
+2025-08-28 15:47:30,147 - __main__ - INFO - Background cleanup task started
+2025-08-28 15:47:30,147 - __main__ - INFO - Auto-cleanup task started (30 min session timeout)
+2025-08-28 15:47:30,147 - __main__ - INFO - Session management: Automatic cleanup enabled (30 min timeout)
+2025-08-28 15:47:30,147 - __main__ - INFO - Available MCP tools:
+2025-08-28 15:47:30,147 - __main__ - INFO -   - upload_temp_file_tool: Upload files with auto-cleanup
+2025-08-28 15:47:30,148 - __main__ - INFO -   - get_server_status_tool: Get server status
+2025-08-28 15:47:30,148 - __main__ - INFO -   - read_metadata_tool: Extract file metadata
+2025-08-28 15:47:30,148 - __main__ - INFO -   - run_pandas_code_tool: Execute pandas operations
+2025-08-28 15:47:30,148 - __main__ - INFO -   - load_dataframe_tool: Load data files
+2025-08-28 15:47:30,148 - __main__ - INFO -   - list_dataframes_tool: List loaded DataFrames
+2025-08-28 15:47:30,148 - __main__ - INFO -   - get_dataframe_info_tool: Get DataFrame details
+2025-08-28 15:47:30,148 - __main__ - INFO -   - validate_pandas_code_tool: Validate code without execution
+2025-08-28 15:47:30,148 - __main__ - INFO -   - get_execution_context_tool: Get execution context
+2025-08-28 15:47:30,148 - __main__ - INFO -   - preview_file_tool: Preview files
+2025-08-28 15:47:30,148 - __main__ - INFO -   - get_supported_formats_tool: Get supported formats
+2025-08-28 15:47:30,148 - __main__ - INFO -   - clear_session_tool: Clear session data
+2025-08-28 15:47:30,148 - __main__ - INFO -   - get_session_info_tool: Get session info
+2025-08-28 15:47:30,148 - __main__ - INFO -   - get_server_info_tool: Get server configuration
+2025-08-28 15:47:30,148 - __main__ - INFO -   - create_chart_tool: Create interactive charts
+2025-08-28 15:47:30,148 - __main__ - INFO -   - suggest_charts_tool: Get chart recommendations
+2025-08-28 15:47:30,148 - __main__ - INFO -   - get_chart_types_tool: List supported chart types
+2025-08-28 15:47:30,148 - __main__ - INFO -   - create_correlation_heatmap_tool: Create correlation matrix
+2025-08-28 15:47:30,148 - __main__ - INFO -   - create_time_series_chart_tool: Create time series visualization
+2025-08-28 15:52:30,248 - __main__ - INFO - Cleaned orphaned session directory: default
+2025-08-28 16:45:20,634 - __main__ - INFO - Starting pandas-mcp-server v0.1.0
+2025-08-28 16:45:20,634 - __main__ - INFO - Server configuration: sse on 0.0.0.0:8000
+2025-08-28 16:45:20,635 - __main__ - INFO - Background cleanup task started
+2025-08-28 16:45:20,635 - __main__ - INFO - Auto-cleanup task started (30 min session timeout)
+2025-08-28 16:45:20,635 - __main__ - INFO - Session management: Automatic cleanup enabled (30 min timeout)
+2025-08-28 16:45:20,635 - __main__ - INFO - Available MCP tools:
+2025-08-28 16:45:20,635 - __main__ - INFO -   - upload_temp_file_tool: Upload files with auto-cleanup
+2025-08-28 16:45:20,635 - __main__ - INFO -   - get_server_status_tool: Get server status
+2025-08-28 16:45:20,635 - __main__ - INFO -   - read_metadata_tool: Extract file metadata
+2025-08-28 16:45:20,635 - __main__ - INFO -   - run_pandas_code_tool: Execute pandas operations
+2025-08-28 16:45:20,636 - __main__ - INFO -   - load_dataframe_tool: Load data files
+2025-08-28 16:45:20,636 - __main__ - INFO -   - list_dataframes_tool: List loaded DataFrames
+2025-08-28 16:45:20,636 - __main__ - INFO -   - get_dataframe_info_tool: Get DataFrame details
+2025-08-28 16:45:20,636 - __main__ - INFO -   - validate_pandas_code_tool: Validate code without execution
+2025-08-28 16:45:20,636 - __main__ - INFO -   - get_execution_context_tool: Get execution context
+2025-08-28 16:45:20,636 - __main__ - INFO -   - preview_file_tool: Preview files
+2025-08-28 16:45:20,636 - __main__ - INFO -   - get_supported_formats_tool: Get supported formats
+2025-08-28 16:45:20,636 - __main__ - INFO -   - clear_session_tool: Clear session data
+2025-08-28 16:45:20,636 - __main__ - INFO -   - get_session_info_tool: Get session info
+2025-08-28 16:45:20,636 - __main__ - INFO -   - get_server_info_tool: Get server configuration
+2025-08-28 16:45:20,636 - __main__ - INFO -   - create_chart_tool: Create interactive charts
+2025-08-28 16:45:20,636 - __main__ - INFO -   - suggest_charts_tool: Get chart recommendations
+2025-08-28 16:45:20,636 - __main__ - INFO -   - get_chart_types_tool: List supported chart types
+2025-08-28 16:45:20,636 - __main__ - INFO -   - create_correlation_heatmap_tool: Create correlation matrix
+2025-08-28 16:45:20,636 - __main__ - INFO -   - create_time_series_chart_tool: Create time series visualization
+2025-08-28 16:45:39,191 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 16:47:00,319 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 16:47:00,325 - core.tools - INFO - Uploaded anime_dataset.csv to session default
+2025-08-28 16:47:00,329 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 16:47:03,567 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 16:47:03,574 - core.tools - INFO - Orchestrating data loading: sessions/default/anime_dataset.csv -> DataFrame 'df'
+2025-08-28 16:47:03,574 - core.data_loader - INFO - Loading file 'sessions/default/anime_dataset.csv' as DataFrame 'df' in session 'default'
+2025-08-28 16:47:03,575 - core.data_loader - INFO - Using .csv loader with options: {}
+2025-08-28 16:47:03,575 - core.data_loader - INFO - Loading CSV with options: {}
+2025-08-28 16:47:03,591 - core.data_loader - INFO - Loaded DataFrame: (30, 25), Memory: 0.03MB
+2025-08-28 16:47:03,593 - core.data_loader - INFO - Successfully stored DataFrame 'df': DataFrame 'df' added successfully (0.03MB)
+2025-08-28 16:47:03,596 - core.tools - INFO - Successfully loaded sessions/default/anime_dataset.csv as 'df'
+2025-08-28 16:47:03,600 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 16:47:07,873 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 16:47:07,877 - core.tools - INFO - Orchestrating pandas code execution in session default
+2025-08-28 16:47:07,877 - core.execution - INFO - Executing pandas code in session 'default' on DataFrame 'df': top_sci_fi_animes = df[df['genres'].str.contains('Sci-Fi')].nlargest(6, 'popularity')[['title', 'pop...
+2025-08-28 16:47:07,881 - storage.dataframe_manager - INFO - Auto-registering new DataFrame: top_sci_fi_animes
+2025-08-28 16:47:07,883 - storage.dataframe_manager - INFO - Successfully registered DataFrame 'top_sci_fi_animes': DataFrame 'top_sci_fi_animes' added successfully (0.00MB)
+2025-08-28 16:47:07,883 - core.execution - INFO - Code executed successfully, result type: none
+2025-08-28 16:47:07,883 - core.tools - INFO - Code executed successfully, result type: none
+2025-08-28 16:47:07,888 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 16:47:10,119 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 16:47:10,133 - core.tools - INFO - Orchestrating chart creation: bar for DataFrame 'df'
+2025-08-28 16:47:10,133 - core.visualization - INFO - Creating bar visualization for DataFrame 'df'
+2025-08-28 16:47:10,134 - core.charts.base_chart - INFO - Chart saved to /home/justin/Work/Huawei/pandas-mcp-server/charts/bar_df_bar_20250828_164710.html
+2025-08-28 16:47:10,134 - core.visualization - INFO - Successfully created bar chart: /home/justin/Work/Huawei/pandas-mcp-server/charts/bar_df_bar_20250828_164710.html
+2025-08-28 16:47:10,135 - core.tools - INFO - Chart created successfully: /home/justin/Work/Huawei/pandas-mcp-server/charts/bar_df_bar_20250828_164710.html
+2025-08-28 16:47:10,138 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 16:47:10,194 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 16:47:10,195 - core.tools - INFO - Retrieved HTML chart: /home/justin/Work/Huawei/pandas-mcp-server/charts/bar_df_bar_20250828_164710.html
+2025-08-28 16:47:10,200 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 16:49:09,980 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 16:49:09,983 - core.tools - INFO - File anime_dataset.csv already exists with same content
+2025-08-28 16:49:09,987 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 16:49:10,091 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 16:49:10,094 - core.tools - INFO - File anime_dataset.csv already exists with same content
+2025-08-28 16:49:10,097 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 16:49:11,556 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 16:49:11,567 - core.tools - INFO - Orchestrating data loading: sessions/default/anime_dataset.csv -> DataFrame 'df'
+2025-08-28 16:49:11,567 - core.data_loader - INFO - Loading file 'sessions/default/anime_dataset.csv' as DataFrame 'df' in session 'default'
+2025-08-28 16:49:11,567 - core.data_loader - INFO - Using .csv loader with options: {}
+2025-08-28 16:49:11,568 - core.data_loader - INFO - Loading CSV with options: {}
+2025-08-28 16:49:11,573 - core.data_loader - INFO - Loaded DataFrame: (30, 25), Memory: 0.03MB
+2025-08-28 16:49:11,577 - core.data_loader - INFO - Successfully stored DataFrame 'df': DataFrame 'df' added successfully (0.03MB)
+2025-08-28 16:49:11,580 - core.tools - INFO - Successfully loaded sessions/default/anime_dataset.csv as 'df'
+2025-08-28 16:49:11,584 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 16:49:14,020 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 16:49:14,024 - core.tools - INFO - Orchestrating pandas code execution in session default
+2025-08-28 16:49:14,024 - core.execution - INFO - Executing pandas code in session 'default' on DataFrame 'df': top_sci_fi_animes = df[df['genres'].str.contains('Sci-Fi', na=False)].nlargest(2, 'score')[['title',...
+2025-08-28 16:49:14,027 - core.execution - INFO - Code executed successfully, result type: none
+2025-08-28 16:49:14,027 - core.tools - INFO - Code executed successfully, result type: none
+2025-08-28 16:49:14,030 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 16:49:15,863 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 16:49:15,880 - core.tools - INFO - Orchestrating chart creation: bar for DataFrame 'df'
+2025-08-28 16:49:15,880 - core.visualization - INFO - Creating bar visualization for DataFrame 'df'
+2025-08-28 16:49:15,881 - core.charts.base_chart - INFO - Chart saved to /home/justin/Work/Huawei/pandas-mcp-server/charts/bar_df_bar_20250828_164915.html
+2025-08-28 16:49:15,881 - core.visualization - INFO - Successfully created bar chart: /home/justin/Work/Huawei/pandas-mcp-server/charts/bar_df_bar_20250828_164915.html
+2025-08-28 16:49:15,881 - core.tools - INFO - Chart created successfully: /home/justin/Work/Huawei/pandas-mcp-server/charts/bar_df_bar_20250828_164915.html
+2025-08-28 16:49:15,885 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 16:49:15,940 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 16:49:15,942 - core.tools - INFO - Retrieved HTML chart: /home/justin/Work/Huawei/pandas-mcp-server/charts/bar_df_bar_20250828_164915.html
+2025-08-28 16:49:15,948 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 16:50:27,585 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 16:50:50,486 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 16:50:50,489 - core.tools - INFO - File anime_dataset.csv already exists with same content
+2025-08-28 16:50:50,493 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 16:50:51,771 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 16:50:51,778 - core.tools - INFO - Orchestrating data loading: sessions/default/anime_dataset.csv -> DataFrame 'df'
+2025-08-28 16:50:51,778 - core.data_loader - INFO - Loading file 'sessions/default/anime_dataset.csv' as DataFrame 'df' in session 'default'
+2025-08-28 16:50:51,778 - core.data_loader - INFO - Using .csv loader with options: {}
+2025-08-28 16:50:51,779 - core.data_loader - INFO - Loading CSV with options: {}
+2025-08-28 16:50:51,782 - core.data_loader - INFO - Loaded DataFrame: (30, 25), Memory: 0.03MB
+2025-08-28 16:50:51,785 - core.data_loader - INFO - Successfully stored DataFrame 'df': DataFrame 'df' added successfully (0.03MB)
+2025-08-28 16:50:51,787 - core.tools - INFO - Successfully loaded sessions/default/anime_dataset.csv as 'df'
+2025-08-28 16:50:51,791 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 16:50:53,953 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 16:50:53,956 - core.tools - INFO - Orchestrating pandas code execution in session default
+2025-08-28 16:50:53,956 - core.execution - INFO - Executing pandas code in session 'default' on DataFrame 'df': df[df['genres'].str.contains('Action', case=False)].shape[0]...
+2025-08-28 16:50:53,957 - core.execution - INFO - Code executed successfully, result type: scalar
+2025-08-28 16:50:53,957 - core.tools - INFO - Code executed successfully, result type: scalar
+2025-08-28 16:50:53,961 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 16:51:29,250 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 16:51:29,254 - core.tools - INFO - File anime_dataset.csv already exists with same content
+2025-08-28 16:51:29,259 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 16:51:29,363 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 16:51:29,366 - core.tools - INFO - File anime_dataset.csv already exists with same content
+2025-08-28 16:51:29,369 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 16:51:30,811 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 16:51:30,818 - core.tools - INFO - Orchestrating data loading: sessions/default/anime_dataset.csv -> DataFrame 'df'
+2025-08-28 16:51:30,818 - core.data_loader - INFO - Loading file 'sessions/default/anime_dataset.csv' as DataFrame 'df' in session 'default'
+2025-08-28 16:51:30,818 - core.data_loader - INFO - Using .csv loader with options: {}
+2025-08-28 16:51:30,818 - core.data_loader - INFO - Loading CSV with options: {}
+2025-08-28 16:51:30,821 - core.data_loader - INFO - Loaded DataFrame: (30, 25), Memory: 0.03MB
+2025-08-28 16:51:30,825 - core.data_loader - INFO - Successfully stored DataFrame 'df': DataFrame 'df' added successfully (0.03MB)
+2025-08-28 16:51:30,827 - core.tools - INFO - Successfully loaded sessions/default/anime_dataset.csv as 'df'
+2025-08-28 16:51:30,831 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 16:51:32,449 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 16:51:32,452 - core.tools - INFO - Orchestrating pandas code execution in session default
+2025-08-28 16:51:32,452 - core.execution - INFO - Executing pandas code in session 'default' on DataFrame 'df': df[df['genres'].str.contains('Action')].nlargest(5, 'score')[['title', 'synopsis']]...
+2025-08-28 16:51:32,456 - core.execution - INFO - Code executed successfully, result type: dataframe
+2025-08-28 16:51:32,456 - core.tools - INFO - Code executed successfully, result type: dataframe
+2025-08-28 16:51:32,460 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 16:52:44,186 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 16:52:44,190 - core.tools - INFO - Orchestrating pandas code execution in session default
+2025-08-28 16:52:44,190 - core.execution - INFO - Executing pandas code in session 'default' on DataFrame 'df': top_action_animes = df[df['genre'].str.contains('Action')].sort_values(by='score', ascending=False)....
+2025-08-28 16:52:44,190 - core.execution - ERROR - Execution runtime error: Execution failed: 'genre'
+2025-08-28 16:52:44,190 - core.tools - WARNING - Code execution failed: Execution failed: 'genre'
+2025-08-28 16:52:44,194 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 16:52:44,298 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 16:52:44,301 - core.tools - INFO - Getting info for DataFrame 'top_action_animes' in session 'default'
+2025-08-28 16:52:44,307 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 16:52:45,560 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 16:52:45,564 - core.tools - INFO - Getting info for DataFrame 'df' in session 'default'
+2025-08-28 16:52:45,572 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 16:52:47,405 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 16:52:47,409 - core.tools - INFO - Orchestrating pandas code execution in session default
+2025-08-28 16:52:47,409 - core.execution - INFO - Executing pandas code in session 'default' on DataFrame 'df': top_action_animes = df[df['genres'].str.contains('Action')].sort_values(by='score', ascending=False)...
+2025-08-28 16:52:47,410 - storage.dataframe_manager - INFO - Auto-registering new DataFrame: top_action_animes
+2025-08-28 16:52:47,414 - storage.dataframe_manager - INFO - Successfully registered DataFrame 'top_action_animes': DataFrame 'top_action_animes' added successfully (0.00MB)
+2025-08-28 16:52:47,414 - core.execution - INFO - Code executed successfully, result type: none
+2025-08-28 16:52:47,414 - core.tools - INFO - Code executed successfully, result type: none
+2025-08-28 16:52:47,418 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 16:52:49,045 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 16:52:49,059 - core.tools - INFO - Orchestrating chart creation: bar for DataFrame 'top_action_animes'
+2025-08-28 16:52:49,059 - core.visualization - INFO - Creating bar visualization for DataFrame 'top_action_animes'
+2025-08-28 16:52:49,060 - core.charts.base_chart - INFO - Chart saved to /home/justin/Work/Huawei/pandas-mcp-server/charts/bar_top_action_animes_bar_20250828_165249.html
+2025-08-28 16:52:49,060 - core.visualization - INFO - Successfully created bar chart: /home/justin/Work/Huawei/pandas-mcp-server/charts/bar_top_action_animes_bar_20250828_165249.html
+2025-08-28 16:52:49,060 - core.tools - INFO - Chart created successfully: /home/justin/Work/Huawei/pandas-mcp-server/charts/bar_top_action_animes_bar_20250828_165249.html
+2025-08-28 16:52:49,063 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 16:52:49,116 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-28 16:52:49,117 - core.tools - INFO - Retrieved HTML chart: /home/justin/Work/Huawei/pandas-mcp-server/charts/bar_top_action_animes_bar_20250828_165249.html
+2025-08-28 16:52:49,123 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 16:55:04,474 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 17:00:48,404 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-28 17:25:21,273 - __main__ - INFO - Auto-cleaned inactive session: default (30 min timeout)
+2025-08-28 17:25:21,273 - storage.dataframe_manager - INFO - Session cleared: default
+2025-08-28 17:25:21,274 - __main__ - INFO - Cleaned 1 inactive sessions
+2025-08-29 09:09:19,281 - __main__ - INFO - Starting pandas-mcp-server v0.1.0
+2025-08-29 09:09:19,281 - __main__ - INFO - Server configuration: sse on 0.0.0.0:8000
+2025-08-29 09:09:19,281 - __main__ - INFO - Background cleanup task started
+2025-08-29 09:09:19,282 - __main__ - INFO - Auto-cleanup task started (30 min session timeout)
+2025-08-29 09:09:19,282 - __main__ - INFO - Session management: Automatic cleanup enabled (30 min timeout)
+2025-08-29 09:09:19,282 - __main__ - INFO - Available MCP tools:
+2025-08-29 09:09:19,282 - __main__ - INFO -   - upload_temp_file_tool: Upload files with auto-cleanup
+2025-08-29 09:09:19,282 - __main__ - INFO -   - get_server_status_tool: Get server status
+2025-08-29 09:09:19,282 - __main__ - INFO -   - read_metadata_tool: Extract file metadata
+2025-08-29 09:09:19,283 - __main__ - INFO -   - run_pandas_code_tool: Execute pandas operations
+2025-08-29 09:09:19,283 - __main__ - INFO -   - load_dataframe_tool: Load data files
+2025-08-29 09:09:19,283 - __main__ - INFO -   - list_dataframes_tool: List loaded DataFrames
+2025-08-29 09:09:19,283 - __main__ - INFO -   - get_dataframe_info_tool: Get DataFrame details
+2025-08-29 09:09:19,283 - __main__ - INFO -   - validate_pandas_code_tool: Validate code without execution
+2025-08-29 09:09:19,283 - __main__ - INFO -   - get_execution_context_tool: Get execution context
+2025-08-29 09:09:19,283 - __main__ - INFO -   - preview_file_tool: Preview files
+2025-08-29 09:09:19,283 - __main__ - INFO -   - get_supported_formats_tool: Get supported formats
+2025-08-29 09:09:19,283 - __main__ - INFO -   - clear_session_tool: Clear session data
+2025-08-29 09:09:19,283 - __main__ - INFO -   - get_session_info_tool: Get session info
+2025-08-29 09:09:19,283 - __main__ - INFO -   - get_server_info_tool: Get server configuration
+2025-08-29 09:09:19,283 - __main__ - INFO -   - create_chart_tool: Create interactive charts
+2025-08-29 09:09:19,283 - __main__ - INFO -   - suggest_charts_tool: Get chart recommendations
+2025-08-29 09:09:19,283 - __main__ - INFO -   - get_chart_types_tool: List supported chart types
+2025-08-29 09:09:19,283 - __main__ - INFO -   - create_correlation_heatmap_tool: Create correlation matrix
+2025-08-29 09:09:19,284 - __main__ - INFO -   - create_time_series_chart_tool: Create time series visualization
+2025-08-29 09:09:42,423 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-29 09:12:04,822 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-29 09:12:24,306 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-29 09:12:24,312 - core.tools - INFO - Uploaded anime_dataset.csv to session default
+2025-08-29 09:12:24,317 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-29 09:12:26,054 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-29 09:12:26,067 - core.tools - INFO - Orchestrating data loading: sessions/default/anime_dataset.csv -> DataFrame 'df'
+2025-08-29 09:12:26,068 - core.data_loader - INFO - Loading file 'sessions/default/anime_dataset.csv' as DataFrame 'df' in session 'default'
+2025-08-29 09:12:26,068 - core.data_loader - INFO - Using .csv loader with options: {}
+2025-08-29 09:12:26,068 - core.data_loader - INFO - Loading CSV with options: {}
+2025-08-29 09:12:26,089 - core.data_loader - INFO - Loaded DataFrame: (30, 25), Memory: 0.03MB
+2025-08-29 09:12:26,092 - core.data_loader - INFO - Successfully stored DataFrame 'df': DataFrame 'df' added successfully (0.03MB)
+2025-08-29 09:12:26,098 - core.tools - INFO - Successfully loaded sessions/default/anime_dataset.csv as 'df'
+2025-08-29 09:12:26,104 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-29 09:12:30,387 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-08-29 09:12:30,393 - core.tools - INFO - Orchestrating pandas code execution in session default
+2025-08-29 09:12:30,393 - core.execution - INFO - Executing pandas code in session 'default' on DataFrame 'df': df[df['genres'].str.contains('Action')].nlargest(6, 'score')[['title', 'score']]...
+2025-08-29 09:12:30,401 - core.execution - INFO - Code executed successfully, result type: dataframe
+2025-08-29 09:12:30,401 - core.tools - INFO - Code executed successfully, result type: dataframe
+2025-08-29 09:12:30,406 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-29 09:44:19,865 - __main__ - INFO - Auto-cleaned inactive session: default (30 min timeout)
+2025-08-29 09:44:19,865 - storage.dataframe_manager - INFO - Session cleared: default
+2025-08-29 09:44:19,865 - __main__ - INFO - Cleaned 1 inactive sessions
+2025-08-29 10:08:05,921 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest
+2025-08-29 10:08:17,146 - mcp.server.lowlevel.server - INFO - Processing request of type ListToolsRequest

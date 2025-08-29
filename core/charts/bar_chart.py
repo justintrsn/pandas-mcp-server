@@ -114,26 +114,55 @@ class BarChart(BaseChart):
         
         # Prepare datasets
         datasets = []
-        for i, col in enumerate(y_columns):
+        
+        # Handle single dataset with multiple bars (different colors per bar)
+        if len(y_columns) == 1:
+            col = y_columns[0]
             if col not in df.columns:
-                continue
-            
-            color = CHART_COLOR_PALETTE[i % len(CHART_COLOR_PALETTE)]
+                return {"error": f"Column '{col}' not found"}
             
             # Handle NaN values
             data_values = df[col].fillna(0).tolist()
             
+            # Generate different colors for each bar
+            bar_colors = [CHART_COLOR_PALETTE[i % len(CHART_COLOR_PALETTE)] 
+                         for i in range(len(data_values))]
+            hover_colors = [color + "FF" for color in bar_colors]
+            background_colors = [color + "CC" for color in bar_colors]
+            
             dataset = {
                 "label": col,
                 "data": data_values,
-                "backgroundColor": color + "CC",  # Semi-transparent
-                "borderColor": color,
+                "backgroundColor": background_colors,  # Array of colors for each bar
+                "borderColor": bar_colors,  # Array of border colors
+                "hoverBackgroundColor": hover_colors,  # Hover colors
                 "borderWidth": 1,
-                "hoverBackgroundColor": color + "FF",
                 "hoverBorderWidth": 2
             }
             
             datasets.append(dataset)
+        else:
+            # Multiple datasets (different series)
+            for i, col in enumerate(y_columns):
+                if col not in df.columns:
+                    continue
+                
+                color = CHART_COLOR_PALETTE[i % len(CHART_COLOR_PALETTE)]
+                
+                # Handle NaN values
+                data_values = df[col].fillna(0).tolist()
+                
+                dataset = {
+                    "label": col,
+                    "data": data_values,
+                    "backgroundColor": color + "CC",  # Semi-transparent
+                    "borderColor": color,
+                    "borderWidth": 1,
+                    "hoverBackgroundColor": color + "FF",
+                    "hoverBorderWidth": 2
+                }
+                
+                datasets.append(dataset)
         
         return {
             "labels": x_data,
@@ -142,7 +171,8 @@ class BarChart(BaseChart):
                 "x_column": x_column,
                 "y_columns": y_columns,
                 "total_records": len(df),
-                "aggregation": aggregate_func if group_by else None
+                "aggregation": aggregate_func if group_by else None,
+                "single_dataset": len(y_columns) == 1  # Flag for different color handling
             }
         }
     
@@ -153,6 +183,8 @@ class BarChart(BaseChart):
         # Bar-specific options
         options.update({
             "indexAxis": "x",  # Can be changed to "y" for horizontal bars
+            "responsive": True,
+            "maintainAspectRatio": False,
             "scales": {
                 "x": {
                     "grid": {
@@ -194,13 +226,24 @@ class BarChart(BaseChart):
                     "cornerRadius": 4,
                     "padding": 10
                 }
+            },
+            "animation": {
+                "duration": 1000,
+                "easing": "easeOutQuart"
+            },
+            "transitions": {
+                "active": {
+                    "animation": {
+                        "duration": 400
+                    }
+                }
             }
         })
         
         return options
     
     def _generate_controls_html(self, chart_data: Dict[str, Any]) -> str:
-        """Generate bar chart specific controls"""
+        """Generate bar chart specific controls with custom dropdown"""
         base_controls = super()._generate_controls_html(chart_data)
         
         # Add bar-specific controls
@@ -237,11 +280,68 @@ class BarChart(BaseChart):
             </div>
         ''')
         
+        # Sort control using custom dropdown
+        sort_dropdown = self._create_custom_dropdown(
+            label="Sort",
+            options=[
+                ("original", "Original"),
+                ("asc", "Ascending"),
+                ("desc", "Descending")
+            ],
+            callback="sortBars",
+            default_value="original"
+        )
+        bar_controls.append(sort_dropdown)
+        
         return base_controls + '\n' + '\n'.join(bar_controls)
     
     def _get_custom_scripts(self) -> str:
         """Get custom JavaScript for bar chart"""
         return '''
+        // Add custom plugin to display values on bars
+        Chart.register({
+            id: 'dataLabels',
+            afterDatasetsDraw: function(chart) {
+                const ctx = chart.ctx;
+                ctx.save();
+                
+                chart.data.datasets.forEach((dataset, datasetIndex) => {
+                    const meta = chart.getDatasetMeta(datasetIndex);
+                    if (!meta.hidden) {
+                        meta.data.forEach((element, index) => {
+                            const value = dataset.data[index];
+                            if (value !== null && value !== undefined) {
+                                ctx.fillStyle = '#333';
+                                ctx.font = 'bold 11px Arial';
+                                ctx.textAlign = 'center';
+                                ctx.textBaseline = 'bottom';
+                                
+                                let x = element.x;
+                                let y = element.y - 5;
+                                
+                                // Handle horizontal bars
+                                if (chart.options.indexAxis === 'y') {
+                                    x = element.x + 10;
+                                    y = element.y + 3;
+                                    ctx.textAlign = 'left';
+                                    ctx.textBaseline = 'middle';
+                                }
+                                
+                                ctx.fillText(value.toFixed(1), x, y);
+                            }
+                        });
+                    }
+                });
+                
+                ctx.restore();
+            }
+        });
+        
+        // Add staggered animation delay
+        myChart.options.animation.delay = function(context) {
+            return context.dataIndex * 100;
+        };
+        
         function toggleStacked(isStacked) {
             myChart.options.scales.x.stacked = isStacked;
             myChart.options.scales.y.stacked = isStacked;
@@ -249,7 +349,34 @@ class BarChart(BaseChart):
         }
         
         function toggleHorizontal(isHorizontal) {
-            myChart.options.indexAxis = isHorizontal ? 'y' : 'x';
+            if (isHorizontal) {
+                myChart.options.indexAxis = 'y';
+                const xScale = myChart.options.scales.x;
+                const yScale = myChart.options.scales.y;
+                myChart.options.scales.x = {
+                    ...yScale,
+                    grid: { display: true, color: "rgba(0, 0, 0, 0.05)" }
+                };
+                myChart.options.scales.y = {
+                    ...xScale,
+                    grid: { display: false }
+                };
+            } else {
+                myChart.options.indexAxis = 'x';
+                myChart.options.scales.x = {
+                    grid: { display: false },
+                    ticks: {
+                        maxRotation: 45,
+                        minRotation: 0,
+                        autoSkip: true,
+                        maxTicksLimit: 20
+                    }
+                };
+                myChart.options.scales.y = {
+                    beginAtZero: true,
+                    grid: { color: "rgba(0, 0, 0, 0.05)" }
+                };
+            }
             myChart.update();
         }
         
@@ -260,19 +387,16 @@ class BarChart(BaseChart):
             myChart.update();
         }
         
-        // Add dataset visibility toggles
         function toggleDataset(index) {
             const meta = myChart.getDatasetMeta(index);
             meta.hidden = meta.hidden === null ? !myChart.data.datasets[index].hidden : null;
             myChart.update();
         }
         
-        // Sort bars
         function sortBars(order) {
-            const labels = myChart.data.labels;
+            const labels = [...myChart.data.labels];
             const datasets = myChart.data.datasets;
             
-            // Create array of indices and values for sorting
             let indices = [];
             for (let i = 0; i < labels.length; i++) {
                 indices.push({
@@ -282,21 +406,31 @@ class BarChart(BaseChart):
                 });
             }
             
-            // Sort based on order
             if (order === 'asc') {
                 indices.sort((a, b) => a.value - b.value);
             } else if (order === 'desc') {
                 indices.sort((a, b) => b.value - a.value);
             } else {
-                // Original order
                 indices.sort((a, b) => a.index - b.index);
             }
             
-            // Reorder data
             const newLabels = indices.map(item => item.label);
             datasets.forEach(dataset => {
                 const newData = indices.map(item => dataset.data[item.index]);
                 dataset.data = newData;
+                
+                if (Array.isArray(dataset.backgroundColor)) {
+                    const newBgColors = indices.map(item => dataset.backgroundColor[item.index]);
+                    dataset.backgroundColor = newBgColors;
+                }
+                if (Array.isArray(dataset.borderColor)) {
+                    const newBorderColors = indices.map(item => dataset.borderColor[item.index]);
+                    dataset.borderColor = newBorderColors;
+                }
+                if (Array.isArray(dataset.hoverBackgroundColor)) {
+                    const newHoverColors = indices.map(item => dataset.hoverBackgroundColor[item.index]);
+                    dataset.hoverBackgroundColor = newHoverColors;
+                }
             });
             myChart.data.labels = newLabels;
             

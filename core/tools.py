@@ -306,7 +306,13 @@ def list_dataframes(session_id: Optional[str] = None) -> Dict[str, Any]:
         logger.error(f"Failed to list dataframes: {e}")
         return {"success": False, "error": str(e)}
 
-
+def store_dataframe(df_data, df_name: str, session_id: str = "default"):
+    """Store a dataframe result explicitly in the session"""
+    result = pandas_executor.execute(f"result = {df_data}", "df", session_id)
+    if result['success'] and 'result' in result:
+        success, msg = df_manager.add_dataframe(result['result'], df_name, session_id)
+        return {"success": success, "message": msg}
+    
 def get_dataframe_info(df_name: str, session_id: str = "default") -> Dict[str, Any]:
     """
     Get detailed information about a specific DataFrame.

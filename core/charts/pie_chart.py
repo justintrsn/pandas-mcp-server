@@ -170,8 +170,7 @@ class PieChart(BaseChart):
                         "usePointStyle": True,
                         "font": {
                             "size": 12
-                        },
-                        "generateLabels": None  # Will be set in JavaScript
+                        }
                     }
                 },
                 "tooltip": {
@@ -182,28 +181,51 @@ class PieChart(BaseChart):
                     "borderColor": "#ddd",
                     "borderWidth": 1,
                     "cornerRadius": 4,
-                    "padding": 10,
-                    "callbacks": {}  # Will be set in JavaScript for percentage display
-                },
-                "datalabels": {
-                    "display": False,  # Can be enabled for showing labels on slices
-                    "color": "#fff",
-                    "font": {
-                        "weight": "bold"
-                    }
+                    "padding": 10
                 }
             },
-            "cutout": "0%"  # 0% for pie, 50% for doughnut
+            "cutout": "0%",
+            "animation": {
+                "duration": 1500,
+                "easing": "easeInOutElastic"
+            },
+            "transitions": {
+                "active": {
+                    "animation": {
+                        "duration": 400
+                    }
+                }
+            }
         })
         
         return options
-    
+
     def _generate_controls_html(self, chart_data: Dict[str, Any]) -> str:
         """Generate pie chart specific controls"""
         base_controls = super()._generate_controls_html(chart_data)
         
-        # Add pie-specific controls
         pie_controls = []
+        
+        # Label display checkboxes
+        pie_controls.append('''
+            <div class="control-group">
+                <label>Show on Slices</label>
+                <div style="display: flex; flex-direction: column; gap: 5px;">
+                    <label style="display: flex; align-items: center; font-size: 14px; text-transform: none;">
+                        <input type="checkbox" checked onchange="toggleShowPercentage(this.checked)" style="margin-right: 5px;">
+                        Percentage
+                    </label>
+                    <label style="display: flex; align-items: center; font-size: 14px; text-transform: none;">
+                        <input type="checkbox" onchange="toggleShowValue(this.checked)" style="margin-right: 5px;">
+                        Values
+                    </label>
+                    <label style="display: flex; align-items: center; font-size: 14px; text-transform: none;">
+                        <input type="checkbox" onchange="toggleShowLabel(this.checked)" style="margin-right: 5px;">
+                        Labels
+                    </label>
+                </div>
+            </div>
+        ''')
         
         # Doughnut toggle
         pie_controls.append('''
@@ -221,159 +243,161 @@ class PieChart(BaseChart):
             <div class="control-group">
                 <label>Rotation</label>
                 <input type="range" min="0" max="360" step="10" value="0" 
-                       onchange="changeRotation(this.value)">
+                    onchange="rotateChart(this.value)">
             </div>
         ''')
         
-        # Show percentages toggle
-        pie_controls.append('''
-            <div class="control-group">
-                <label>Show %</label>
-                <label class="switch">
-                    <input type="checkbox" onchange="togglePercentages(this.checked)">
-                    <span class="slider"></span>
-                </label>
-            </div>
-        ''')
-        
-        # Animation style
-        pie_controls.append('''
-            <div class="control-group">
-                <label>Explode Slices</label>
-                <input type="range" min="0" max="20" step="2" value="4" 
-                       onchange="changeOffset(this.value)">
-            </div>
-        ''')
+        # Legend position using custom dropdown
+        legend_dropdown = self._create_custom_dropdown(
+            label="Legend Position",
+            options=[
+                ("right", "Right"),
+                ("top", "Top"),
+                ("bottom", "Bottom"),
+                ("left", "Left")
+            ],
+            callback="changeLegendPosition",
+            default_value="right"
+        )
+        pie_controls.append(legend_dropdown)
         
         return base_controls + '\n' + '\n'.join(pie_controls)
-    
+
     def _get_custom_scripts(self) -> str:
         """Get custom JavaScript for pie chart"""
         return '''
-        // Add percentage to tooltips
-        myChart.options.plugins.tooltip.callbacks.label = function(context) {
-            let label = context.label || '';
-            if (label) {
-                label += ': ';
-            }
-            const value = context.parsed;
-            const total = context.dataset.data.reduce((a, b) => a + b, 0);
-            const percentage = ((value / total) * 100).toFixed(1);
-            label += value.toLocaleString() + ' (' + percentage + '%)';
-            return label;
+        // Add rotation animation delay
+        myChart.options.animation.delay = function(context) {
+            return context.dataIndex * 200;
         };
         
-        // Custom legend with values
-        myChart.options.plugins.legend.labels.generateLabels = function(chart) {
-            const data = chart.data;
-            if (data.labels.length && data.datasets.length) {
-                const dataset = data.datasets[0];
-                const total = dataset.data.reduce((a, b) => a + b, 0);
+        // Display options
+        let showPercentage = true;
+        let showValue = false;
+        let showLabel = false;
+        
+        // Plugin to display data labels on slices
+        Chart.register({
+            id: 'pieLabels',
+            afterDatasetsDraw: function(chart) {
+                const ctx = chart.ctx;
+                ctx.save();
                 
-                return data.labels.map((label, i) => {
-                    const value = dataset.data[i];
-                    const percentage = ((value / total) * 100).toFixed(1);
+                chart.data.datasets.forEach((dataset, datasetIndex) => {
+                    const meta = chart.getDatasetMeta(datasetIndex);
+                    const total = dataset.data.reduce((sum, value) => sum + value, 0);
                     
-                    return {
-                        text: label + ' (' + percentage + '%)',
-                        fillStyle: dataset.backgroundColor[i],
-                        strokeStyle: dataset.borderColor,
-                        lineWidth: dataset.borderWidth,
-                        hidden: false,
-                        index: i
-                    };
+                    meta.data.forEach((element, index) => {
+                        if (meta.data[index].hidden) return;
+                        
+                        const data = dataset.data[index];
+                        const percentage = ((data / total) * 100).toFixed(1);
+                        
+                        // Get the center of the slice
+                        const model = element;
+                        const midRadius = model.innerRadius + (model.outerRadius - model.innerRadius) * 0.7;
+                        const startAngle = model.startAngle;
+                        const endAngle = model.endAngle;
+                        const midAngle = startAngle + (endAngle - startAngle) / 2;
+                        
+                        const x = model.x + Math.cos(midAngle) * midRadius;
+                        const y = model.y + Math.sin(midAngle) * midRadius;
+                        
+                        // Prepare text lines
+                        const lines = [];
+                        if (showLabel) {
+                            lines.push(chart.data.labels[index]);
+                        }
+                        if (showPercentage) {
+                            lines.push(percentage + '%');
+                        }
+                        if (showValue) {
+                            lines.push(data.toLocaleString());
+                        }
+                        
+                        if (lines.length > 0) {
+                            // Only show label if slice is big enough
+                            const sliceAngle = endAngle - startAngle;
+                            if (sliceAngle < 0.2) return; // Skip very small slices
+                            
+                            ctx.fillStyle = '#fff';
+                            ctx.strokeStyle = '#333';
+                            ctx.lineWidth = 2;
+                            ctx.font = 'bold 12px Arial';
+                            ctx.textAlign = 'center';
+                            ctx.textBaseline = 'middle';
+                            
+                            // Draw text with outline for better visibility
+                            lines.forEach((line, lineIndex) => {
+                                const yOffset = (lineIndex - (lines.length - 1) / 2) * 15;
+                                ctx.strokeText(line, x, y + yOffset);
+                                ctx.fillText(line, x, y + yOffset);
+                            });
+                        }
+                    });
                 });
+                
+                ctx.restore();
             }
-            return [];
+        });
+        
+        // Tooltip configuration
+        myChart.options.plugins.tooltip.callbacks.label = function(context) {
+            const dataset = context.dataset;
+            const total = dataset.data.reduce((sum, value) => sum + value, 0);
+            const percentage = ((context.raw / total) * 100).toFixed(1);
+            return context.label + ': ' + context.raw.toLocaleString() + ' (' + percentage + '%)';
         };
         
-        myChart.update();
+        function toggleShowPercentage(show) {
+            showPercentage = show;
+            myChart.update();
+        }
+        
+        function toggleShowValue(show) {
+            showValue = show;
+            myChart.update();
+        }
+        
+        function toggleShowLabel(show) {
+            showLabel = show;
+            myChart.update();
+        }
         
         function toggleDoughnut(isDoughnut) {
-            myChart.config.type = isDoughnut ? 'doughnut' : 'pie';
-            myChart.options.cutout = isDoughnut ? '50%' : '0%';
-            myChart.update();
-        }
-        
-        function changeRotation(degrees) {
-            myChart.options.rotation = degrees * Math.PI / 180;
-            myChart.update();
-        }
-        
-        function togglePercentages(showPercentages) {
-            if (showPercentages) {
-                myChart.options.plugins.datalabels = {
-                    display: true,
-                    color: '#fff',
-                    font: {
-                        weight: 'bold',
-                        size: 12
-                    },
-                    formatter: (value, context) => {
-                        const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                        const percentage = ((value / total) * 100).toFixed(1);
-                        return percentage + '%';
-                    }
-                };
+            if (isDoughnut) {
+                myChart.options.cutout = '50%';
             } else {
-                myChart.options.plugins.datalabels.display = false;
+                myChart.options.cutout = 0;
             }
             myChart.update();
         }
         
-        function changeOffset(offset) {
-            myChart.data.datasets[0].hoverOffset = parseInt(offset);
+        function rotateChart(rotation) {
+            myChart.options.rotation = (rotation * Math.PI) / 180;
             myChart.update();
         }
         
-        // Sort slices
-        function sortSlices(order) {
+        function changeLegendPosition(position) {
+            myChart.options.plugins.legend.position = position;
+            myChart.update();
+        }
+        
+        function explodeSlice(index) {
             const dataset = myChart.data.datasets[0];
-            const labels = myChart.data.labels;
-            const data = dataset.data;
-            const backgroundColor = dataset.backgroundColor;
-            
-            // Create array of indices
-            let indices = [];
-            for (let i = 0; i < labels.length; i++) {
-                indices.push({
-                    label: labels[i],
-                    value: data[i],
-                    color: backgroundColor[i],
-                    index: i
-                });
+            if (!dataset.offset) {
+                dataset.offset = new Array(dataset.data.length).fill(0);
             }
             
-            // Sort
-            if (order === 'asc') {
-                indices.sort((a, b) => a.value - b.value);
-            } else if (order === 'desc') {
-                indices.sort((a, b) => b.value - a.value);
-            } else {
-                indices.sort((a, b) => a.index - b.index);
-            }
-            
-            // Reorder
-            myChart.data.labels = indices.map(item => item.label);
-            dataset.data = indices.map(item => item.value);
-            dataset.backgroundColor = indices.map(item => item.color);
-            
+            // Toggle the offset for the clicked slice
+            dataset.offset[index] = dataset.offset[index] === 0 ? 20 : 0;
             myChart.update();
         }
         
-        // Explode single slice on click
+        // Add click handler for slice explosion
         myChart.options.onClick = function(event, elements) {
             if (elements.length > 0) {
-                const index = elements[0].index;
-                const dataset = myChart.data.datasets[0];
-                
-                if (!dataset.offset) {
-                    dataset.offset = new Array(dataset.data.length).fill(0);
-                }
-                
-                // Toggle explosion
-                dataset.offset[index] = dataset.offset[index] === 0 ? 20 : 0;
-                myChart.update();
+                explodeSlice(elements[0].index);
             }
         };
         '''

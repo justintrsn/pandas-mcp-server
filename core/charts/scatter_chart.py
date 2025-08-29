@@ -241,7 +241,6 @@ class ScatterChart(BaseChart):
                     "position": "top",
                     "labels": {
                         "usePointStyle": True
-                        # filter will be set in JavaScript
                     }
                 },
                 "tooltip": {
@@ -249,34 +248,45 @@ class ScatterChart(BaseChart):
                     "mode": "point",
                     "intersect": True,
                     "backgroundColor": "rgba(0, 0, 0, 0.8)",
-                    "callbacks": {}  # Will be set in JavaScript
-                },
-                "zoom": {
-                    "enabled": False,  # Could be enabled with plugin
-                    "mode": "xy"
+                    "titleColor": "#fff",
+                    "bodyColor": "#fff",
+                    "borderColor": "#ddd",
+                    "borderWidth": 1,
+                    "cornerRadius": 4,
+                    "padding": 10
                 }
             },
             "interaction": {
                 "mode": "point",
                 "intersect": True
+            },
+            "animation": {
+                "duration": 1200,
+                "easing": "easeOutBounce"
+            },
+            "transitions": {
+                "active": {
+                    "animation": {
+                        "duration": 400
+                    }
+                }
             }
         })
         
         return options
-    
+
     def _generate_controls_html(self, chart_data: Dict[str, Any]) -> str:
-        """Generate scatter chart specific controls"""
+        """Generate scatter chart specific controls with custom dropdown"""
         base_controls = super()._generate_controls_html(chart_data)
         
-        # Add scatter-specific controls
         scatter_controls = []
         
         # Point size control
         scatter_controls.append('''
             <div class="control-group">
                 <label>Point Size</label>
-                <input type="range" min="1" max="10" step="1" value="4" 
-                       onchange="changePointSize(this.value)">
+                <input type="range" min="1" max="15" step="1" value="4" 
+                    onchange="changePointSize(this.value)">
             </div>
         ''')
         
@@ -286,6 +296,17 @@ class ScatterChart(BaseChart):
                 <label>Trend Lines</label>
                 <label class="switch">
                     <input type="checkbox" onchange="toggleTrendLines(this.checked)">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        ''')
+        
+        # Show statistics
+        scatter_controls.append('''
+            <div class="control-group">
+                <label>Show Stats</label>
+                <label class="switch">
+                    <input type="checkbox" checked onchange="toggleStats(this.checked)">
                     <span class="slider"></span>
                 </label>
             </div>
@@ -302,55 +323,113 @@ class ScatterChart(BaseChart):
             </div>
         ''')
         
-        # Logarithmic scale toggle
-        scatter_controls.append('''
-            <div class="control-group">
-                <label>Log Scale</label>
-                <select onchange="changeScale(this.value)">
-                    <option value="linear">Linear</option>
-                    <option value="logarithmic">Logarithmic</option>
-                </select>
-            </div>
-        ''')
+        # Scale type using custom dropdown
+        scale_dropdown = self._create_custom_dropdown(
+            label="Scale",
+            options=[
+                ("linear", "Linear"),
+                ("logarithmic", "Logarithmic")
+            ],
+            callback="changeScale",
+            default_value="linear"
+        )
+        scatter_controls.append(scale_dropdown)
         
-        # Add correlation info if available
-        if "correlations" in chart_data.get("metadata", {}):
-            corr_html = '<div class="info-panel" style="margin-top: 10px;"><strong>Correlations:</strong><br>'
-            for col, corr in chart_data["metadata"]["correlations"].items():
-                corr_html += f'{col}: {corr:.3f}<br>'
-            corr_html += '</div>'
-            scatter_controls.append(corr_html)
+        # Point shape using custom dropdown
+        shape_dropdown = self._create_custom_dropdown(
+            label="Point Shape",
+            options=[
+                ("circle", "Circle"),
+                ("triangle", "Triangle"),
+                ("rect", "Square"),
+                ("rectRot", "Diamond"),
+                ("cross", "Cross"),
+                ("star", "Star")
+            ],
+            callback="changePointStyle",
+            default_value="circle"
+        )
+        scatter_controls.append(shape_dropdown)
         
         return base_controls + '\n' + '\n'.join(scatter_controls)
-    
+
     def _get_custom_scripts(self) -> str:
         """Get custom JavaScript for scatter chart"""
         return '''
-        // Enhanced tooltips with correlation info
-        myChart.options.plugins.tooltip.callbacks.label = function(context) {
-            let label = context.dataset.label || '';
-            if (label) {
-                label += ': ';
-            }
-            label += '(' + context.parsed.x.toFixed(2) + ', ' + context.parsed.y.toFixed(2) + ')';
-            if (context.raw.r) {
-                label += ', size: ' + context.raw.r.toFixed(1);
-            }
-            return label;
+        // Add staggered point animation
+        myChart.options.animation.delay = function(context) {
+            return Math.random() * 1000;
         };
         
-        // Filter out trend lines from legend if hidden
-        let showTrends = false;
-        myChart.options.plugins.legend.labels.filter = function(item, chart) {
-            if (!showTrends && item.text.includes('trend')) {
-                return false;
+        // Store metadata for statistics display
+        myChart.correlationData = chartData.metadata.correlations || {};
+        myChart.trendData = chartData.metadata.trend_lines || [];
+        
+        // Plugin to display statistics on the chart
+        Chart.register({
+            id: 'statsDisplay',
+            afterDraw: function(chart) {
+                if (chart.config.showStats === false) return;
+                
+                const ctx = chart.ctx;
+                ctx.save();
+                
+                // Background box for statistics
+                const padding = 10;
+                const lineHeight = 20;
+                const startX = chart.width - 200;
+                const startY = 60;
+                
+                const stats = [];
+                
+                // Add correlation data
+                if (chart.correlationData) {
+                    for (const [key, value] of Object.entries(chart.correlationData)) {
+                        stats.push(`${key}: r = ${value.toFixed(3)}`);
+                    }
+                }
+                
+                // Add R-squared from trend lines
+                if (chart.trendData && chart.trendData.length > 0) {
+                    chart.trendData.forEach((trend, index) => {
+                        if (trend.r_squared !== undefined) {
+                            stats.push(`R² = ${trend.r_squared.toFixed(3)}`);
+                        }
+                    });
+                }
+                
+                if (stats.length > 0) {
+                    // Draw background
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+                    ctx.strokeStyle = 'rgba(102, 126, 234, 0.5)';
+                    ctx.lineWidth = 1;
+                    
+                    const boxHeight = stats.length * lineHeight + padding * 2;
+                    const boxWidth = 180;
+                    
+                    ctx.fillRect(startX, startY, boxWidth, boxHeight);
+                    ctx.strokeRect(startX, startY, boxWidth, boxHeight);
+                    
+                    // Draw text
+                    ctx.fillStyle = '#333';
+                    ctx.font = '12px Arial';
+                    ctx.textAlign = 'left';
+                    
+                    stats.forEach((stat, index) => {
+                        ctx.fillText(stat, startX + padding, startY + padding + (index + 0.8) * lineHeight);
+                    });
+                }
+                
+                ctx.restore();
             }
-            return true;
-        };
+        });
+        
+        // Initialize stats display
+        myChart.config.showStats = true;
         
         function changePointSize(size) {
             myChart.data.datasets.forEach(dataset => {
-                if (!dataset.label.includes('trend')) {
+                if (!dataset.label || !dataset.label.includes('(trend)')) {
                     dataset.pointRadius = parseInt(size);
                     dataset.pointHoverRadius = parseInt(size) + 2;
                 }
@@ -359,18 +438,17 @@ class ScatterChart(BaseChart):
         }
         
         function toggleTrendLines(show) {
-            showTrends = show;
-            myChart.data.datasets.forEach(dataset => {
-                if (dataset.label.includes('trend')) {
-                    dataset.hidden = !show;
+            myChart.data.datasets.forEach((dataset, index) => {
+                if (dataset.label && dataset.label.includes('(trend)')) {
+                    const meta = myChart.getDatasetMeta(index);
+                    meta.hidden = !show;
                 }
             });
-            myChart.options.plugins.legend.labels.filter = function(item, chart) {
-                if (!showTrends && item.text.includes('trend')) {
-                    return false;
-                }
-                return true;
-            };
+            myChart.update();
+        }
+        
+        function toggleStats(show) {
+            myChart.config.showStats = show;
             myChart.update();
         }
         
@@ -381,58 +459,102 @@ class ScatterChart(BaseChart):
         }
         
         function changeScale(scaleType) {
-            myChart.options.scales.x.type = scaleType;
-            myChart.options.scales.y.type = scaleType;
-            myChart.update();
-        }
-        
-        // Quadrant highlighting
-        function addQuadrants() {
-            const xScale = myChart.scales.x;
-            const yScale = myChart.scales.y;
-            const xMid = (xScale.max + xScale.min) / 2;
-            const yMid = (yScale.max + yScale.min) / 2;
+            const isLog = scaleType === 'logarithmic';
             
-            // Add annotation plugin config for quadrants
-            myChart.options.plugins.annotation = {
-                annotations: {
-                    line1: {
-                        type: 'line',
-                        xMin: xMid,
-                        xMax: xMid,
-                        borderColor: 'rgba(128, 128, 128, 0.3)',
-                        borderWidth: 1,
-                        borderDash: [5, 5]
-                    },
-                    line2: {
-                        type: 'line',
-                        yMin: yMid,
-                        yMax: yMid,
-                        borderColor: 'rgba(128, 128, 128, 0.3)',
-                        borderWidth: 1,
-                        borderDash: [5, 5]
-                    }
-                }
-            };
-            myChart.update();
-        }
-        
-        // Highlight outliers
-        function highlightOutliers() {
+            // Store original data on first switch
             myChart.data.datasets.forEach(dataset => {
-                if (!dataset.label.includes('trend')) {
-                    const values = dataset.data.map(p => p.y);
-                    const mean = values.reduce((a, b) => a + b, 0) / values.length;
-                    const std = Math.sqrt(values.map(x => Math.pow(x - mean, 2)).reduce((a, b) => a + b) / values.length);
-                    
-                    dataset.pointBackgroundColor = dataset.data.map(point => {
-                        if (Math.abs(point.y - mean) > 2 * std) {
-                            return '#ff0000';  // Red for outliers
-                        }
-                        return dataset.backgroundColor;
-                    });
+                if (!dataset.originalData) {
+                    dataset.originalData = [...dataset.data];
                 }
             });
+            
+            if (isLog) {
+                // For logarithmic scale, we need to ensure all values are positive
+                myChart.options.scales.x.type = 'logarithmic';
+                myChart.options.scales.y.type = 'logarithmic';
+                
+                // Set proper min values for log scale
+                myChart.options.scales.x.min = undefined;
+                myChart.options.scales.y.min = undefined;
+                
+                // Filter data points
+                myChart.data.datasets.forEach(dataset => {
+                    if (!dataset.label || !dataset.label.includes('(trend)')) {
+                        // For scatter points, filter out non-positive values
+                        dataset.data = dataset.originalData.filter(point => 
+                            point.x > 0 && point.y > 0
+                        );
+                    } else {
+                        // For trend lines, recalculate with positive values only
+                        // Find the corresponding scatter dataset
+                        const scatterLabel = dataset.label.replace(' (trend)', '');
+                        const scatterDataset = myChart.data.datasets.find(d => 
+                            d.label === scatterLabel
+                        );
+                        
+                        if (scatterDataset && scatterDataset.data.length > 1) {
+                            // Get positive values only
+                            const validPoints = scatterDataset.data.filter(p => p.x > 0 && p.y > 0);
+                            if (validPoints.length > 1) {
+                                // Calculate log-transformed trend line
+                                const xValues = validPoints.map(p => Math.log10(p.x));
+                                const yValues = validPoints.map(p => Math.log10(p.y));
+                                
+                                // Simple linear regression on log values
+                                const n = xValues.length;
+                                const sumX = xValues.reduce((a, b) => a + b, 0);
+                                const sumY = yValues.reduce((a, b) => a + b, 0);
+                                const sumXY = xValues.reduce((sum, x, i) => sum + x * yValues[i], 0);
+                                const sumX2 = xValues.reduce((sum, x) => sum + x * x, 0);
+                                
+                                const slope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
+                                const intercept = (sumY - slope * sumX) / n;
+                                
+                                // Generate trend line in log space
+                                const xMin = Math.min(...validPoints.map(p => p.x));
+                                const xMax = Math.max(...validPoints.map(p => p.x));
+                                
+                                dataset.data = [
+                                    {x: xMin, y: Math.pow(10, slope * Math.log10(xMin) + intercept)},
+                                    {x: xMax, y: Math.pow(10, slope * Math.log10(xMax) + intercept)}
+                                ];
+                            } else {
+                                dataset.data = [];
+                            }
+                        }
+                    }
+                });
+            } else {
+                // Reset to linear scale
+                myChart.options.scales.x.type = 'linear';
+                myChart.options.scales.y.type = 'linear';
+                
+                delete myChart.options.scales.x.min;
+                delete myChart.options.scales.y.min;
+                
+                // Restore original data
+                myChart.data.datasets.forEach(dataset => {
+                    if (dataset.originalData) {
+                        dataset.data = [...dataset.originalData];
+                    }
+                });
+            }
+            
+            myChart.update();
+        }
+        
+        function changePointStyle(style) {
+            myChart.data.datasets.forEach(dataset => {
+                if (!dataset.label || !dataset.label.includes('(trend)')) {
+                    dataset.pointStyle = style;
+                }
+            });
+            myChart.update();
+        }
+        
+        function toggleDataset(index) {
+            const meta = myChart.getDatasetMeta(index);
+            meta.hidden = meta.hidden === null ? !myChart.data.datasets[index].hidden : null;
             myChart.update();
         }
         '''
