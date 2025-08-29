@@ -142,7 +142,7 @@ def detailed_status():
     
     uptime_seconds = int(time.time() - server_start_time)
     
-    return JSONResponse({
+    return {
         "server": {
             "name": SERVER_NAME,
             "version": SERVER_VERSION,
@@ -178,7 +178,7 @@ def detailed_status():
             "memory_usage_mb": manager._calculate_total_memory() if hasattr(manager, '_calculate_total_memory') else 0
         },
         "timestamp": datetime.now().isoformat()
-    })
+    }
 
 # ============================================================================
 # AUTO-CLEANUP BACKGROUND TASK
