@@ -25,8 +25,6 @@ from datetime import datetime
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from fastmcp import FastMCP
-from fastapi import FastAPI
-from fastapi.responses import JSONResponse, HTMLResponse
 
 # Import ALL orchestration functions AND session_tracker from core.tools
 from core.tools import (
@@ -79,9 +77,6 @@ logger = logging.getLogger(__name__)
 
 # Initialize FastMCP server
 mcp = FastMCP(SERVER_NAME)
-
-# Create FastAPI app for custom endpoints
-app = FastAPI(title=SERVER_NAME, version=SERVER_VERSION)
 
 # Track server start time for status
 server_start_time = time.time()
@@ -872,7 +867,7 @@ def main():
             print("Press Ctrl+C to stop the server")
             print("=" * 60)
             
-            # Run with SSE transport AND custom FastAPI app
+            # Run with SSE transport
             mcp.run(
                 transport="sse",
                 host=SERVER_HOST,
